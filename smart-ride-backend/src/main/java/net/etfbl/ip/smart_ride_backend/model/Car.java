@@ -6,15 +6,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class Car extends Vehicle{
     private LocalDateTime purchaseDateTime;
     private String description;
 
+    public Car(String id, String manufacturer, String model, BigDecimal purchasePrice, String picturePath, LocalDateTime purchaseDateTime, String description) {
+        super(id, manufacturer, model, purchasePrice, picturePath);
+        this.purchaseDateTime = purchaseDateTime;
+        this.description = description;
+    }
 }

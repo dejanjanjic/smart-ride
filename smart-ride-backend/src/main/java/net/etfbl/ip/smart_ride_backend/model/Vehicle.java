@@ -1,20 +1,36 @@
 package net.etfbl.ip.smart_ride_backend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
-@Getter
-@Setter
-@MappedSuperclass
+
+@Data
+@NoArgsConstructor
+@Entity
+@Inheritance(
+        strategy = InheritanceType.JOINED
+)
 public abstract class Vehicle {
     @Id
-    private String id;
-    private String manufacturer;
-    private String model;
-    private Double purchasePrice;
+    protected String id;
+    protected String manufacturer;
+    protected String model;
+    protected BigDecimal purchasePrice;
+    protected String picturePath;
+    @OneToMany(mappedBy = "vehicle")
+    private List<Failure> failures = new ArrayList<>();
+    @OneToMany(mappedBy = "vehicle")
+    private List<Rental> rentals = new ArrayList<>();
 
+    public Vehicle(String id, String manufacturer, String model, BigDecimal purchasePrice, String picturePath) {
+        this.id = id;
+        this.manufacturer = manufacturer;
+        this.model = model;
+        this.purchasePrice = purchasePrice;
+        this.picturePath = picturePath;
+    }
 }
