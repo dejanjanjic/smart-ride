@@ -2,7 +2,6 @@ package net.etfbl.ip.smart_ride_backend.model;
 
 import jakarta.persistence.Entity;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Entity

@@ -1,10 +1,12 @@
 package net.etfbl.ip.smart_ride_backend.model;
 
-import jakarta.persistence.Column;
+
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -15,6 +17,8 @@ public class Client extends User{
     private String image;
     private String driverLicenseNumber;
     private Boolean domesticate;
+    @OneToMany(mappedBy = "client")
+    private List<Rental> rentals = new ArrayList<>();
 
     public Client() {
     }
