@@ -15,11 +15,19 @@ import lombok.NoArgsConstructor;
 public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String username;
-    private String password;
-    private String firstName;
-    private String lastName;
+    protected Long id;
+    protected String username;
+    protected String password;
+    protected String firstName;
+    protected String lastName;
     @Enumerated(EnumType.STRING)
-    private Role role;
+    protected Role role;
+
+    public User(String username, String password, String firstName, String lastName, Role role) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+    }
 }
