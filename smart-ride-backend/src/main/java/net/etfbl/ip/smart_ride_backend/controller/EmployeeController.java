@@ -22,14 +22,6 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginDTO loginDTO){
-        Employee employee = employeeService.login(loginDTO);
-        if(employee == null){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(employee);
-    }
     @PostMapping
     public ResponseEntity addEmployee(@RequestBody AddEmployeeDTO addEmployeeDTO){
         if(addEmployeeDTO.getRole().equals(Role.CLIENT)){

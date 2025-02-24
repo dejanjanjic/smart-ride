@@ -16,20 +16,6 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public Employee login(LoginDTO loginDTO){
-        Employee employee = employeeRepository
-                .findByUsername(loginDTO.getUsername())
-                .orElse(null);
-        if(employee == null){
-            return null;
-        }
-        if(!employee.getPassword().equals(loginDTO.getPassword())){
-            return null;
-        }
-        return employee;
-
-    }
-
     public Employee addEmployee(AddEmployeeDTO addEmployeeDTO) {
         if(employeeRepository.existsByUsername(addEmployeeDTO.getUsername())){
             return null;
