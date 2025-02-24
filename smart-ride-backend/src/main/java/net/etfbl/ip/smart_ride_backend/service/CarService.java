@@ -35,7 +35,34 @@ public class CarService {
 
     public Car update(Car car) {
         Car temp = carRepository.findById(car.getId()).orElse(null);
-        return temp == null ? temp : carRepository.save(car);
+        if(temp == null){
+            return null;
+        }
+        if(car.getModel() != null){
+            temp.setModel(car.getModel());
+        }
+        if(car.getManufacturer() != null){
+            temp.setManufacturer(car.getManufacturer());
+        }
+        if(car.getFailures() != null){
+            temp.setFailures(car.getFailures());
+        }
+        if(car.getRentals() != null){
+            temp.setRentals(car.getRentals());
+        }
+        if(car.getPicturePath() != null){
+            temp.setPicturePath(car.getPicturePath());
+        }
+        if(car.getPurchasePrice() != null){
+            temp.setPurchasePrice(car.getPurchasePrice());
+        }
+        if(car.getDescription() != null){
+            temp.setDescription(car.getDescription());
+        }
+        if(car.getPurchaseDateTime() != null){
+            temp.setPurchaseDateTime(car.getPurchaseDateTime());
+        }
+        return carRepository.save(temp);
     }
 
     public boolean deleteById(String id) {

@@ -10,9 +10,9 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Entity
 public class EBike extends Vehicle {
-    private int maxRange;
+    private Integer maxRange;
 
-    public EBike(String id, String manufacturer, String model, BigDecimal purchasePrice, String picturePath, int maxRange) {
+    public EBike(String id, Manufacturer manufacturer, String model, BigDecimal purchasePrice, String picturePath, Integer maxRange) {
         super(id, manufacturer, model, purchasePrice, picturePath);
         this.maxRange = maxRange;
     }

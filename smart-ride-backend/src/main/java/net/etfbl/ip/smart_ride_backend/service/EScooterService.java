@@ -34,8 +34,33 @@ public class EScooterService {
 
     public EScooter update(EScooter eScooter) {
         EScooter temp = eScooterRepository.findById(eScooter.getId()).orElse(null);
-        return temp == null ? temp : eScooterRepository.save(eScooter);
+        if (temp == null) {
+            return null;
+        }
+        if (eScooter.getModel() != null) {
+            temp.setModel(eScooter.getModel());
+        }
+        if (eScooter.getManufacturer() != null) {
+            temp.setManufacturer(eScooter.getManufacturer());
+        }
+        if (eScooter.getFailures() != null) {
+            temp.setFailures(eScooter.getFailures());
+        }
+        if (eScooter.getRentals() != null) {
+            temp.setRentals(eScooter.getRentals());
+        }
+        if (eScooter.getPicturePath() != null) {
+            temp.setPicturePath(eScooter.getPicturePath());
+        }
+        if (eScooter.getPurchasePrice() != null) {
+            temp.setPurchasePrice(eScooter.getPurchasePrice());
+        }
+        if (eScooter.getMaxSpeed() != null) {
+            temp.setMaxSpeed(eScooter.getMaxSpeed());
+        }
+        return eScooterRepository.save(temp);
     }
+
 
     public boolean deleteById(String id) {
         if (eScooterRepository.existsById(id)) {

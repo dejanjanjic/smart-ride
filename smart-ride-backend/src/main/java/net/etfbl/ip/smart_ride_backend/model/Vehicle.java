@@ -17,7 +17,9 @@ import java.util.List;
 public abstract class Vehicle {
     @Id
     protected String id;
-    protected String manufacturer;
+    @ManyToOne
+    @JoinColumn(name = "manufacturer_id")
+    protected Manufacturer manufacturer;
     protected String model;
     protected BigDecimal purchasePrice;
     protected String picturePath;
@@ -26,7 +28,7 @@ public abstract class Vehicle {
     @OneToMany(mappedBy = "vehicle")
     private List<Rental> rentals = new ArrayList<>();
 
-    public Vehicle(String id, String manufacturer, String model, BigDecimal purchasePrice, String picturePath) {
+    public Vehicle(String id, Manufacturer manufacturer, String model, BigDecimal purchasePrice, String picturePath) {
         this.id = id;
         this.manufacturer = manufacturer;
         this.model = model;
