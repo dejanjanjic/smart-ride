@@ -20,7 +20,7 @@ public class AuthController {
         this.authService = authService;
     }
     @PostMapping
-    public ResponseEntity login(@RequestBody LoginDTO loginDTO){
+    public ResponseEntity<Employee> login(@RequestBody LoginDTO loginDTO){
         Employee employee = authService.login(loginDTO);
         if(employee == null){
             return ResponseEntity.notFound().build();

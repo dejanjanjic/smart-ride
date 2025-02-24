@@ -1,7 +1,6 @@
 package net.etfbl.ip.smart_ride_backend.service;
 
 import net.etfbl.ip.smart_ride_backend.dto.AddEmployeeDTO;
-import net.etfbl.ip.smart_ride_backend.dto.LoginDTO;
 import net.etfbl.ip.smart_ride_backend.model.Employee;
 import net.etfbl.ip.smart_ride_backend.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,6 @@
 package net.etfbl.ip.smart_ride_backend.controller;
 
 import net.etfbl.ip.smart_ride_backend.dto.AddEmployeeDTO;
-import net.etfbl.ip.smart_ride_backend.dto.LoginDTO;
 import net.etfbl.ip.smart_ride_backend.model.Employee;
 import net.etfbl.ip.smart_ride_backend.model.Role;
 import net.etfbl.ip.smart_ride_backend.service.EmployeeService;
@@ -23,7 +22,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity addEmployee(@RequestBody AddEmployeeDTO addEmployeeDTO){
+    public ResponseEntity<Employee> addEmployee(@RequestBody AddEmployeeDTO addEmployeeDTO){
         if(addEmployeeDTO.getRole().equals(Role.CLIENT)){
             return ResponseEntity.status(403).build();
         }
