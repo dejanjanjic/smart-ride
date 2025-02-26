@@ -25,10 +25,6 @@ public class ManufacturerService {
     }
 
     public Manufacturer save(Manufacturer manufacturer) {
-        boolean exist = manufacturerRepository.existsById(manufacturer.getId());
-        if(exist){
-            return null;
-        }
         return manufacturerRepository.save(manufacturer);
     }
 

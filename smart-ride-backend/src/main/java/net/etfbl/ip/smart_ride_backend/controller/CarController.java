@@ -1,5 +1,6 @@
 package net.etfbl.ip.smart_ride_backend.controller;
 
+import net.etfbl.ip.smart_ride_backend.dto.CarSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.model.Car;
 import net.etfbl.ip.smart_ride_backend.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class CarController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Car>> getAll(){
+    public ResponseEntity<List<CarSimpleDTO>> getAll(){
         return ResponseEntity.ok(this.carService.findAll());
     }
     @GetMapping("{id}")

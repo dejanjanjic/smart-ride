@@ -30,8 +30,7 @@ public class ManufacturerController {
     }
     @PostMapping
     public ResponseEntity<Manufacturer> save(@RequestBody Manufacturer manufacturer){
-        Manufacturer temp = this.manufacturerService.save(manufacturer);
-        return temp == null ? ResponseEntity.status(409).build() : ResponseEntity.ok(temp);
+        return ResponseEntity.ok(this.manufacturerService.save(manufacturer));
     }
     @PutMapping()
     public ResponseEntity<Manufacturer> update(@RequestBody Manufacturer manufacturer) {

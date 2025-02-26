@@ -1,0 +1,13 @@
+<mat-toolbar color="accent">
+  <button mat-icon-button class="hamburger-icon" (click)="onToggleSidebar()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Smart ride</span>
+  <span class="spacer"></span>
+  <p>{{ username }}</p>
+  <mat-icon>person</mat-icon>
+
+  <button mat-icon-button class="logout-icon" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>

@@ -10,8 +10,10 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { EmployeeService } from '../../services/employee.service';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { Employee } from '../../model/employee.model';
+import { Role } from '../../enum/role.enum';
 
 @Component({
   selector: 'app-login',
@@ -28,8 +30,9 @@ import { EmployeeService } from '../../services/employee.service';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
+  private router: Router = inject(Router);
   private formBuilder = inject(FormBuilder);
-  private employeeService = inject(EmployeeService);
+  private authService = inject(AuthService);
 
   public invalidCredentials: boolean = false;
 
@@ -43,11 +46,22 @@ export class LoginComponent {
       return;
     }
 
-    this.employeeService.login(this.loginForm.value).subscribe({
-      next: (employee) => {
+    this.authService.login(this.loginForm.value).subscribe({
+      next: (employee: Employee) => {
         console.log('Login successful:', employee);
         this.invalidCredentials = false;
-        // Preusmeri korisnika na sledeću stranicu
+        this.authService.store(employee);
+        switch (employee.role) {
+          case Role.ADMINISTRATOR:
+            this.router.navigate(['/admin']);
+            break;
+          case Role.OPERATOR:
+            this.router.navigate(['/operator']);
+            break;
+          case Role.MANAGEMENT:
+            this.router.navigate(['/management']);
+            break;
+        }
       },
       error: (err) => {
         console.error('Error during login:', err.message);

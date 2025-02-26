@@ -1,0 +1,39 @@
+<table mat-table [dataSource]="cars">
+  <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+
+  <!-- Model Column -->
+  <ng-container matColumnDef="model">
+    <th mat-header-cell *matHeaderCellDef>Model</th>
+    <td mat-cell *matCellDef="let car">{{ car.model }}</td>
+  </ng-container>
+
+  <!-- Id Column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>Id</th>
+    <td mat-cell *matCellDef="let car">{{ car.id }}</td>
+  </ng-container>
+
+  <!-- Price Column -->
+  <ng-container matColumnDef="purchasePrice">
+    <th mat-header-cell *matHeaderCellDef>Price</th>
+    <td mat-cell *matCellDef="let car">{{ car.purchasePrice }}</td>
+  </ng-container>
+
+  <!-- Manufacturer Column -->
+  <ng-container matColumnDef="manufacturer">
+    <th mat-header-cell *matHeaderCellDef>Manufacturer</th>
+    <td mat-cell *matCellDef="let car">{{ car.manufacturer }}</td>
+  </ng-container>
+
+  <!-- Purchase date Column -->
+  <ng-container matColumnDef="purchaseDate">
+    <th mat-header-cell *matHeaderCellDef>Purchase date</th>
+    <td mat-cell *matCellDef="let car">
+      {{ car.purchaseDateTime | date : "dd.MM.yyyy" }}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

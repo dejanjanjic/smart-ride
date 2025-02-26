@@ -1,10 +1,12 @@
 package net.etfbl.ip.smart_ride_backend.service;
 
+import net.etfbl.ip.smart_ride_backend.dto.CarSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.model.Car;
 import net.etfbl.ip.smart_ride_backend.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,8 +18,12 @@ public class CarService {
         this.carRepository = carRepository;
     }
 
-    public List<Car> findAll() {
-        return this.carRepository.findAll();
+    public List<CarSimpleDTO> findAll() {
+        List<CarSimpleDTO> temp = new ArrayList<>();
+        for (Car car : this.carRepository.findAll()){
+            temp.add(new CarSimpleDTO(car));
+        }
+        return temp;
     }
 
     public Car findById(String id) {
