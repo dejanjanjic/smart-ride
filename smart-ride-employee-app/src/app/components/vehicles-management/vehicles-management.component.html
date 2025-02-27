@@ -1,1 +1,28 @@
-<router-outlet />
+<div class="content-container">
+  <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>directions_car</mat-icon>
+      </ng-template>
+      <div class="table-container">
+        <app-cars-table />
+      </div>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>electric_bike</mat-icon>
+      </ng-template>
+      <div class="table-container">
+        <app-e-bikes-table />
+      </div>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>electric_scooter</mat-icon>
+      </ng-template>
+      <div class="table-container">
+        <app-e-scooters-table />
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

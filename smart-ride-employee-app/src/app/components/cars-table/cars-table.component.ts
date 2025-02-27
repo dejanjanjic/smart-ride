@@ -3,9 +3,12 @@ import { MatTableModule } from '@angular/material/table';
 import { CarService } from '../../services/car.service';
 import { Car } from '../../model/car.model';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
 @Component({
   selector: 'app-cars-table',
-  imports: [MatTableModule, CommonModule],
+  imports: [MatTableModule, CommonModule, MatIconModule, MatButtonModule],
   templateUrl: './cars-table.component.html',
   styleUrl: './cars-table.component.css',
 })
@@ -18,6 +21,7 @@ export class CarsTableComponent implements OnInit {
     'manufacturer',
     'purchasePrice',
     'purchaseDate',
+    'actions',
   ];
   ngOnInit(): void {
     this.loadData();
@@ -31,5 +35,14 @@ export class CarsTableComponent implements OnInit {
         console.error('Greška prilikom učitavanja podataka:', err);
       },
     });
+  }
+  viewDetails(id: string) {
+    // Logika za prikaz detalja
+    console.log('Prikaz detalja za vozilo sa ID:', id);
+  }
+
+  deleteCar(id: string) {
+    // Logika za brisanje
+    console.log('Brisanje vozila sa ID:', id);
   }
 }

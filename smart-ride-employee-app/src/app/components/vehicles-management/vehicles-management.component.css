@@ -1,3 +1,6 @@
-table {
-  width: 100%;
+.content-container {
+  margin: 30px;
+}
+.table-container {
+  margin-top: 20px;
 }

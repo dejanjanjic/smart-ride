@@ -3,9 +3,13 @@
   <mat-sidenav-container>
     <mat-sidenav #sidenav>
       <mat-nav-list>
-        <a mat-list-item>Vehicles</a>
-        <a mat-list-item>Manufacturers</a>
-        <a mat-list-item>Users</a>
+        <a mat-list-item routerLink="vehicles" (click)="sidenav.toggle()"
+          >Vehicles</a
+        >
+        <a mat-list-item routerLink="manufacturers" (click)="sidenav.toggle()"
+          >Manufacturers</a
+        >
+        <a mat-list-item routerLink="users" (click)="sidenav.toggle()">Users</a>
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content><router-outlet /></mat-sidenav-content>
