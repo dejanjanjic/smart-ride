@@ -11,4 +11,7 @@ export class CarService {
   public getAll() {
     return this.http.get(this.BASE_URL);
   }
+  public deleteById(id: string) {
+    return this.http.delete(`${this.BASE_URL}/${id}`);
+  }
 }

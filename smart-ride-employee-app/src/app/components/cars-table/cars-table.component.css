@@ -9,3 +9,11 @@
 th {
   color: #424874;
 }
+
+.table-toolbar {
+  display: flex;
+  justify-content: end;
+}
+.add-button {
+  margin-right: 20px;
+}
