@@ -9,6 +9,7 @@ import { ManufacturersManagementComponent } from './components/manufacturers-man
 import { UsersManagementComponent } from './components/users-management/users-management.component';
 import { EBikesTableComponent } from './components/e-bikes-table/e-bikes-table.component';
 import { EScootersTableComponent } from './components/e-scooters-table/e-scooters-table.component';
+import { AddCarComponent } from './components/add-car/add-car.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -32,6 +33,10 @@ export const routes: Routes = [
       {
         path: 'users',
         component: UsersManagementComponent,
+      },
+      {
+        path: 'add-car',
+        component: AddCarComponent,
       },
       { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
     ],

@@ -1,7 +1,6 @@
-import { Component, inject, Input, model } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import {
-  MatDialog,
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
