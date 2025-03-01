@@ -30,15 +30,15 @@ public class CarController {
         return temp == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(temp);
     }
     @PostMapping
-    public ResponseEntity<Car> save(@RequestBody Car car){
+    public ResponseEntity<Car> save(@RequestBody CarSimpleDTO car){
         Car temp = this.carService.save(car);
         return temp == null ? ResponseEntity.status(409).build() : ResponseEntity.ok(temp);
     }
-    @PutMapping()
-    public ResponseEntity<Car> update(@RequestBody Car car) {
-        Car temp = this.carService.update(car);
-        return temp == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(temp);
-    }
+//    @PutMapping()
+//    public ResponseEntity<Car> update(@RequestBody Car car) {
+//        Car temp = this.carService.update(car);
+//        return temp == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(temp);
+//    }
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteById(@PathVariable String id) {
         boolean isDeleted = this.carService.deleteById(id);

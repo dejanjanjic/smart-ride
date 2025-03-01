@@ -35,11 +35,11 @@ public class EBikeController {
         return temp == null ? ResponseEntity.status(409).build() : ResponseEntity.ok(temp);
     }
 
-    @PutMapping
-    public ResponseEntity<EBike> update(@RequestBody EBike eBike) {
-        EBike temp = this.eBikeService.update(eBike);
-        return temp == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(temp);
-    }
+//    @PutMapping
+//    public ResponseEntity<EBike> update(@RequestBody EBike eBike) {
+//        EBike temp = this.eBikeService.update(eBike);
+//        return temp == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(temp);
+//    }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteById(@PathVariable String id) {

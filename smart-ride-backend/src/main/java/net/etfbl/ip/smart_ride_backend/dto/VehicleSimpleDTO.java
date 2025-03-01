@@ -7,9 +7,12 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class VehicleSimpleDTO {
     protected String id;
     protected String manufacturer;
     protected String model;
     protected BigDecimal purchasePrice;
+    //TODO: dodati i sliku
 }

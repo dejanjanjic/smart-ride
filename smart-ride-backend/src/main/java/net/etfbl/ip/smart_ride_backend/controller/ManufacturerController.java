@@ -23,6 +23,10 @@ public class ManufacturerController {
     public ResponseEntity<List<Manufacturer>> getAll(){
         return ResponseEntity.ok(this.manufacturerService.findAll());
     }
+    @GetMapping("names")
+    public ResponseEntity<List<String>> getAllNames(){
+        return ResponseEntity.ok(this.manufacturerService.findAllNames());
+    }
     @GetMapping("{id}")
     public ResponseEntity<Manufacturer> getById(@PathVariable Long id){
         Manufacturer temp = manufacturerService.findById(id);
@@ -30,7 +34,11 @@ public class ManufacturerController {
     }
     @PostMapping
     public ResponseEntity<Manufacturer> save(@RequestBody Manufacturer manufacturer){
-        return ResponseEntity.ok(this.manufacturerService.save(manufacturer));
+        Manufacturer temp = this.manufacturerService.save(manufacturer);
+        if(temp == null){
+            return ResponseEntity.status(409).build();
+        }
+        return ResponseEntity.ok(temp);
     }
     @PutMapping()
     public ResponseEntity<Manufacturer> update(@RequestBody Manufacturer manufacturer) {

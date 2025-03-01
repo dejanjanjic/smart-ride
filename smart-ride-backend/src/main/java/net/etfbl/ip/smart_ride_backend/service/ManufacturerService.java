@@ -19,12 +19,17 @@ public class ManufacturerService {
     public List<Manufacturer> findAll() {
         return this.manufacturerRepository.findAll();
     }
-
+    public List<String> findAllNames() {
+        return this.manufacturerRepository.findAll().stream().map(Manufacturer::getName).toList();
+    }
     public Manufacturer findById(Long id) {
         return this.manufacturerRepository.findById(id).orElse(null);
     }
 
     public Manufacturer save(Manufacturer manufacturer) {
+        if(manufacturerRepository.existsByName(manufacturer.getName())){
+            return null;
+        }
         return manufacturerRepository.save(manufacturer);
     }
 
@@ -62,4 +67,6 @@ public class ManufacturerService {
         }
         return false;
     }
+
+
 }

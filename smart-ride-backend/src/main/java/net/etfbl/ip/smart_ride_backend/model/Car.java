@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import net.etfbl.ip.smart_ride_backend.dto.CarSimpleDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -21,4 +22,5 @@ public class Car extends Vehicle{
         this.purchaseDateTime = purchaseDateTime;
         this.description = description;
     }
+
 }

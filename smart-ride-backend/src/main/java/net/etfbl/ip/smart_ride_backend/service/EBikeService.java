@@ -32,34 +32,34 @@ public class EBikeService {
         return eBikeRepository.save(eBike);
     }
 
-    public EBike update(EBike eBike) {
-        EBike temp = eBikeRepository.findById(eBike.getId()).orElse(null);
-        if (temp == null) {
-            return null;
-        }
-        if (eBike.getModel() != null) {
-            temp.setModel(eBike.getModel());
-        }
-        if (eBike.getManufacturer() != null) {
-            temp.setManufacturer(eBike.getManufacturer());
-        }
-        if (eBike.getFailures() != null) {
-            temp.setFailures(eBike.getFailures());
-        }
-        if (eBike.getRentals() != null) {
-            temp.setRentals(eBike.getRentals());
-        }
-        if (eBike.getPicturePath() != null) {
-            temp.setPicturePath(eBike.getPicturePath());
-        }
-        if (eBike.getPurchasePrice() != null) {
-            temp.setPurchasePrice(eBike.getPurchasePrice());
-        }
-        if (eBike.getMaxRange() != null){
-            temp.setMaxRange(eBike.getMaxRange());
-        }
-        return eBikeRepository.save(temp);
-    }
+//    public EBike update(EBike eBike) {
+//        EBike temp = eBikeRepository.findById(eBike.getId()).orElse(null);
+//        if (temp == null) {
+//            return null;
+//        }
+//        if (eBike.getModel() != null) {
+//            temp.setModel(eBike.getModel());
+//        }
+//        if (eBike.getManufacturer() != null) {
+//            temp.setManufacturer(eBike.getManufacturer());
+//        }
+//        if (eBike.getFailures() != null) {
+//            temp.setFailures(eBike.getFailures());
+//        }
+//        if (eBike.getRentals() != null) {
+//            temp.setRentals(eBike.getRentals());
+//        }
+//        if (eBike.getPicturePath() != null) {
+//            temp.setPicturePath(eBike.getPicturePath());
+//        }
+//        if (eBike.getPurchasePrice() != null) {
+//            temp.setPurchasePrice(eBike.getPurchasePrice());
+//        }
+//        if (eBike.getMaxRange() != null){
+//            temp.setMaxRange(eBike.getMaxRange());
+//        }
+//        return eBikeRepository.save(temp);
+//    }
 
 
     public boolean deleteById(String id) {

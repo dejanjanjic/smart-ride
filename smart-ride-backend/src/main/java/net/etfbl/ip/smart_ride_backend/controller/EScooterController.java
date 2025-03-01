@@ -35,11 +35,11 @@ public class EScooterController {
         return temp == null ? ResponseEntity.status(409).build() : ResponseEntity.ok(temp);
     }
 
-    @PutMapping
-    public ResponseEntity<EScooter> update(@RequestBody EScooter eScooter) {
-        EScooter temp = this.eScooterService.update(eScooter);
-        return temp == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(temp);
-    }
+//    @PutMapping
+//    public ResponseEntity<EScooter> update(@RequestBody EScooter eScooter) {
+//        EScooter temp = this.eScooterService.update(eScooter);
+//        return temp == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(temp);
+//    }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteById(@PathVariable String id) {
