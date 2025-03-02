@@ -1,8 +1,7 @@
 package net.etfbl.ip.smart_ride_backend.service;
 
 import net.etfbl.ip.smart_ride_backend.dto.CarSimpleDTO;
-import net.etfbl.ip.smart_ride_backend.model.Car;
-import net.etfbl.ip.smart_ride_backend.model.Manufacturer;
+import net.etfbl.ip.smart_ride_backend.model.*;
 import net.etfbl.ip.smart_ride_backend.repository.CarRepository;
 import net.etfbl.ip.smart_ride_backend.repository.ManufacturerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CarService {
+public class CarService extends VehicleService{
     private final CarRepository carRepository;
     private final ManufacturerRepository manufacturerRepository;
 
@@ -31,7 +30,9 @@ public class CarService {
     }
 
     public Car findById(String id) {
-        return this.carRepository.findById(id).orElse(null);
+        Car car = this.carRepository.findById(id).orElse(null);
+        declareVehicleState(car);
+        return car;
     }
 
     public Car save(CarSimpleDTO car) {

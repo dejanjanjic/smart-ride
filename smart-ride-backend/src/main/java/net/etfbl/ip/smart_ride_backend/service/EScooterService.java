@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class EScooterService {
+public class EScooterService extends VehicleService {
     private final EScooterRepository eScooterRepository;
 
     @Autowired
@@ -21,7 +21,9 @@ public class EScooterService {
     }
 
     public EScooter findById(String id) {
-        return this.eScooterRepository.findById(id).orElse(null);
+        EScooter eScooter = this.eScooterRepository.findById(id).orElse(null);
+        declareVehicleState(eScooter);
+        return eScooter;
     }
 
     public EScooter save(EScooter eScooter) {

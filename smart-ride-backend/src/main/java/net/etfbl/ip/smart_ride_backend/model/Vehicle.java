@@ -27,6 +27,8 @@ public abstract class Vehicle {
     private List<Failure> failures = new ArrayList<>();
     @OneToMany(mappedBy = "vehicle")
     private List<Rental> rentals = new ArrayList<>();
+    @Transient
+    private VehicleState vehicleState;
 
     public Vehicle(String id, Manufacturer manufacturer, String model, BigDecimal purchasePrice, String picturePath) {
         this.id = id;
