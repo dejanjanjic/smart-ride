@@ -6,6 +6,7 @@ import net.etfbl.ip.smart_ride_backend.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -29,6 +30,8 @@ public class CarController {
         Car temp = carService.findById(id);
         return temp == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(temp);
     }
+    @GetMapping("{id}/image")
+
     @PostMapping
     public ResponseEntity<Car> save(@RequestBody CarSimpleDTO car){
         Car temp = this.carService.save(car);
@@ -39,6 +42,18 @@ public class CarController {
 //        Car temp = this.carService.update(car);
 //        return temp == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(temp);
 //    }
+    @PutMapping("{id}/image")
+    public ResponseEntity<Void> uploadImage(@PathVariable String id, @RequestParam("file") MultipartFile file) {
+        try{
+            Car car = carService.saveImage(id, file);
+            return car != null ? ResponseEntity.status(204).build() : ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+
+
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteById(@PathVariable String id) {
         boolean isDeleted = this.carService.deleteById(id);

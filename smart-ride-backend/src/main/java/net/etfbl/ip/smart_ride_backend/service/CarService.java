@@ -5,15 +5,26 @@ import net.etfbl.ip.smart_ride_backend.model.*;
 import net.etfbl.ip.smart_ride_backend.repository.CarRepository;
 import net.etfbl.ip.smart_ride_backend.repository.ManufacturerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CarService extends VehicleService{
     private final CarRepository carRepository;
     private final ManufacturerRepository manufacturerRepository;
+
+    @Value("${images.car}")
+    private String uploadDir;
 
     @Autowired
     public CarService(CarRepository carRepository, ManufacturerRepository manufacturerRepository){
@@ -84,5 +95,24 @@ public class CarService extends VehicleService{
             return true;
         }
         return false;
+    }
+
+    public Car saveImage(String id, MultipartFile file) throws IOException {
+        Car car = carRepository.findById(id).orElse(null);
+        if(car == null) return null;
+
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+
+        Path filePath = uploadPath.resolve(id + Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".")));
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        car.setPicturePath(filePath.toAbsolutePath().toString());
+        carRepository.save(car);
+
+        return car;
     }
 }

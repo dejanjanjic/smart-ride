@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/ebike")
+@RequestMapping("api/v1/e-bike")
 public class EBikeController {
     private final EBikeService eBikeService;
 
