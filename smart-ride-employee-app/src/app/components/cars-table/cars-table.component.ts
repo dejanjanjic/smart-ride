@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-cars-table',
@@ -18,6 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     MatIconModule,
     MatButtonModule,
     MatPaginatorModule,
+    RouterModule,
   ],
   templateUrl: './cars-table.component.html',
   styleUrl: './cars-table.component.css',
@@ -31,11 +32,10 @@ export class CarsTableComponent implements AfterViewInit {
   public cars: Array<Car> = [];
   public displayedColumns: string[] = [
     'id',
-    'model',
     'manufacturer',
+    'model',
     'purchasePrice',
     'purchaseDate',
-    'description',
     'actions',
   ];
   public resultsLength: number = 0;
@@ -62,9 +62,6 @@ export class CarsTableComponent implements AfterViewInit {
   viewDetails(id: string) {
     // Logika za prikaz detalja
     console.log('Prikaz detalja za vozilo sa ID:', id);
-  }
-  addCar() {
-    this.router.navigate(['../add-car'], { relativeTo: this.route });
   }
   deleteCar(id: string) {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {

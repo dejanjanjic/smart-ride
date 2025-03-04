@@ -10,6 +10,7 @@ import { UsersManagementComponent } from './components/users-management/users-ma
 import { EBikesTableComponent } from './components/e-bikes-table/e-bikes-table.component';
 import { EScootersTableComponent } from './components/e-scooters-table/e-scooters-table.component';
 import { AddCarComponent } from './components/add-car/add-car.component';
+import { ViewDetailsCarComponent } from './components/view-details-car/view-details-car.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -35,8 +36,12 @@ export const routes: Routes = [
         component: UsersManagementComponent,
       },
       {
-        path: 'add-car',
+        path: 'vehicles/add-car',
         component: AddCarComponent,
+      },
+      {
+        path: 'vehicles/:id',
+        component: ViewDetailsCarComponent,
       },
       { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
     ],

@@ -16,6 +16,11 @@ export class CarService {
   public add(car: Car): Observable<any> {
     return this.http.post(this.BASE_URL, car);
   }
+  public uploadImage(id: string, image: File) {
+    const formData = new FormData();
+    formData.append('file', image);
+    return this.http.put<void>(`${this.BASE_URL}/${id}/image`, formData);
+  }
   public deleteById(id: string) {
     return this.http.delete(`${this.BASE_URL}/${id}`);
   }

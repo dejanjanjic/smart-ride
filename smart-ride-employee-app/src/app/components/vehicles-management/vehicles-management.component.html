@@ -1,4 +1,17 @@
 <div class="content-container">
+  <div class="import-container">
+    <button mat-raised-button class="import-button" (click)="openFileDialog()">
+      Import
+      <mat-icon>add</mat-icon>
+    </button>
+    <input
+      type="file"
+      #fileInput
+      accept=".csv"
+      (change)="onFileSelected($event)"
+      hidden
+    />
+  </div>
   <mat-tab-group [dynamicHeight]="true">
     <mat-tab>
       <ng-template mat-tab-label>

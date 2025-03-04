@@ -29,3 +29,14 @@
   padding-left: 16px;
   margin: 0;
 }
+
+.image-input-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.fileName {
+  padding-right: 10px;
+  line-height: 10px;
+}
