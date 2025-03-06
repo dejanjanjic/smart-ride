@@ -6,7 +6,8 @@ export interface Vehicle {
   manufacturer: string;
   model: string;
   purchasePrice: number;
-  picturePath?: string;
+  picture?: string;
   failures?: Failure[];
   rentals?: Rental[];
+  vehicleState: string;
 }

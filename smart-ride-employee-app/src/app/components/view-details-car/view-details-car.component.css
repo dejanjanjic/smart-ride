@@ -1,0 +1,25 @@
+.details-container {
+  margin: 30px;
+  padding: 10px;
+  border: 1px solid #bebebe;
+  border-radius: 10px;
+}
+.car-image {
+  height: 400px;
+  border-radius: 20px;
+}
+.top-part {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+li {
+  list-style-type: none;
+  margin-bottom: 20px;
+}
+
+h1 {
+  margin-bottom: 60px;
+  border-bottom: 1px solid #bebebe;
+}

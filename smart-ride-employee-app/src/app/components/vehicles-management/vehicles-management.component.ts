@@ -15,6 +15,7 @@ import { Car } from '../../model/car.model';
 import Papa from 'papaparse';
 import { EBike } from '../../model/ebike.model';
 import { EScooter } from '../../model/escooter.model';
+import { VehicleState } from '../../enum/vehicle-state.enum';
 
 @Component({
   selector: 'app-vehicles-management',
@@ -90,6 +91,7 @@ export class VehiclesManagementComponent {
       model: model,
       purchasePrice: purchasePrice,
       maxSpeed: maxSpeed,
+      vehicleState: VehicleState.AVAILABLE,
     };
 
     this.eScooterService.add(eScooter).subscribe({
@@ -125,6 +127,7 @@ export class VehiclesManagementComponent {
       model: model,
       purchasePrice: purchasePrice,
       maxRange: maxRange,
+      vehicleState: VehicleState.AVAILABLE,
     };
 
     this.eBikeService.add(eBike).subscribe({
@@ -161,6 +164,7 @@ export class VehiclesManagementComponent {
       purchasePrice: purchasePrice,
       purchaseDateTime: new Date(purchaseDateTime),
       description: description,
+      vehicleState: VehicleState.AVAILABLE,
     };
 
     this.carService.add(car).subscribe({

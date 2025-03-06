@@ -13,6 +13,15 @@ export class CarService {
   public getAll() {
     return this.http.get(this.BASE_URL);
   }
+  public getById(id: string): Observable<any> {
+    return this.http.get(`${this.BASE_URL}/${id}`);
+  }
+  getImageById(id: string): Observable<Blob> {
+    return this.http.get(`${this.BASE_URL}/${id}/image`, {
+      responseType: 'blob',
+    });
+  }
+
   public add(car: Car): Observable<any> {
     return this.http.post(this.BASE_URL, car);
   }
