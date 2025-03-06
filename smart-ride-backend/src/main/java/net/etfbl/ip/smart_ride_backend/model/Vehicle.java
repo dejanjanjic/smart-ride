@@ -28,6 +28,7 @@ public abstract class Vehicle {
     @OneToMany(mappedBy = "vehicle")
     private List<Rental> rentals = new ArrayList<>();
     @Transient
+    @Enumerated(EnumType.STRING)
     private VehicleState vehicleState;
 
     public Vehicle(String id, Manufacturer manufacturer, String model, BigDecimal purchasePrice, String picturePath) {

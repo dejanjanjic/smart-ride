@@ -1,5 +1,7 @@
 package net.etfbl.ip.smart_ride_backend.model;
 
-public enum VehicleState {
+import java.io.Serializable;
+
+public enum VehicleState{
     AVAILABLE, RENTED, BROKEN
 }

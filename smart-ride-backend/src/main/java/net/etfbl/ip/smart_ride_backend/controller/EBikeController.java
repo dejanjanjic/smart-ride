@@ -1,5 +1,6 @@
 package net.etfbl.ip.smart_ride_backend.controller;
 
+import net.etfbl.ip.smart_ride_backend.dto.EBikeSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.model.EBike;
 import net.etfbl.ip.smart_ride_backend.service.EBikeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class EBikeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EBike>> getAll() {
+    public ResponseEntity<List<EBikeSimpleDTO>> getAll() {
         return ResponseEntity.ok(this.eBikeService.findAll());
     }
 
@@ -30,7 +31,7 @@ public class EBikeController {
     }
 
     @PostMapping
-    public ResponseEntity<EBike> save(@RequestBody EBike eBike) {
+    public ResponseEntity<EBike> save(@RequestBody EBikeSimpleDTO eBike) {
         EBike temp = this.eBikeService.save(eBike);
         return temp == null ? ResponseEntity.status(409).build() : ResponseEntity.ok(temp);
     }

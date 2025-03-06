@@ -1,23 +1,32 @@
 package net.etfbl.ip.smart_ride_backend.service;
 
+import net.etfbl.ip.smart_ride_backend.dto.EBikeSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.model.EBike;
+import net.etfbl.ip.smart_ride_backend.model.Manufacturer;
 import net.etfbl.ip.smart_ride_backend.repository.EBikeRepository;
+import net.etfbl.ip.smart_ride_backend.repository.ManufacturerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EBikeService extends VehicleService{
     private final EBikeRepository eBikeRepository;
+    private final ManufacturerRepository manufacturerRepository;
 
     @Autowired
-    public EBikeService(EBikeRepository eBikeRepository) {
+    public EBikeService(EBikeRepository eBikeRepository, ManufacturerRepository manufacturerRepository) {
         this.eBikeRepository = eBikeRepository;
+        this.manufacturerRepository = manufacturerRepository;
     }
 
-    public List<EBike> findAll() {
-        return this.eBikeRepository.findAll();
+    public List<EBikeSimpleDTO> findAll() {
+        return this.eBikeRepository.findAll().stream()
+                .map(EBikeSimpleDTO::new)
+                .toList();
     }
 
     public EBike findById(String id) {
@@ -26,12 +35,14 @@ public class EBikeService extends VehicleService{
         return eBike;
     }
 
-    public EBike save(EBike eBike) {
+    public EBike save(EBikeSimpleDTO eBike) {
         boolean exist = eBikeRepository.existsById(eBike.getId());
-        if (exist) {
+        Manufacturer manufacturer = manufacturerRepository.findByName(eBike.getManufacturer());
+        if(exist || manufacturer == null){
             return null;
         }
-        return eBikeRepository.save(eBike);
+        EBike temp = new EBike(eBike.getId(), manufacturer, eBike.getModel(), eBike.getPurchasePrice(), null, eBike.getMaxRange());
+        return eBikeRepository.save(temp);
     }
 
 //    public EBike update(EBike eBike) {

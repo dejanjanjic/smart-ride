@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 public class VehicleService {
 
     public void declareVehicleState(Vehicle vehicle){
+        System.out.println("Stigao: " + vehicle);
         if(vehicle != null){
             if(vehicle.getRentals().stream().anyMatch(Rental::getActive)){
                 vehicle.setVehicleState(VehicleState.RENTED);

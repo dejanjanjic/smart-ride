@@ -14,5 +14,4 @@ public class VehicleSimpleDTO {
     protected String manufacturer;
     protected String model;
     protected BigDecimal purchasePrice;
-    //TODO: dodati i sliku
 }
