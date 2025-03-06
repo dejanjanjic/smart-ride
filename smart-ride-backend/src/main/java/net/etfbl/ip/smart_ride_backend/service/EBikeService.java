@@ -6,16 +6,25 @@ import net.etfbl.ip.smart_ride_backend.model.Manufacturer;
 import net.etfbl.ip.smart_ride_backend.repository.EBikeRepository;
 import net.etfbl.ip.smart_ride_backend.repository.ManufacturerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Service
 public class EBikeService extends VehicleService{
     private final EBikeRepository eBikeRepository;
     private final ManufacturerRepository manufacturerRepository;
+
+    @Value("${images.e-bike}")
+    private String uploadDir;
 
     @Autowired
     public EBikeService(EBikeRepository eBikeRepository, ManufacturerRepository manufacturerRepository) {
@@ -81,5 +90,24 @@ public class EBikeService extends VehicleService{
             return true;
         }
         return false;
+    }
+
+    public EBike saveImage(String id, MultipartFile file) throws IOException {
+        EBike eBike = eBikeRepository.findById(id).orElse(null);
+        if(eBike == null) return null;
+
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+
+        Path filePath = uploadPath.resolve(id + Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".")));
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        eBike.setPicturePath(filePath.toAbsolutePath().toString());
+        eBikeRepository.save(eBike);
+
+        return eBike;
     }
 }

@@ -6,14 +6,25 @@ import net.etfbl.ip.smart_ride_backend.model.Manufacturer;
 import net.etfbl.ip.smart_ride_backend.repository.EScooterRepository;
 import net.etfbl.ip.smart_ride_backend.repository.ManufacturerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class EScooterService extends VehicleService {
     private final EScooterRepository eScooterRepository;
     private final ManufacturerRepository manufacturerRepository;
+
+    @Value("${images.e-scooter}")
+    private String uploadDir;
 
     @Autowired
     public EScooterService(EScooterRepository eScooterRepository, ManufacturerRepository manufacturerRepository) {
@@ -70,6 +81,25 @@ public class EScooterService extends VehicleService {
 //        return eScooterRepository.save(temp);
 //    }
 
+
+    public EScooter saveImage(String id, MultipartFile file) throws IOException {
+        EScooter eScooter = eScooterRepository.findById(id).orElse(null);
+        if(eScooter == null) return null;
+
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+
+        Path filePath = uploadPath.resolve(id + Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".")));
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        eScooter.setPicturePath(filePath.toAbsolutePath().toString());
+        eScooterRepository.save(eScooter);
+
+        return eScooter;
+    }
 
     public boolean deleteById(String id) {
         if (eScooterRepository.existsById(id)) {

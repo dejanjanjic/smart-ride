@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.etfbl.ip.smart_ride_backend.model.Failure;
 import net.etfbl.ip.smart_ride_backend.model.Rental;
-import net.etfbl.ip.smart_ride_backend.model.VehicleState;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
