@@ -1,0 +1,42 @@
+<div>
+  <article class="details-container">
+    <div class="top-part">
+      <div>
+        <h1>Vehicle {{ vehicle?.id }}</h1>
+        <ul>
+          <li>Manufacturer: {{ vehicle?.manufacturer }}</li>
+          <li>Model: {{ vehicle?.model }}</li>
+          @if(vehicleType === 'car'){
+          <li>
+            Purchase date:
+            {{ vehicle?.purchaseDateTime | date : "dd.MM.yyyy." }}
+          </li>
+          } @else if (vehicleType === 'e-bike') {
+          <li>Max range: {{ vehicle?.maxRange }}</li>
+          } @else {
+          <li>Max speed: {{ vehicle?.maxSpeed }}</li>
+          }
+
+          <li>Vehicle state: {{ vehicle?.vehicleState?.toLowerCase() }}</li>
+          <li>Purchase price: {{ vehicle?.purchasePrice }}KM</li>
+          <li>Description: {{ vehicle?.description }}</li>
+        </ul>
+      </div>
+      <div class="image-container">
+        @if(vehicle?.picture){
+        <img
+          [src]="vehicle!.picture"
+          alt="Vehicle image"
+          class="vehicle-image"
+        />
+        }@else {
+        <p>No image available</p>
+        }
+      </div>
+    </div>
+    <div class="bottom-part">
+      <div class="rentals-container"></div>
+      <div class="failures-container"></div>
+    </div>
+  </article>
+</div>

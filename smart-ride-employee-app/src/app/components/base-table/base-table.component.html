@@ -16,7 +16,10 @@
         @if (col !== 'actions') {
         {{ isDateColumn(col) ? (item[col] | date : dateFormat) : item[col] }}
         } @else {
-        <button mat-icon-button [routerLink]="[item.id]">
+        <button
+          mat-icon-button
+          [routerLink]="headerMap['entityName'] + 's/' + item.id"
+        >
           <mat-icon id="visibility-icon">visibility</mat-icon>
         </button>
         <button mat-icon-button (click)="deleteItem(item.id)">

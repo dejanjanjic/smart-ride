@@ -13,9 +13,24 @@ export class EScooterService {
   public getAll() {
     return this.http.get(this.BASE_URL);
   }
+  public getById(id: string): Observable<any> {
+    return this.http.get(`${this.BASE_URL}/${id}`);
+  }
+  public getImageById(id: string): Observable<Blob> {
+    return this.http.get(`${this.BASE_URL}/${id}/image`, {
+      responseType: 'blob',
+    });
+  }
   public add(eScooter: EScooter): Observable<any> {
     return this.http.post(this.BASE_URL, eScooter);
   }
+
+  public uploadImage(id: string, image: File) {
+    const formData = new FormData();
+    formData.append('file', image);
+    return this.http.put<void>(`${this.BASE_URL}/${id}/image`, formData);
+  }
+
   public deleteById(id: string) {
     return this.http.delete(`${this.BASE_URL}/${id}`);
   }

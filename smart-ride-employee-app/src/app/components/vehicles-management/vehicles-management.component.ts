@@ -5,11 +5,9 @@ import { EBikesTableComponent } from '../e-bikes-table/e-bikes-table.component';
 import { EScootersTableComponent } from '../e-scooters-table/e-scooters-table.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { Vehicle } from '../../model/vehicle.model';
 import { CarService } from '../../services/car.service';
 import { EBikeService } from '../../services/e-bike.service';
 import { EScooterService } from '../../services/e-scooter.service';
-import { of } from 'rxjs';
 import { Car } from '../../model/car.model';
 
 import Papa from 'papaparse';

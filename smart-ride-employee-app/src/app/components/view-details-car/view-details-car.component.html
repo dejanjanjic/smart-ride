@@ -1,30 +1,4 @@
-<div>
-  <article class="details-container">
-    <div class="top-part">
-      <div>
-        <h1>Car {{ car?.id }}</h1>
-        <ul>
-          <li>Manufacturer: {{ car?.manufacturer }}</li>
-          <li>Model: {{ car?.model }}</li>
-          <li>
-            Purchase date: {{ car?.purchaseDateTime | date : "dd.MM.yyyy." }}
-          </li>
-          <li>Purchase price: {{ car?.purchasePrice }}KM</li>
-          <li>Vehicle state: {{ car?.vehicleState?.toLowerCase() }}</li>
-          <li>Description: {{ car?.description }}</li>
-        </ul>
-      </div>
-      <div class="image-container">
-        @if(car?.picture){
-        <img [src]="car!.picture" alt="Car image" class="car-image" />
-        }@else {
-        <p>No image available</p>
-        }
-      </div>
-    </div>
-    <div class="bottom-part">
-      <div class="rentals-container"></div>
-      <div class="failures-container"></div>
-    </div>
-  </article>
-</div>
+<app-view-details-vehicle-base
+  vehicleType="car"
+  [vehicleService]="carService"
+/>

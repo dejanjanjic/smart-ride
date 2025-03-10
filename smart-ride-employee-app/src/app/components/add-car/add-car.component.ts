@@ -1,118 +1,13 @@
-import {
-  Component,
-  ElementRef,
-  inject,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import {
-  FormBuilder,
-  ReactiveFormsModule,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, inject } from '@angular/core';
 import { CarService } from '../../services/car.service';
-import { Car } from '../../model/car.model';
-import { MatCardModule } from '@angular/material/card';
-import { ManufacturerService } from '../../manufacturer.service';
-import { formatDate } from '@angular/common';
+import { AddVehicleBaseComponent } from '../add-vehicle-base/add-vehicle-base.component';
 
 @Component({
   selector: 'app-add-car',
-  imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatCardModule,
-    MatIconModule,
-  ],
+  imports: [AddVehicleBaseComponent],
   templateUrl: './add-car.component.html',
   styleUrl: './add-car.component.css',
 })
-export class AddCarComponent implements OnInit {
-  @ViewChild('fileInput') fileInput!: ElementRef;
-  private router: Router = inject(Router);
-  private route: ActivatedRoute = inject(ActivatedRoute);
-  private formBuilder = inject(FormBuilder);
-  private carService: CarService = inject(CarService);
-  private manufacturerService: ManufacturerService =
-    inject(ManufacturerService);
-
-  public manufacturers: Array<string> = [];
-  public conflict: boolean = false;
-  public selectedImage: File | null = null;
-
-  public addCarForm: FormGroup = this.formBuilder.group({
-    id: [null, [Validators.required]],
-    manufacturer: [null, [Validators.required]],
-    model: [null, [Validators.required]],
-    purchasePrice: [null, [Validators.required, Validators.min(0.0)]],
-    purchaseDateTime: [null, [Validators.required]],
-    description: [null, [Validators.required]],
-  });
-
-  public ngOnInit(): void {
-    this.loadData();
-  }
-
-  public loadData() {
-    this.manufacturerService.getAllNames().subscribe({
-      next: (result: any) => {
-        this.manufacturers = result;
-      },
-    });
-  }
-
-  openFileDialog(): void {
-    this.fileInput.nativeElement.click();
-  }
-
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.selectedImage = file;
-      console.log('Selected file:', file.name);
-    }
-  }
-
-  public addCar() {
-    const formValue = { ...this.addCarForm.value };
-
-    const formattedDate = formatDate(
-      formValue.purchaseDateTime,
-      'yyyy-MM-dd',
-      'en-US'
-    );
-
-    formValue.purchaseDateTime = `${formattedDate}T00:00:00`;
-
-    this.carService.add(formValue).subscribe({
-      next: (car: Car) => {
-        console.log('Successful:', car);
-        this.conflict = false;
-        this.carService.uploadImage(car.id, this.selectedImage!).subscribe({
-          next: (response) => {
-            console.log('Image uploaded');
-            this.router.navigate(['../'], { relativeTo: this.route });
-          },
-          error: (err) => {
-            console.log('Error:', err.message);
-          },
-        });
-      },
-      error: (err) => {
-        console.error('Conflict:', err.message);
-        this.conflict = true;
-      },
-    });
-  }
+export class AddCarComponent {
+  public carService: CarService = inject(CarService);
 }

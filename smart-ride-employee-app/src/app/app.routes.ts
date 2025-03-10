@@ -13,6 +13,8 @@ import { AddCarComponent } from './components/add-car/add-car.component';
 import { ViewDetailsCarComponent } from './components/view-details-car/view-details-car.component';
 import { AddEBikeComponent } from './components/add-e-bike/add-e-bike.component';
 import { AddEScooterComponent } from './components/add-e-scooter/add-e-scooter.component';
+import { ViewDetailsEBikeComponent } from './components/view-details-e-bike/view-details-e-bike.component';
+import { ViewDetailsEScooterComponent } from './components/view-details-e-scooter/view-details-e-scooter.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -50,8 +52,16 @@ export const routes: Routes = [
         component: AddEScooterComponent,
       },
       {
-        path: 'vehicles/:id',
+        path: 'vehicles/cars/:id',
         component: ViewDetailsCarComponent,
+      },
+      {
+        path: 'vehicles/e-bikes/:id',
+        component: ViewDetailsEBikeComponent,
+      },
+      {
+        path: 'vehicles/e-scooters/:id',
+        component: ViewDetailsEScooterComponent,
       },
       { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
     ],

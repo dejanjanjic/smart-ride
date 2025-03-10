@@ -16,7 +16,7 @@ export class CarService {
   public getById(id: string): Observable<any> {
     return this.http.get(`${this.BASE_URL}/${id}`);
   }
-  getImageById(id: string): Observable<Blob> {
+  public getImageById(id: string): Observable<Blob> {
     return this.http.get(`${this.BASE_URL}/${id}/image`, {
       responseType: 'blob',
     });
