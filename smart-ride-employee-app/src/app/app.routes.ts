@@ -11,6 +11,8 @@ import { EBikesTableComponent } from './components/e-bikes-table/e-bikes-table.c
 import { EScootersTableComponent } from './components/e-scooters-table/e-scooters-table.component';
 import { AddCarComponent } from './components/add-car/add-car.component';
 import { ViewDetailsCarComponent } from './components/view-details-car/view-details-car.component';
+import { AddEBikeComponent } from './components/add-e-bike/add-e-bike.component';
+import { AddEScooterComponent } from './components/add-e-scooter/add-e-scooter.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -38,6 +40,14 @@ export const routes: Routes = [
       {
         path: 'vehicles/add-car',
         component: AddCarComponent,
+      },
+      {
+        path: 'vehicles/add-e-bike',
+        component: AddEBikeComponent,
+      },
+      {
+        path: 'vehicles/add-e-scooter',
+        component: AddEScooterComponent,
       },
       {
         path: 'vehicles/:id',
