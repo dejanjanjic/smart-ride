@@ -31,6 +31,9 @@ public class CarController {
     public ResponseEntity<List<CarSimpleDTO>> getAll(){
         return ResponseEntity.ok(this.carService.findAll());
     }
+    @GetMapping("search/{keyword}") ResponseEntity<List<CarSimpleDTO>> getAllByManufacturerNameOrModel(@PathVariable String keyword){
+        return ResponseEntity.ok(this.carService.findByManufacturerNameOrModel(keyword));
+    }
     @GetMapping("{id}")
     public ResponseEntity<CarDetailedDTO> getById(@PathVariable String id){
         Car temp = carService.findById(id);

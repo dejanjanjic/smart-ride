@@ -13,8 +13,15 @@ export class ManufacturerService {
   public getAll() {
     return this.http.get(this.BASE_URL);
   }
+  public getAllNames() {
+    return this.http.get(`${this.BASE_URL}/names`);
+  }
   public getById(id: number): Observable<any> {
     return this.http.get(`${this.BASE_URL}/${id}`);
+  }
+
+  public filter(keyword: string): Observable<any> {
+    return this.http.get(`${this.BASE_URL}/search/${keyword}`);
   }
 
   public add(manufacturer: Manufacturer): Observable<any> {

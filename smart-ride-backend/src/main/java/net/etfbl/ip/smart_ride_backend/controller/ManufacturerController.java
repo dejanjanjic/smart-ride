@@ -1,6 +1,7 @@
 package net.etfbl.ip.smart_ride_backend.controller;
 
 
+import net.etfbl.ip.smart_ride_backend.dto.CarSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.model.Manufacturer;
 import net.etfbl.ip.smart_ride_backend.service.ManufacturerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,11 @@ public class ManufacturerController {
     public ResponseEntity<List<String>> getAllNames(){
         return ResponseEntity.ok(this.manufacturerService.findAllNames());
     }
+
+    @GetMapping("search/{keyword}") ResponseEntity<List<Manufacturer>> getAllByManufacturerNameOrModel(@PathVariable String keyword){
+        return ResponseEntity.ok(this.manufacturerService.findByName(keyword));
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<Manufacturer> getById(@PathVariable Long id){
         Manufacturer temp = manufacturerService.findById(id);

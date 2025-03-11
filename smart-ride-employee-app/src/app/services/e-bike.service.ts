@@ -21,7 +21,9 @@ export class EBikeService {
       responseType: 'blob',
     });
   }
-
+  public filter(keyword: string): Observable<any> {
+    return this.http.get(`${this.BASE_URL}/search/${keyword}`);
+  }
   public add(eBike: EBike): Observable<any> {
     return this.http.post(this.BASE_URL, eBike);
   }

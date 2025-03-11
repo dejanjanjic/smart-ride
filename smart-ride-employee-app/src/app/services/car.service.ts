@@ -22,6 +22,10 @@ export class CarService {
     });
   }
 
+  public filter(keyword: string): Observable<any> {
+    return this.http.get(`${this.BASE_URL}/search/${keyword}`);
+  }
+
   public add(car: Car): Observable<any> {
     return this.http.post(this.BASE_URL, car);
   }

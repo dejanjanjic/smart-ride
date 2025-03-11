@@ -1,5 +1,6 @@
 package net.etfbl.ip.smart_ride_backend.service;
 
+import net.etfbl.ip.smart_ride_backend.dto.EBikeSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.dto.EScooterSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.model.EScooter;
 import net.etfbl.ip.smart_ride_backend.model.Manufacturer;
@@ -40,6 +41,13 @@ public class EScooterService extends VehicleService {
         EScooter eScooter = this.eScooterRepository.findById(id).orElse(null);
         declareVehicleState(eScooter);
         return eScooter;
+    }
+
+    public List<EScooterSimpleDTO> findByManufacturerNameOrModel(String keyword) {
+        return eScooterRepository.searchByKeyword(keyword)
+                .stream()
+                .map(EScooterSimpleDTO::new)
+                .toList();
     }
 
     public EScooter save(EScooterSimpleDTO eScooter) {

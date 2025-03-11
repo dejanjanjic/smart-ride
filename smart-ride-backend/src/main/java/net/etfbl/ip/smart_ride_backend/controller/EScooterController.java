@@ -1,5 +1,7 @@
 package net.etfbl.ip.smart_ride_backend.controller;
 
+import net.etfbl.ip.smart_ride_backend.dto.CarSimpleDTO;
+import net.etfbl.ip.smart_ride_backend.dto.EScooterDetailedDTO;
 import net.etfbl.ip.smart_ride_backend.dto.EScooterSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.model.EScooter;
 import net.etfbl.ip.smart_ride_backend.service.EScooterService;
@@ -31,9 +33,17 @@ public class EScooterController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<EScooter> getById(@PathVariable String id) {
+    public ResponseEntity<EScooterDetailedDTO> getById(@PathVariable String id) {
         EScooter temp = eScooterService.findById(id);
-        return temp == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(temp);
+        if (temp == null){
+            return ResponseEntity.notFound().build();
+        }
+        EScooterDetailedDTO eScooterDetailedDTO = new EScooterDetailedDTO(temp);
+        return ResponseEntity.ok(eScooterDetailedDTO);
+    }
+
+    @GetMapping("search/{keyword}") ResponseEntity<List<EScooterSimpleDTO>> getAllByManufacturerNameOrModel(@PathVariable String keyword){
+        return ResponseEntity.ok(this.eScooterService.findByManufacturerNameOrModel(keyword));
     }
 
     @GetMapping("{id}/image")

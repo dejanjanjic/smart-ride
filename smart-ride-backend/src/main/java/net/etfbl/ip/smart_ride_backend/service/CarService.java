@@ -115,4 +115,11 @@ public class CarService extends VehicleService{
 
         return car;
     }
+
+    public List<CarSimpleDTO> findByManufacturerNameOrModel(String keyword) {
+        return carRepository.searchByKeyword(keyword)
+                .stream()
+                .map(CarSimpleDTO::new)
+                .toList();
+    }
 }

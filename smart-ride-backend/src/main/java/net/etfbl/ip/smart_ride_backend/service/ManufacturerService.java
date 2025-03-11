@@ -1,5 +1,6 @@
 package net.etfbl.ip.smart_ride_backend.service;
 
+import net.etfbl.ip.smart_ride_backend.dto.CarSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.model.Manufacturer;
 import net.etfbl.ip.smart_ride_backend.repository.ManufacturerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,9 @@ public class ManufacturerService {
     public Manufacturer findById(Long id) {
         return this.manufacturerRepository.findById(id).orElse(null);
     }
-
+    public List<Manufacturer> findByName(String keyword) {
+        return manufacturerRepository.findByNameContainingIgnoreCase(keyword);
+    }
     public Manufacturer save(Manufacturer manufacturer) {
         if(manufacturerRepository.existsByName(manufacturer.getName())){
             return null;

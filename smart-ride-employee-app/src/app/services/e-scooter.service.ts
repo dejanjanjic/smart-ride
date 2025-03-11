@@ -21,6 +21,9 @@ export class EScooterService {
       responseType: 'blob',
     });
   }
+  public filter(keyword: string): Observable<any> {
+    return this.http.get(`${this.BASE_URL}/search/${keyword}`);
+  }
   public add(eScooter: EScooter): Observable<any> {
     return this.http.post(this.BASE_URL, eScooter);
   }

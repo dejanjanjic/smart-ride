@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { BaseTableComponent } from '../base-table/base-table.component';
-import { ManufacturerService } from '../../manufacturer.service';
+import { ManufacturerService } from '../../services/manufacturer.service';
 
 @Component({
   selector: 'app-manufacturers-table',

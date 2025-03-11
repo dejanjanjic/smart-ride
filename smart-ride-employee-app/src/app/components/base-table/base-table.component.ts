@@ -7,6 +7,8 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-base-table',
@@ -16,6 +18,8 @@ import { MatDialog } from '@angular/material/dialog';
     MatIconModule,
     MatButtonModule,
     MatPaginatorModule,
+    FormsModule,
+    MatInputModule,
     RouterModule,
     DatePipe,
   ],
@@ -36,11 +40,38 @@ export class BaseTableComponent<T extends { id: string | number }>
   dataSource = new MatTableDataSource<T>();
   resultsLength = 0;
 
+  searchTerm = '';
+
   constructor(private dialog: MatDialog) {}
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.loadData();
+  }
+
+  onSearch(): void {
+    if (this.searchTerm.trim()) {
+      this.filter(this.searchTerm.trim());
+    } else {
+      this.loadData();
+    }
+    this.dataSource.paginator?.firstPage();
+  }
+  filter(keyword: string) {
+    this.service.filter(keyword).subscribe({
+      next: (result: T[]) => {
+        this.dataSource.data = result;
+        this.resultsLength = result.length;
+      },
+      error: (err: any) =>
+        console.error('Greška prilikom učitavanja podataka:', err),
+    });
+  }
+
+  refreshTable(): void {
+    this.searchTerm = '';
+    this.loadData();
+    this.dataSource.paginator?.firstPage();
   }
 
   loadData(): void {

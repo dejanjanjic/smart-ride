@@ -6,20 +6,19 @@
         <ul>
           <li>Manufacturer: {{ vehicle?.manufacturer }}</li>
           <li>Model: {{ vehicle?.model }}</li>
+          <li>Vehicle state: {{ vehicle?.vehicleState?.toLowerCase() }}</li>
+          <li>Purchase price: {{ vehicle?.purchasePrice }}KM</li>
           @if(vehicleType === 'car'){
           <li>
             Purchase date:
             {{ vehicle?.purchaseDateTime | date : "dd.MM.yyyy." }}
           </li>
+          <li>Description: {{ vehicle?.description }}</li>
           } @else if (vehicleType === 'e-bike') {
           <li>Max range: {{ vehicle?.maxRange }}</li>
           } @else {
           <li>Max speed: {{ vehicle?.maxSpeed }}</li>
           }
-
-          <li>Vehicle state: {{ vehicle?.vehicleState?.toLowerCase() }}</li>
-          <li>Purchase price: {{ vehicle?.purchasePrice }}KM</li>
-          <li>Description: {{ vehicle?.description }}</li>
         </ul>
       </div>
       <div class="image-container">

@@ -1,5 +1,6 @@
 package net.etfbl.ip.smart_ride_backend.service;
 
+import net.etfbl.ip.smart_ride_backend.dto.CarSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.dto.EBikeSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.model.EBike;
 import net.etfbl.ip.smart_ride_backend.model.Manufacturer;
@@ -44,6 +45,12 @@ public class EBikeService extends VehicleService{
         return eBike;
     }
 
+    public List<EBikeSimpleDTO> findByManufacturerNameOrModel(String keyword) {
+        return eBikeRepository.searchByKeyword(keyword)
+                .stream()
+                .map(EBikeSimpleDTO::new)
+                .toList();
+    }
     public EBike save(EBikeSimpleDTO eBike) {
         boolean exist = eBikeRepository.existsById(eBike.getId());
         Manufacturer manufacturer = manufacturerRepository.findByName(eBike.getManufacturer());
