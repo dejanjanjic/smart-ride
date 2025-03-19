@@ -13,6 +13,12 @@
   flex-direction: row;
   justify-content: space-around;
 }
+.bottom-part {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 15px;
+}
 
 li {
   list-style-type: none;
@@ -22,4 +28,21 @@ li {
 h1 {
   margin-bottom: 60px;
   border-bottom: 1px solid #bebebe;
+}
+
+h2 {
+  padding-left: 10px;
+}
+.rentals-container {
+  border: 1px solid rgb(153, 153, 153);
+  flex: 1;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.failures-container {
+  border: 1px solid rgb(153, 153, 153);
+  flex: 1;
+  padding: 5px;
+  border-radius: 5px;
 }

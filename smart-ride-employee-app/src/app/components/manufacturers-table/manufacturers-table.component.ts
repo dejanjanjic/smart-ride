@@ -14,9 +14,12 @@ export class ManufacturersTableComponent {
     id: 'Id',
     name: 'Name',
     address: 'Address',
+    country: 'Country',
     phone: 'Phone',
     fax: 'Fax',
     mail: 'Mail',
     entityName: 'manufacturer',
   };
+
+  retrieveDataFunction = () => this.manufacturerService.getAll();
 }

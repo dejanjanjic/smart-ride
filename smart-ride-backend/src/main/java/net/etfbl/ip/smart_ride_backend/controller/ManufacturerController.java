@@ -1,7 +1,6 @@
 package net.etfbl.ip.smart_ride_backend.controller;
 
 
-import net.etfbl.ip.smart_ride_backend.dto.CarSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.model.Manufacturer;
 import net.etfbl.ip.smart_ride_backend.service.ManufacturerService;
 import org.springframework.beans.factory.annotation.Autowired;

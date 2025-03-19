@@ -27,6 +27,10 @@ export class ManufacturerService {
   public add(manufacturer: Manufacturer): Observable<any> {
     return this.http.post(this.BASE_URL, manufacturer);
   }
+
+  public update(manufacturer: Manufacturer): Observable<any> {
+    return this.http.put(this.BASE_URL, manufacturer);
+  }
   public deleteById(id: number) {
     return this.http.delete(`${this.BASE_URL}/${id}`);
   }

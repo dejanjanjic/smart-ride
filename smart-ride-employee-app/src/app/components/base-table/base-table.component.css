@@ -2,6 +2,16 @@
   color: #424874;
 }
 
+#update-icon {
+  color: #424874;
+}
+#search-icon {
+  color: #424874;
+}
+#add-icon {
+  color: #424874;
+}
+
 #delete-icon {
   color: crimson;
 }
@@ -45,6 +55,7 @@ th {
   border: 1px solid rgba(0, 0, 0, 0.12);
   transition: background-color 0.3s ease;
   color: #424874;
+  margin-left: 5px;
 }
 
 .refresh-button:hover {

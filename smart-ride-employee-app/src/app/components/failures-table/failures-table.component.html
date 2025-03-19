@@ -1,0 +1,9 @@
+<app-base-table
+  [displayedColumns]="['id', 'dateTime', 'description']"
+  [addRoute]="'add-failure'"
+  [service]="failureService"
+  [headerMap]="headerMap"
+  [actionButtons]="['add', 'delete']"
+  [dateColumns]="['dateTime']"
+  [retrieveDataFunction]="this.retrieveDataFunction"
+/>

@@ -31,10 +31,13 @@ export class BaseTableComponent<T extends { id: string | number }>
 {
   @Input() displayedColumns!: string[];
   @Input() addRoute!: string;
+  @Input() updateRoute!: string;
   @Input() service: any;
   @Input() headerMap: { [key: string]: string } = {};
   @Input() dateColumns: string[] = [];
+  @Input() actionButtons: string[] = [];
   @Input() dateFormat: string = 'dd.MM.yyyy.';
+  @Input() retrieveDataFunction: any;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   dataSource = new MatTableDataSource<T>();
@@ -75,7 +78,7 @@ export class BaseTableComponent<T extends { id: string | number }>
   }
 
   loadData(): void {
-    this.service.getAll().subscribe({
+    this.retrieveDataFunction().subscribe({
       next: (result: T[]) => {
         this.dataSource.data = result;
         this.resultsLength = result.length;

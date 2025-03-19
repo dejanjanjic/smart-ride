@@ -18,4 +18,6 @@ export class EScootersTableComponent {
     maxSpeed: 'Speed',
     entityName: 'e-scooter',
   };
+
+  retrieveDataFunction = () => this.eScooterService.getAll();
 }

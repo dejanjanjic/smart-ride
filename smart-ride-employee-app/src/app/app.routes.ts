@@ -15,6 +15,8 @@ import { AddEBikeComponent } from './components/add-e-bike/add-e-bike.component'
 import { AddEScooterComponent } from './components/add-e-scooter/add-e-scooter.component';
 import { ViewDetailsEBikeComponent } from './components/view-details-e-bike/view-details-e-bike.component';
 import { ViewDetailsEScooterComponent } from './components/view-details-e-scooter/view-details-e-scooter.component';
+import { AddManufacturerComponent } from './components/add-manufacturer/add-manufacturer.component';
+import { UpdateManufacturerComponent } from './components/update-manufacturer/update-manufacturer.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -52,6 +54,10 @@ export const routes: Routes = [
         component: AddEScooterComponent,
       },
       {
+        path: 'manufacturers/add-manufacturer',
+        component: AddManufacturerComponent,
+      },
+      {
         path: 'vehicles/cars/:id',
         component: ViewDetailsCarComponent,
       },
@@ -62,6 +68,10 @@ export const routes: Routes = [
       {
         path: 'vehicles/e-scooters/:id',
         component: ViewDetailsEScooterComponent,
+      },
+      {
+        path: 'manufacturers/update-manufacturer/:id',
+        component: UpdateManufacturerComponent,
       },
       { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
     ],

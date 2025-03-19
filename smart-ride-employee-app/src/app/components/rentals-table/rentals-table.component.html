@@ -1,0 +1,14 @@
+<app-base-table
+  [displayedColumns]="[
+    'id',
+    'rentalDate',
+    'durationInSeconds',
+    'clientName',
+    'actions'
+  ]"
+  [service]="rentalService"
+  [headerMap]="headerMap"
+  [actionButtons]="[]"
+  [dateColumns]="['rentalDate']"
+  [retrieveDataFunction]="this.retrieveDataFunction"
+/>

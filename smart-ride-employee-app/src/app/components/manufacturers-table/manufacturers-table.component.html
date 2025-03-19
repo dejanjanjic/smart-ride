@@ -1,6 +1,18 @@
 <app-base-table
-  [displayedColumns]="['id', 'name', 'address', 'phone', 'mail', 'fax']"
+  [displayedColumns]="[
+    'id',
+    'name',
+    'address',
+    'country',
+    'phone',
+    'mail',
+    'fax',
+    'actions'
+  ]"
   [addRoute]="'add-manufacturer'"
+  [updateRoute]="'update-manufacturer'"
   [service]="manufacturerService"
   [headerMap]="headerMap"
+  [actionButtons]="['delete', 'update', 'add']"
+  [retrieveDataFunction]="this.retrieveDataFunction"
 />

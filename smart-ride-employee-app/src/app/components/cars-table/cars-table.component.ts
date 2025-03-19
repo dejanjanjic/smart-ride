@@ -32,4 +32,6 @@ export class CarsTableComponent {
     purchaseDateTime: 'Purchase date',
     entityName: 'car',
   };
+
+  retrieveDataFunction = () => this.carService.getAll();
 }

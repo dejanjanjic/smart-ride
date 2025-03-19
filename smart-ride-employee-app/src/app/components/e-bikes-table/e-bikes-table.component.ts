@@ -17,4 +17,6 @@ export class EBikesTableComponent {
     maxRange: 'Range',
     entityName: 'e-bike',
   };
+
+  retrieveDataFunction = () => this.eBikeService.getAll();
 }

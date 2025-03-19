@@ -34,8 +34,14 @@
       </div>
     </div>
     <div class="bottom-part">
-      <div class="rentals-container"></div>
-      <div class="failures-container"></div>
+      <div class="rentals-container">
+        <h2>Rentals</h2>
+        <app-rentals-table [vehicleId]="id" />
+      </div>
+      <div class="failures-container">
+        <h2>Failures</h2>
+        <app-failures-table />
+      </div>
     </div>
   </article>
 </div>
