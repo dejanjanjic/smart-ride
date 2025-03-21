@@ -1,1 +1,17 @@
-<p>users-management works!</p>
+<div class="content-container">
+  <h1>Users</h1>
+  <mat-tab-group [dynamicHeight]="true">
+    <mat-tab>
+      <ng-template mat-tab-label> Clients </ng-template>
+      <div class="table-container">
+        <app-clients-table />
+      </div>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label> Employees </ng-template>
+      <div class="table-container">
+        <app-employees-table />
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

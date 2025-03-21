@@ -1,0 +1,17 @@
+<app-base-table
+  [displayedColumns]="[
+    'id',
+    'username',
+    'firstName',
+    'lastName',
+    'idNumber',
+    'email',
+    'phoneNumber',
+    'driverLicenseNumber',
+    'blocked'
+  ]"
+  [service]="clientService"
+  [headerMap]="headerMap"
+  [toggleColumns]="['blocked']"
+  [retrieveDataFunction]="this.retrieveDataFunction"
+/>

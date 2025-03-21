@@ -9,6 +9,7 @@ import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component'
 import { MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-base-table',
@@ -18,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
     MatIconModule,
     MatButtonModule,
     MatPaginatorModule,
+    MatSlideToggleModule,
     FormsModule,
     MatInputModule,
     RouterModule,
@@ -35,6 +37,7 @@ export class BaseTableComponent<T extends { id: string | number }>
   @Input() service: any;
   @Input() headerMap: { [key: string]: string } = {};
   @Input() dateColumns: string[] = [];
+  @Input() toggleColumns: string[] = [];
   @Input() actionButtons: string[] = [];
   @Input() dateFormat: string = 'dd.MM.yyyy.';
   @Input() retrieveDataFunction: any;
@@ -109,5 +112,15 @@ export class BaseTableComponent<T extends { id: string | number }>
 
   isDateColumn(col: string): boolean {
     return this.dateColumns.includes(col);
+  }
+
+  onToggleChange(item: T, column: string, value: boolean): void {
+    const updatedItem = { id: item.id, [column]: value };
+    this.service.update(updatedItem).subscribe({
+      next: () => {
+        this.loadData();
+      },
+      error: (err: any) => console.error('Greška prilikom ažuriranja:', err),
+    });
   }
 }

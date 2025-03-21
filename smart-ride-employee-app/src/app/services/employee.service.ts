@@ -12,4 +12,8 @@ export class EmployeeService {
   private BASE_URL = 'http://localhost:8080/api/v1/employee';
 
   constructor(private http: HttpClient) {}
+
+  public getAll() {
+    return this.http.get(this.BASE_URL);
+  }
 }

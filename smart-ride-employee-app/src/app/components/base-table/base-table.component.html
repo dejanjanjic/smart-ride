@@ -51,9 +51,14 @@
         {{ col !== "actions" ? getHeader(col) : "" }}
       </th>
       <td mat-cell *matCellDef="let item">
-        @if (col !== 'actions') {
+        @if (col !== 'actions') { @if (toggleColumns.includes(col)) {
+        <mat-slide-toggle
+          [ngModel]="item[col]"
+          (change)="onToggleChange(item, col, $event.checked)"
+        ></mat-slide-toggle>
+        } @else {
         {{ isDateColumn(col) ? (item[col] | date : dateFormat) : item[col] }}
-        } @else { @if (actionButtons.includes('details')){
+        } } @else { @if (actionButtons.includes('details')){
         <button
           mat-icon-button
           [routerLink]="headerMap['entityName'] + 's/' + item.id"

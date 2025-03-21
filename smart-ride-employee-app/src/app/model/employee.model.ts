@@ -1,10 +1,4 @@
 import { Role } from '../enum/role.enum';
+import { User } from './user.model';
 
-export interface Employee {
-  id: number;
-  username: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  role: Role;
-}
+export interface Employee extends User {}

@@ -1,0 +1,14 @@
+<app-base-table
+  [displayedColumns]="[
+    'id',
+    'username',
+    'firstName',
+    'lastName',
+    'role',
+    'actions'
+  ]"
+  [service]="employeeService"
+  [headerMap]="headerMap"
+  [actionButtons]="['delete', 'update', 'add']"
+  [retrieveDataFunction]="this.retrieveDataFunction"
+/>
