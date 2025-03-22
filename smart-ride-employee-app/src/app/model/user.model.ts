@@ -1,6 +1,6 @@
 import { Role } from '../enum/role.enum';
 
-export interface User {
+export interface UserSimple {
   id: number;
   username: string;
   firstName: string;

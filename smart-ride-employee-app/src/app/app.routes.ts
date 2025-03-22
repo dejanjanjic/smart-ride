@@ -17,6 +17,8 @@ import { ViewDetailsEBikeComponent } from './components/view-details-e-bike/view
 import { ViewDetailsEScooterComponent } from './components/view-details-e-scooter/view-details-e-scooter.component';
 import { AddManufacturerComponent } from './components/add-manufacturer/add-manufacturer.component';
 import { UpdateManufacturerComponent } from './components/update-manufacturer/update-manufacturer.component';
+import { AddEmployeeComponent } from './components/add-employee/add-employee.component';
+import { UpdateEmployeeComponent } from './components/update-employee/update-employee.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -58,6 +60,10 @@ export const routes: Routes = [
         component: AddManufacturerComponent,
       },
       {
+        path: 'users/add-employee',
+        component: AddEmployeeComponent,
+      },
+      {
         path: 'vehicles/cars/:id',
         component: ViewDetailsCarComponent,
       },
@@ -72,6 +78,10 @@ export const routes: Routes = [
       {
         path: 'manufacturers/update-manufacturer/:id',
         component: UpdateManufacturerComponent,
+      },
+      {
+        path: 'users/update-employee/:id',
+        component: UpdateEmployeeComponent,
       },
       { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
     ],

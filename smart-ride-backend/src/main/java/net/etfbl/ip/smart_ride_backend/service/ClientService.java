@@ -74,4 +74,12 @@ public class ClientService {
 
         return new ClientSimpleDTO(updatedClient);
     }
+
+    public List<ClientSimpleDTO> findByKeyword(String keyword) {
+        return clientRepository
+                .findByUsernameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(keyword, keyword, keyword)
+                .stream()
+                .map(ClientSimpleDTO::new)
+                .toList();
+    }
 }

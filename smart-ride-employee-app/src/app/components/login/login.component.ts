@@ -12,7 +12,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { Employee } from '../../model/employee.model';
+import { EmployeeSimple } from '../../model/employee.model';
 import { Role } from '../../enum/role.enum';
 
 @Component({
@@ -47,7 +47,7 @@ export class LoginComponent {
     }
 
     this.authService.login(this.loginForm.value).subscribe({
-      next: (employee: Employee) => {
+      next: (employee: EmployeeSimple) => {
         console.log('Login successful:', employee);
         this.invalidCredentials = false;
         this.authService.store(employee);

@@ -1,6 +1,6 @@
-import { User } from './user.model';
+import { UserSimple } from './user.model';
 
-export interface Client extends User {
+export interface ClientSimple extends UserSimple {
   idNumber: string;
   email: string;
   phoneNumber: string;

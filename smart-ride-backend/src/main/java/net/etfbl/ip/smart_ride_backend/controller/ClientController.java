@@ -1,6 +1,7 @@
 package net.etfbl.ip.smart_ride_backend.controller;
 
 import net.etfbl.ip.smart_ride_backend.dto.ClientSimpleDTO;
+import net.etfbl.ip.smart_ride_backend.dto.EmployeeSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.model.Client;
 import net.etfbl.ip.smart_ride_backend.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,10 @@ public class ClientController {
     @GetMapping
     public ResponseEntity<List<ClientSimpleDTO>> getAll(){
         return ResponseEntity.ok(clientService.findAll());
+    }
+
+    @GetMapping("search/{keyword}") ResponseEntity<List<ClientSimpleDTO>> getAllByKeyword(@PathVariable String keyword){
+        return ResponseEntity.ok(this.clientService.findByKeyword(keyword));
     }
 
     @PostMapping

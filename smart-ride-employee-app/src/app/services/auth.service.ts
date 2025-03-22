@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoginDTO } from '../model/login.model';
 import { Observable } from 'rxjs';
-import { Employee } from '../model/employee.model';
+import { EmployeeSimple } from '../model/employee.model';
 import { Role } from '../enum/role.enum';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class AuthService {
   public login(loginDTO: LoginDTO): Observable<any> {
     return this.http.post(`${this.BASE_URL}`, loginDTO);
   }
-  public store(employee: Employee) {
+  public store(employee: EmployeeSimple) {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(employee));
   }
   logout(): void {
@@ -30,10 +30,10 @@ export class AuthService {
 
   getUserRole(): Role | null {
     const temp = localStorage.getItem(this.STORAGE_KEY);
-    return temp ? (JSON.parse(temp) as Employee).role : null;
+    return temp ? (JSON.parse(temp) as EmployeeSimple).role : null;
   }
   getUsername(): string | null {
     const temp = localStorage.getItem(this.STORAGE_KEY);
-    return temp ? (JSON.parse(temp) as Employee).username : null;
+    return temp ? (JSON.parse(temp) as EmployeeSimple).username : null;
   }
 }
