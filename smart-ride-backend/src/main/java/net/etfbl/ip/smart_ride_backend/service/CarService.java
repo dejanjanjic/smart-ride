@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class CarService extends VehicleService{
+public class CarService{
     private final CarRepository carRepository;
     private final ManufacturerRepository manufacturerRepository;
 
@@ -56,7 +56,17 @@ public class CarService extends VehicleService{
         return carRepository.save(newCar);
     }
 
-
+    public void declareVehicleState(Vehicle vehicle){
+        if(vehicle != null){
+            if(vehicle.getRentals().stream().anyMatch(Rental::getActive)){
+                vehicle.setVehicleState(VehicleState.RENTED);
+            } else if (!vehicle.getFailures().isEmpty()) {
+                vehicle.setVehicleState(VehicleState.BROKEN);
+            } else{
+                vehicle.setVehicleState(VehicleState.AVAILABLE);
+            }
+        }
+    }
 //    public Car update(Car car) {
 //        Car temp = carRepository.findById(car.getId()).orElse(null);
 //        if(temp == null){

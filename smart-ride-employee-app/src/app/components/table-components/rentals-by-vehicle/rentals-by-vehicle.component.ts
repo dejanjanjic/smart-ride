@@ -3,21 +3,22 @@ import { BaseTableComponent } from '../base-table/base-table.component';
 import { RentalService } from '../../../services/rental.service';
 
 @Component({
-  selector: 'app-rentals-table',
+  selector: 'app-rentals-by-vehicle',
   imports: [BaseTableComponent],
-  templateUrl: './rentals-table.component.html',
-  styleUrl: './rentals-table.component.css',
+  templateUrl: './rentals-by-vehicle.component.html',
+  styleUrl: './rentals-by-vehicle.component.css',
 })
-export class RentalsTableComponent {
+export class RentalsByVehicleComponent {
+  @Input() vehicleId: string = '';
   rentalService: RentalService = inject(RentalService);
   headerMap = {
     id: 'Id',
     rentalDate: 'Date',
     durationInSeconds: 'Duration',
     clientName: 'Client name',
-    vehicleId: 'Vehicle',
     entityName: 'rental',
   };
 
-  retrieveDataFunction = () => this.rentalService.getAll();
+  retrieveDataFunction = () =>
+    this.rentalService.getAllByVehicleId(this.vehicleId);
 }

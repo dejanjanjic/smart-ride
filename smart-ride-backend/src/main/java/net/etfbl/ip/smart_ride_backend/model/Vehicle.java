@@ -1,5 +1,6 @@
 package net.etfbl.ip.smart_ride_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,8 +25,10 @@ public abstract class Vehicle {
     protected BigDecimal purchasePrice;
     protected String picturePath;
     @OneToMany(mappedBy = "vehicle")
+    @JsonBackReference
     private List<Failure> failures = new ArrayList<>();
     @OneToMany(mappedBy = "vehicle")
+    @JsonBackReference
     private List<Rental> rentals = new ArrayList<>();
     @Transient
     @Enumerated(EnumType.STRING)

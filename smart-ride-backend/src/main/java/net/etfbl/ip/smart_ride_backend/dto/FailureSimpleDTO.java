@@ -15,10 +15,12 @@ public class FailureSimpleDTO {
     private Long id;
     private String description;
     private LocalDateTime dateTime;
+    private String vehicleId;
 
     public FailureSimpleDTO(Failure failure){
         this.id = failure.getId();
         this.description = failure.getDescription();
         this.dateTime = failure.getDateTime();
+        this.vehicleId = failure.getVehicle().getId();
     }
 }

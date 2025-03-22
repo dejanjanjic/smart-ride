@@ -2,8 +2,7 @@ package net.etfbl.ip.smart_ride_backend.service;
 
 import net.etfbl.ip.smart_ride_backend.dto.CarSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.dto.EBikeSimpleDTO;
-import net.etfbl.ip.smart_ride_backend.model.EBike;
-import net.etfbl.ip.smart_ride_backend.model.Manufacturer;
+import net.etfbl.ip.smart_ride_backend.model.*;
 import net.etfbl.ip.smart_ride_backend.repository.EBikeRepository;
 import net.etfbl.ip.smart_ride_backend.repository.ManufacturerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class EBikeService extends VehicleService{
+public class EBikeService{
     private final EBikeRepository eBikeRepository;
     private final ManufacturerRepository manufacturerRepository;
 
@@ -61,6 +60,17 @@ public class EBikeService extends VehicleService{
         return eBikeRepository.save(temp);
     }
 
+    public void declareVehicleState(Vehicle vehicle){
+        if(vehicle != null){
+            if(vehicle.getRentals().stream().anyMatch(Rental::getActive)){
+                vehicle.setVehicleState(VehicleState.RENTED);
+            } else if (!vehicle.getFailures().isEmpty()) {
+                vehicle.setVehicleState(VehicleState.BROKEN);
+            } else{
+                vehicle.setVehicleState(VehicleState.AVAILABLE);
+            }
+        }
+    }
 //    public EBike update(EBike eBike) {
 //        EBike temp = eBikeRepository.findById(eBike.getId()).orElse(null);
 //        if (temp == null) {

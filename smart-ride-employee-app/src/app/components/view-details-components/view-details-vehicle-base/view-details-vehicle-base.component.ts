@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { RentalsTableComponent } from '../../table-components/rentals-table/rentals-table.component';
+import { RentalsByVehicleComponent } from '../../table-components/rentals-by-vehicle/rentals-by-vehicle.component';
 import { FailuresTableComponent } from '../../table-components/failures-table/failures-table.component';
 
 type VehicleType = 'car' | 'e-bike' | 'e-scooter';
 
 @Component({
   selector: 'app-view-details-vehicle-base',
-  imports: [CommonModule, RentalsTableComponent, FailuresTableComponent],
+  imports: [CommonModule, RentalsByVehicleComponent, FailuresTableComponent],
   templateUrl: './view-details-vehicle-base.component.html',
   styleUrl: './view-details-vehicle-base.component.css',
 })

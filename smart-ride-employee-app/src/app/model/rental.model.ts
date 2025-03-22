@@ -9,4 +9,5 @@ export interface Rental {
   rentalDate: Date;
   durationInSeconds: number;
   clientName: string;
+  vehicleId: string;
 }

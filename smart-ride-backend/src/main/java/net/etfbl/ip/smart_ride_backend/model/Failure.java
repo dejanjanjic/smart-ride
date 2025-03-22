@@ -17,9 +17,13 @@ public class Failure {
     private Long id;
     private String description;
     private LocalDateTime dateTime;
-    private Boolean active; // it's true if vehicle isn't repaired yet
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
+    public Failure(String description, LocalDateTime dateTime, Vehicle vehicle) {
+        this.description = description;
+        this.dateTime = dateTime;
+        this.vehicle = vehicle;
+    }
 }

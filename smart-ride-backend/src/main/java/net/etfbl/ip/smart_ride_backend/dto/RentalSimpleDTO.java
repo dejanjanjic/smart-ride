@@ -15,11 +15,13 @@ public class RentalSimpleDTO {
     private LocalDateTime dateTime;
     private Integer durationInSeconds;
     private String clientName;
+    private String vehicleId;
 
     public RentalSimpleDTO(Rental rental){
         this.id = rental.getId();
         this.dateTime = rental.getDateTime();
         this.durationInSeconds = rental.getDurationInSeconds();
         this.clientName = rental.getClient().getFirstName() + " " + rental.getClient().getLastName();
+        this.vehicleId = rental.getVehicle().getId();
     }
 }

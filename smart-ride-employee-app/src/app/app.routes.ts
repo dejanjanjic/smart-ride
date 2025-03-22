@@ -19,6 +19,9 @@ import { AddManufacturerComponent } from './components/add-object-components/add
 import { UpdateManufacturerComponent } from './components/update-object-components/update-manufacturer/update-manufacturer.component';
 import { AddEmployeeComponent } from './components/add-object-components/add-employee/add-employee.component';
 import { UpdateEmployeeComponent } from './components/update-object-components/update-employee/update-employee.component';
+import { RentalsManagementComponent } from './components/pages/rentals-management/rentals-management.component';
+import { ClientsManagementComponent } from './components/pages/clients-management/clients-management.component';
+import { AddFailureComponent } from './components/add-object-components/add-failure/add-failure.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -84,6 +87,30 @@ export const routes: Routes = [
         component: UpdateEmployeeComponent,
       },
       { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
+    ],
+  },
+  {
+    path: 'operator',
+    loadComponent: () =>
+      import('./components/pages/operator-page/operator-page.component').then(
+        (m) => m.OperatorPageComponent
+      ),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.OPERATOR] },
+    children: [
+      {
+        path: 'rentals',
+        component: RentalsManagementComponent,
+      },
+      {
+        path: 'clients',
+        component: ClientsManagementComponent,
+      },
+      {
+        path: 'add-failure',
+        component: AddFailureComponent,
+      },
+      { path: '', redirectTo: 'rentals', pathMatch: 'full' },
     ],
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' },

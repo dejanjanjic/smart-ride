@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/failure/")
+@RequestMapping("api/v1/failure")
 public class FailureController {
     private final FailureService failureService;
 
@@ -23,4 +23,8 @@ public class FailureController {
         return ResponseEntity.ok(failureService.findByVehicleId(id));
     }
 
+    @PostMapping
+    public ResponseEntity<FailureSimpleDTO> add(@RequestBody FailureSimpleDTO failureSimpleDTO){
+        return ResponseEntity.ok(failureService.add(failureSimpleDTO));
+    }
 }

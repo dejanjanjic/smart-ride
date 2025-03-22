@@ -2,8 +2,7 @@ package net.etfbl.ip.smart_ride_backend.service;
 
 import net.etfbl.ip.smart_ride_backend.dto.EBikeSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.dto.EScooterSimpleDTO;
-import net.etfbl.ip.smart_ride_backend.model.EScooter;
-import net.etfbl.ip.smart_ride_backend.model.Manufacturer;
+import net.etfbl.ip.smart_ride_backend.model.*;
 import net.etfbl.ip.smart_ride_backend.repository.EScooterRepository;
 import net.etfbl.ip.smart_ride_backend.repository.ManufacturerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class EScooterService extends VehicleService {
+public class EScooterService {
     private final EScooterRepository eScooterRepository;
     private final ManufacturerRepository manufacturerRepository;
 
@@ -60,6 +59,17 @@ public class EScooterService extends VehicleService {
         return eScooterRepository.save(temp);
     }
 
+    public void declareVehicleState(Vehicle vehicle){
+        if(vehicle != null){
+            if(vehicle.getRentals().stream().anyMatch(Rental::getActive)){
+                vehicle.setVehicleState(VehicleState.RENTED);
+            } else if (!vehicle.getFailures().isEmpty()) {
+                vehicle.setVehicleState(VehicleState.BROKEN);
+            } else{
+                vehicle.setVehicleState(VehicleState.AVAILABLE);
+            }
+        }
+    }
 //    public EScooter update(EScooter eScooter) {
 //        EScooter temp = eScooterRepository.findById(eScooter.getId()).orElse(null);
 //        if (temp == null) {

@@ -36,11 +36,11 @@
     <div class="bottom-part">
       <div class="rentals-container">
         <h2>Rentals</h2>
-        <app-rentals-table [vehicleId]="id" />
+        <app-rentals-by-vehicle [vehicleId]="id" />
       </div>
       <div class="failures-container">
         <h2>Failures</h2>
-        <app-failures-table />
+        <app-failures-table [vehicleId]="id" />
       </div>
     </div>
   </article>
