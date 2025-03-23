@@ -13,9 +13,10 @@ export class RentalsByVehicleComponent {
   rentalService: RentalService = inject(RentalService);
   headerMap = {
     id: 'Id',
-    rentalDate: 'Date',
+    dateTime: 'Date',
     durationInSeconds: 'Duration',
     clientName: 'Client name',
+    price: 'Price',
     entityName: 'rental',
   };
 

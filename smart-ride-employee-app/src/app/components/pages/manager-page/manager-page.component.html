@@ -1,16 +1,20 @@
-<div class="operator-main">
+<div class="manager-main">
   <app-header (toggleSidebar)="sidenav.toggle()"> </app-header>
   <mat-sidenav-container>
     <mat-sidenav #sidenav>
       <mat-nav-list>
+        <a mat-list-item routerLink="vehicles" (click)="sidenav.toggle()"
+          >Vehicles</a
+        >
+        <a mat-list-item routerLink="manufacturers" (click)="sidenav.toggle()"
+          >Manufacturers</a
+        >
+        <a mat-list-item routerLink="users" (click)="sidenav.toggle()">Users</a>
         <a mat-list-item routerLink="rentals" (click)="sidenav.toggle()"
           >Rentals</a
         >
         <a mat-list-item routerLink="map" (click)="sidenav.toggle()"
           >Vehicle map</a
-        >
-        <a mat-list-item routerLink="clients" (click)="sidenav.toggle()"
-          >Clients</a
         >
         <a mat-list-item routerLink="add-failure" (click)="sidenav.toggle()"
           >Add failure</a

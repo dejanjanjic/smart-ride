@@ -1,8 +1,9 @@
 <app-base-table
   [displayedColumns]="[
     'id',
-    'rentalDate',
+    'dateTime',
     'durationInSeconds',
+    'price',
     'clientName',
     'vehicleId',
     'actions'
@@ -10,6 +11,6 @@
   [service]="rentalService"
   [headerMap]="headerMap"
   [actionButtons]="[]"
-  [dateColumns]="['rentalDate']"
+  [dateColumns]="['dateTime']"
   [retrieveDataFunction]="this.retrieveDataFunction"
 />

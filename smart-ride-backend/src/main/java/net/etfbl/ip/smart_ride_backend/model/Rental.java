@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -16,13 +17,13 @@ public class Rental {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDateTime dateTime;
-    @ManyToOne
-    @JoinColumn(name = "start_location_id")
-    private Location startLocation;
-    @ManyToOne
-    @JoinColumn(name = "end_location_id")
-    private Location endLocation;
+
+    private Double startLocationX;
+    private Double startLocationY;
+    private Double endLocationX;
+    private Double endLocationY;
     private Integer durationInSeconds;
+    private BigDecimal price;
     private Boolean active;
     @ManyToOne
     @JoinColumn(name="client_id")
@@ -30,4 +31,17 @@ public class Rental {
     @ManyToOne
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
+
+    public Rental(LocalDateTime dateTime, Double startLocationX, Double startLocationY, Double endLocationX, Double endLocationY, Integer durationInSeconds, BigDecimal price, Boolean active, Client client, Vehicle vehicle) {
+        this.dateTime = dateTime;
+        this.startLocationX = startLocationX;
+        this.startLocationY = startLocationY;
+        this.endLocationX = endLocationX;
+        this.endLocationY = endLocationY;
+        this.durationInSeconds = durationInSeconds;
+        this.price = price;
+        this.active = active;
+        this.client = client;
+        this.vehicle = vehicle;
+    }
 }

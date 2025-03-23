@@ -19,8 +19,6 @@ public class EBikeDetailedDTO extends VehicleDetailedDTO{
         this.model = eBike.getModel();
         this.purchasePrice = eBike.getPurchasePrice();
         this.maxRange = eBike.getMaxRange();
-        this.rentals = eBike.getRentals();
-        this.failures = eBike.getFailures();
         this.vehicleState = eBike.getVehicleState().name();
     }
 }

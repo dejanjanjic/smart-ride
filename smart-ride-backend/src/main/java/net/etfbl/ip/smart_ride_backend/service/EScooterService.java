@@ -4,7 +4,9 @@ import net.etfbl.ip.smart_ride_backend.dto.EBikeSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.dto.EScooterSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.model.*;
 import net.etfbl.ip.smart_ride_backend.repository.EScooterRepository;
+import net.etfbl.ip.smart_ride_backend.repository.FailureRepository;
 import net.etfbl.ip.smart_ride_backend.repository.ManufacturerRepository;
+import net.etfbl.ip.smart_ride_backend.repository.RentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,14 +24,18 @@ import java.util.Objects;
 public class EScooterService {
     private final EScooterRepository eScooterRepository;
     private final ManufacturerRepository manufacturerRepository;
+    private final RentalRepository rentalRepository;
+    private final FailureRepository failureRepository;
 
     @Value("${images.e-scooter}")
     private String uploadDir;
 
     @Autowired
-    public EScooterService(EScooterRepository eScooterRepository, ManufacturerRepository manufacturerRepository) {
+    public EScooterService(EScooterRepository eScooterRepository, ManufacturerRepository manufacturerRepository, RentalRepository rentalRepository, FailureRepository failureRepository) {
         this.eScooterRepository = eScooterRepository;
         this.manufacturerRepository = manufacturerRepository;
+        this.rentalRepository = rentalRepository;
+        this.failureRepository = failureRepository;
     }
 
     public List<EScooterSimpleDTO> findAll() {
@@ -61,9 +67,9 @@ public class EScooterService {
 
     public void declareVehicleState(Vehicle vehicle){
         if(vehicle != null){
-            if(vehicle.getRentals().stream().anyMatch(Rental::getActive)){
+            if(rentalRepository.findAllByVehicle_Id(vehicle.getId()).stream().anyMatch(Rental::getActive)){
                 vehicle.setVehicleState(VehicleState.RENTED);
-            } else if (!vehicle.getFailures().isEmpty()) {
+            } else if (!failureRepository.findAllByVehicle_Id(vehicle.getId()).isEmpty()) {
                 vehicle.setVehicleState(VehicleState.BROKEN);
             } else{
                 vehicle.setVehicleState(VehicleState.AVAILABLE);

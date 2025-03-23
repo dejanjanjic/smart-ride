@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.etfbl.ip.smart_ride_backend.model.Rental;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -16,6 +17,7 @@ public class RentalSimpleDTO {
     private Integer durationInSeconds;
     private String clientName;
     private String vehicleId;
+    private BigDecimal price;
 
     public RentalSimpleDTO(Rental rental){
         this.id = rental.getId();
@@ -23,5 +25,6 @@ public class RentalSimpleDTO {
         this.durationInSeconds = rental.getDurationInSeconds();
         this.clientName = rental.getClient().getFirstName() + " " + rental.getClient().getLastName();
         this.vehicleId = rental.getVehicle().getId();
+        this.price = rental.getPrice();
     }
 }

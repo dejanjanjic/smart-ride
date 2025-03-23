@@ -14,6 +14,7 @@ export class RentalsTableComponent {
     id: 'Id',
     rentalDate: 'Date',
     durationInSeconds: 'Duration',
+    price: 'price',
     clientName: 'Client name',
     vehicleId: 'Vehicle',
     entityName: 'rental',

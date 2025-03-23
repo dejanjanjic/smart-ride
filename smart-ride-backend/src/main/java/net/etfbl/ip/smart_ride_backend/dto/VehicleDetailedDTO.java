@@ -18,7 +18,5 @@ public class VehicleDetailedDTO {
     protected String manufacturer;
     protected String model;
     protected BigDecimal purchasePrice;
-    protected List<Failure> failures = new ArrayList<>();
-    protected List<Rental> rentals = new ArrayList<>();
     protected String vehicleState;
 }

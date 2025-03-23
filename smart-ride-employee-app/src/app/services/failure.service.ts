@@ -17,4 +17,8 @@ export class FailureService {
   public add(failure: Failure): Observable<any> {
     return this.http.post(this.BASE_URL, failure);
   }
+
+  public deleteById(id: number) {
+    return this.http.delete(`${this.BASE_URL}/${id}`);
+  }
 }

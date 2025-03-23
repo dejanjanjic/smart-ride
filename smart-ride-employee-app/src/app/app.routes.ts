@@ -22,6 +22,8 @@ import { UpdateEmployeeComponent } from './components/update-object-components/u
 import { RentalsManagementComponent } from './components/pages/rentals-management/rentals-management.component';
 import { ClientsManagementComponent } from './components/pages/clients-management/clients-management.component';
 import { AddFailureComponent } from './components/add-object-components/add-failure/add-failure.component';
+import { AddFailureByVehicleComponent } from './components/add-object-components/add-failure-by-vehicle/add-failure-by-vehicle.component';
+import { VehicleMapComponent } from './components/vehicle-map/vehicle-map.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -67,6 +69,10 @@ export const routes: Routes = [
         component: AddEmployeeComponent,
       },
       {
+        path: 'vehicles/cars/:id/add-failure',
+        component: AddFailureByVehicleComponent,
+      },
+      {
         path: 'vehicles/cars/:id',
         component: ViewDetailsCarComponent,
       },
@@ -110,7 +116,91 @@ export const routes: Routes = [
         path: 'add-failure',
         component: AddFailureComponent,
       },
+      {
+        path: 'map',
+        component: VehicleMapComponent,
+      },
       { path: '', redirectTo: 'rentals', pathMatch: 'full' },
+    ],
+  },
+  {
+    path: 'management',
+    loadComponent: () =>
+      import('./components/pages/manager-page/manager-page.component').then(
+        (m) => m.ManagerPageComponent
+      ),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.MANAGEMENT] },
+    children: [
+      {
+        path: 'vehicles',
+        component: VehiclesManagementComponent,
+      },
+      {
+        path: 'manufacturers',
+        component: ManufacturersManagementComponent,
+      },
+      {
+        path: 'users',
+        component: UsersManagementComponent,
+      },
+      {
+        path: 'rentals',
+        component: RentalsManagementComponent,
+      },
+      {
+        path: 'add-failure',
+        component: AddFailureComponent,
+      },
+      {
+        path: 'vehicles/add-car',
+        component: AddCarComponent,
+      },
+      {
+        path: 'vehicles/add-e-bike',
+        component: AddEBikeComponent,
+      },
+      {
+        path: 'vehicles/add-e-scooter',
+        component: AddEScooterComponent,
+      },
+      {
+        path: 'manufacturers/add-manufacturer',
+        component: AddManufacturerComponent,
+      },
+      {
+        path: 'users/add-employee',
+        component: AddEmployeeComponent,
+      },
+      {
+        path: 'vehicles/cars/:id/add-failure',
+        component: AddFailureByVehicleComponent,
+      },
+      {
+        path: 'vehicles/cars/:id',
+        component: ViewDetailsCarComponent,
+      },
+      {
+        path: 'vehicles/e-bikes/:id',
+        component: ViewDetailsEBikeComponent,
+      },
+      {
+        path: 'vehicles/e-scooters/:id',
+        component: ViewDetailsEScooterComponent,
+      },
+      {
+        path: 'manufacturers/update-manufacturer/:id',
+        component: UpdateManufacturerComponent,
+      },
+      {
+        path: 'users/update-employee/:id',
+        component: UpdateEmployeeComponent,
+      },
+      {
+        path: 'map',
+        component: VehicleMapComponent,
+      },
+      { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
     ],
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' },

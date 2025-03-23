@@ -1,8 +1,10 @@
 package net.etfbl.ip.smart_ride_backend.service;
 
+import jakarta.transaction.Transactional;
 import net.etfbl.ip.smart_ride_backend.dto.FailureSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.model.Failure;
 import net.etfbl.ip.smart_ride_backend.model.Vehicle;
+import net.etfbl.ip.smart_ride_backend.model.VehicleState;
 import net.etfbl.ip.smart_ride_backend.repository.FailureRepository;
 import net.etfbl.ip.smart_ride_backend.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +44,21 @@ public class FailureService {
                                 vehicle)
                 );
         return new FailureSimpleDTO(failure);
+    }
+
+    @Transactional
+    public boolean deleteById(Long id) {
+        Failure failure = this.failureRepository.findById(id).orElse(null);
+        if(failure != null){
+            Vehicle vehicle = failure.getVehicle();
+            if(this.failureRepository.findAllByVehicle_Id(vehicle.getId()).size() == 1){
+                vehicle.setVehicleState(VehicleState.AVAILABLE);
+                vehicleRepository.save(vehicle);
+            }
+            this.failureRepository.deleteById(id);
+
+            return true;
+        }
+        return false;
     }
 }

@@ -1,1 +1,35 @@
-<p>add-failure-by-vehicle works!</p>
+<div class="form-container">
+  <mat-card class="form-card" appearance="outlined">
+    <mat-card-header class="form-header">
+      <mat-card-title class="title">Add Failure</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="failureForm">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Date</mat-label>
+          <input type="date" matInput formControlName="dateTime" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <input matInput formControlName="description" />
+        </mat-form-field>
+
+        @if(conflict) {
+        <p class="error">Vehicle ID doesn't exist</p>
+        }
+
+        <div class="button-container">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="submitForm()"
+            [disabled]="failureForm.invalid"
+          >
+            Add failure
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

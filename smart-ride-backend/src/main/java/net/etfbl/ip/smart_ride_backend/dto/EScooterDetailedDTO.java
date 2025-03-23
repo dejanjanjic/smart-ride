@@ -20,8 +20,6 @@ public class EScooterDetailedDTO extends VehicleDetailedDTO{
         this.model = eScooter.getModel();
         this.purchasePrice = eScooter.getPurchasePrice();
         this.maxSpeed = eScooter.getMaxSpeed();
-        this.rentals = eScooter.getRentals();
-        this.failures = eScooter.getFailures();
         this.vehicleState = eScooter.getVehicleState().name();
     }
 }

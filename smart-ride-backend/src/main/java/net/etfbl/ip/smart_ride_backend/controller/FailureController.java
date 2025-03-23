@@ -27,4 +27,10 @@ public class FailureController {
     public ResponseEntity<FailureSimpleDTO> add(@RequestBody FailureSimpleDTO failureSimpleDTO){
         return ResponseEntity.ok(failureService.add(failureSimpleDTO));
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable("id")Long id){
+        boolean deleted = this.failureService.deleteById(id);
+        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
 }

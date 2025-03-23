@@ -23,8 +23,6 @@ public class CarDetailedDTO extends VehicleDetailedDTO{
         this.purchasePrice = car.getPurchasePrice();
         this.purchaseDateTime = car.getPurchaseDateTime();
         this.description = car.getDescription();
-        this.rentals = car.getRentals();
-        this.failures = car.getFailures();
         this.vehicleState = car.getVehicleState().name();
     }
 }

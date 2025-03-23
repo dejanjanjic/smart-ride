@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,8 @@ export class RentalService {
   }
 
   public getAllByVehicleId(id: string) {
-    return this.http.get(`${this.BASE_URL}/vehicle/${id}`);
+    return this.http
+      .get(`${this.BASE_URL}/vehicle/${id}`)
+      .pipe(tap((result) => console.log('API Response:', result)));
   }
 }
