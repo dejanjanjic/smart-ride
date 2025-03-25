@@ -6,6 +6,7 @@ import net.etfbl.ip.smart_ride_backend.repository.CarRepository;
 import net.etfbl.ip.smart_ride_backend.repository.FailureRepository;
 import net.etfbl.ip.smart_ride_backend.repository.ManufacturerRepository;
 import net.etfbl.ip.smart_ride_backend.repository.RentalRepository;
+import net.etfbl.ip.smart_ride_backend.util.RandomGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -58,7 +59,9 @@ public class CarService{
         if(carExist || manufacturer == null){
             return null;
         }
-        Car newCar = new Car(car.getId(), manufacturer, car.getModel(), car.getPurchasePrice(), null, car.getPurchaseDateTime(), car.getDescription());
+        Double posX = RandomGenerator.getRandomPosition(44.75548087994783, 44.79654652278502);
+        Double posY = RandomGenerator.getRandomPosition(17.170851491908504, 17.229302191354293);
+        Car newCar = new Car(car.getId(), manufacturer, car.getModel(), car.getPurchasePrice(), posX, posY, null, car.getVehicleState(), car.getPurchaseDateTime(), car.getDescription());
         return carRepository.save(newCar);
     }
 

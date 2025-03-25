@@ -63,7 +63,6 @@ export class AddFailureComponent implements OnInit {
     }
     const formValue = { ...this.failureForm.value };
     formValue.dateTime = this.formatDate(formValue.dateTime);
-    console.log(formValue);
 
     this.failureService.add(formValue).subscribe({
       next: (failure: any) => {

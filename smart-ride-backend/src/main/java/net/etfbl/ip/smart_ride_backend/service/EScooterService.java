@@ -7,6 +7,7 @@ import net.etfbl.ip.smart_ride_backend.repository.EScooterRepository;
 import net.etfbl.ip.smart_ride_backend.repository.FailureRepository;
 import net.etfbl.ip.smart_ride_backend.repository.ManufacturerRepository;
 import net.etfbl.ip.smart_ride_backend.repository.RentalRepository;
+import net.etfbl.ip.smart_ride_backend.util.RandomGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -61,7 +62,9 @@ public class EScooterService {
         if (exist || manufacturer == null) {
             return null;
         }
-        EScooter temp = new EScooter(eScooter.getId(), manufacturer, eScooter.getModel(), eScooter.getPurchasePrice(), null, eScooter.getMaxSpeed());
+        Double posX = RandomGenerator.getRandomPosition(44.75548087994783, 44.79654652278502);
+        Double posY = RandomGenerator.getRandomPosition(17.170851491908504, 17.229302191354293);
+        EScooter temp = new EScooter(eScooter.getId(), manufacturer, eScooter.getModel(), eScooter.getPurchasePrice(), posX, posY, null, eScooter.getVehicleState(), eScooter.getMaxSpeed());
         return eScooterRepository.save(temp);
     }
 

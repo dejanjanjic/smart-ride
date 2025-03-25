@@ -10,6 +10,9 @@ export class VehicleService {
 
   constructor(private http: HttpClient) {}
 
+  getAll(): Observable<any> {
+    return this.http.get(this.BASE_URL);
+  }
   getVehicleIds(): Observable<any> {
     return this.http.get(`${this.BASE_URL}/ids`);
   }

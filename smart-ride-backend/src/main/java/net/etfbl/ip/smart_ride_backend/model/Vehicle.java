@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Inheritance(
         strategy = InheritanceType.JOINED
@@ -21,16 +22,10 @@ public abstract class Vehicle {
     protected Manufacturer manufacturer;
     protected String model;
     protected BigDecimal purchasePrice;
+    protected Double positionX;
+    protected Double positionY;
     protected String picturePath;
     @Transient
     @Enumerated(EnumType.STRING)
     private VehicleState vehicleState;
-
-    public Vehicle(String id, Manufacturer manufacturer, String model, BigDecimal purchasePrice, String picturePath) {
-        this.id = id;
-        this.manufacturer = manufacturer;
-        this.model = model;
-        this.purchasePrice = purchasePrice;
-        this.picturePath = picturePath;
-    }
 }

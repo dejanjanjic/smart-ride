@@ -7,6 +7,7 @@ import net.etfbl.ip.smart_ride_backend.repository.EBikeRepository;
 import net.etfbl.ip.smart_ride_backend.repository.FailureRepository;
 import net.etfbl.ip.smart_ride_backend.repository.ManufacturerRepository;
 import net.etfbl.ip.smart_ride_backend.repository.RentalRepository;
+import net.etfbl.ip.smart_ride_backend.util.RandomGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -62,7 +63,9 @@ public class EBikeService{
         if(exist || manufacturer == null){
             return null;
         }
-        EBike temp = new EBike(eBike.getId(), manufacturer, eBike.getModel(), eBike.getPurchasePrice(), null, eBike.getMaxRange());
+        Double posX = RandomGenerator.getRandomPosition(44.75548087994783, 44.79654652278502);
+        Double posY = RandomGenerator.getRandomPosition(17.170851491908504, 17.229302191354293);
+        EBike temp = new EBike(eBike.getId(), manufacturer, eBike.getModel(), eBike.getPurchasePrice(), posX, posY, null, eBike.getVehicleState(), eBike.getMaxRange());
         return eBikeRepository.save(temp);
     }
 

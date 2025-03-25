@@ -17,10 +17,9 @@ public class Car extends Vehicle{
     private LocalDateTime purchaseDateTime;
     private String description;
 
-    public Car(String id, Manufacturer manufacturer, String model, BigDecimal purchasePrice, String picturePath, LocalDateTime purchaseDateTime, String description) {
-        super(id, manufacturer, model, purchasePrice, picturePath);
+    public Car(String id, Manufacturer manufacturer, String model, BigDecimal purchasePrice, double positionX, double positionY, String picturePath, VehicleState vehicleState, LocalDateTime purchaseDateTime, String description) {
+        super(id, manufacturer, model, purchasePrice, positionX, positionY, picturePath, vehicleState);
         this.purchaseDateTime = purchaseDateTime;
         this.description = description;
     }
-
 }

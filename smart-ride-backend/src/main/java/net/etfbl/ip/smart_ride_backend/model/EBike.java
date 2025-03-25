@@ -14,8 +14,8 @@ import java.math.BigDecimal;
 public class EBike extends Vehicle {
     private Integer maxRange;
 
-    public EBike(String id, Manufacturer manufacturer, String model, BigDecimal purchasePrice, String picturePath, Integer maxRange) {
-        super(id, manufacturer, model, purchasePrice, picturePath);
+    public EBike(String id, Manufacturer manufacturer, String model, BigDecimal purchasePrice, double positionX, double positionY, String picturePath, VehicleState vehicleState, Integer maxRange) {
+        super(id, manufacturer, model, purchasePrice, positionX, positionY, picturePath, vehicleState);
         this.maxRange = maxRange;
     }
 }

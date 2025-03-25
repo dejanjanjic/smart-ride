@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
@@ -14,8 +15,8 @@ import java.math.BigDecimal;
 public class EScooter extends Vehicle{
     private Integer maxSpeed;
 
-    public EScooter(String id, Manufacturer manufacturer, String model, BigDecimal purchasePrice, String picturePath, Integer maxSpeed) {
-        super(id, manufacturer, model, purchasePrice, picturePath);
+    public EScooter(String id, Manufacturer manufacturer, String model, BigDecimal purchasePrice, double positionX, double positionY, String picturePath, VehicleState vehicleState, Integer maxSpeed) {
+        super(id, manufacturer, model, purchasePrice, positionX, positionY, picturePath, vehicleState);
         this.maxSpeed = maxSpeed;
     }
 }

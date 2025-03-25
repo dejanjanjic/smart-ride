@@ -12,9 +12,9 @@ export class RentalsTableComponent {
   rentalService: RentalService = inject(RentalService);
   headerMap = {
     id: 'Id',
-    rentalDate: 'Date',
+    dateTime: 'Date',
     durationInSeconds: 'Duration',
-    price: 'price',
+    price: 'Price',
     clientName: 'Client name',
     vehicleId: 'Vehicle',
     entityName: 'rental',

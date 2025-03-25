@@ -1,5 +1,6 @@
 package net.etfbl.ip.smart_ride_backend.controller;
 
+import net.etfbl.ip.smart_ride_backend.model.Vehicle;
 import net.etfbl.ip.smart_ride_backend.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,10 @@ public class VehicleController {
         this.vehicleService = vehicleService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<Vehicle>> getAll(){
+        return ResponseEntity.ok(vehicleService.findAll());
+    }
     @GetMapping("ids")
     public ResponseEntity<List<String>> getVehicleIds(){
         return ResponseEntity.ok(vehicleService.findAllIds());
