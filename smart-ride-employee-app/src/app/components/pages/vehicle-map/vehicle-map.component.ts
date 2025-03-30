@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
-import { VehicleService } from '../../services/vehicle.service';
+import { VehicleService } from '../../../services/vehicle.service';
 
 @Component({
   selector: 'app-vehicle-map',
@@ -58,7 +58,6 @@ export class VehicleMapComponent implements OnInit {
 
   onMapReady(map: L.Map) {
     this.map = map;
-    // Add the initial empty markers layer to the map
     this.markersLayer.addTo(this.map);
   }
 }

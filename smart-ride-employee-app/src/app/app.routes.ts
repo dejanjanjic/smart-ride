@@ -23,7 +23,8 @@ import { RentalsManagementComponent } from './components/pages/rentals-managemen
 import { ClientsManagementComponent } from './components/pages/clients-management/clients-management.component';
 import { AddFailureComponent } from './components/add-object-components/add-failure/add-failure.component';
 import { AddFailureByVehicleComponent } from './components/add-object-components/add-failure-by-vehicle/add-failure-by-vehicle.component';
-import { VehicleMapComponent } from './components/vehicle-map/vehicle-map.component';
+import { VehicleMapComponent } from './components/pages/vehicle-map/vehicle-map.component';
+import { RentalPriceConfigurationComponent } from './components/pages/rental-price-configuration/rental-price-configuration.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -199,6 +200,10 @@ export const routes: Routes = [
       {
         path: 'map',
         component: VehicleMapComponent,
+      },
+      {
+        path: 'rental-price-config',
+        component: RentalPriceConfigurationComponent,
       },
       { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
     ],
