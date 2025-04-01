@@ -1,6 +1,7 @@
 package net.etfbl.ip.smart_ride_backend.controller;
 
 import net.etfbl.ip.smart_ride_backend.dto.FailureSimpleDTO;
+import net.etfbl.ip.smart_ride_backend.dto.VerticalBarDataDTO;
 import net.etfbl.ip.smart_ride_backend.service.FailureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,11 @@ public class FailureController {
     @GetMapping("vehicle/{id}")
     public ResponseEntity<List<FailureSimpleDTO>> getAllByVehicleId(@PathVariable("id") String id){
         return ResponseEntity.ok(failureService.findByVehicleId(id));
+    }
+
+    @GetMapping("by-vehicle")
+    public ResponseEntity<List<VerticalBarDataDTO>> getFailuresByVehicle(){
+        return ResponseEntity.ok(failureService.getFailuresByVehicle());
     }
 
     @PostMapping

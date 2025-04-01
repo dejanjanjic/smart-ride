@@ -25,6 +25,7 @@ import { AddFailureComponent } from './components/add-object-components/add-fail
 import { AddFailureByVehicleComponent } from './components/add-object-components/add-failure-by-vehicle/add-failure-by-vehicle.component';
 import { VehicleMapComponent } from './components/pages/vehicle-map/vehicle-map.component';
 import { RentalPriceConfigurationComponent } from './components/pages/rental-price-configuration/rental-price-configuration.component';
+import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -134,6 +135,10 @@ export const routes: Routes = [
     data: { roles: [Role.MANAGEMENT] },
     children: [
       {
+        path: 'dashboard',
+        component: DashboardComponent,
+      },
+      {
         path: 'vehicles',
         component: VehiclesManagementComponent,
       },
@@ -205,7 +210,7 @@ export const routes: Routes = [
         path: 'rental-price-config',
         component: RentalPriceConfigurationComponent,
       },
-      { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' },

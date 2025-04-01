@@ -3,6 +3,9 @@
   <mat-sidenav-container>
     <mat-sidenav #sidenav>
       <mat-nav-list>
+        <a mat-list-item routerLink="dashboard" (click)="sidenav.toggle()"
+          >Dashboard</a
+        >
         <a mat-list-item routerLink="vehicles" (click)="sidenav.toggle()"
           >Vehicles</a
         >

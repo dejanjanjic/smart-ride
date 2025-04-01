@@ -1,0 +1,32 @@
+h1 {
+  color: #424874;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.main {
+  padding: 10px;
+  background-color: #e6e6e6;
+  height: 100%;
+}
+
+.top-part {
+  margin-bottom: 10px;
+  justify-content: center;
+  align-items: center;
+}
+.bottom-part {
+  justify-content: center;
+  align-content: space-around;
+}

@@ -14,6 +14,10 @@ export class FailureService {
     return this.http.get(`${this.BASE_URL}/vehicle/${id}`);
   }
 
+  public getFailuresByVehicle() {
+    return this.http.get(`${this.BASE_URL}/by-vehicle`);
+  }
+
   public add(failure: Failure): Observable<any> {
     return this.http.post(this.BASE_URL, failure);
   }

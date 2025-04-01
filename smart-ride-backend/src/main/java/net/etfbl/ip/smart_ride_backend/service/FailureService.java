@@ -2,6 +2,7 @@ package net.etfbl.ip.smart_ride_backend.service;
 
 import jakarta.transaction.Transactional;
 import net.etfbl.ip.smart_ride_backend.dto.FailureSimpleDTO;
+import net.etfbl.ip.smart_ride_backend.dto.VerticalBarDataDTO;
 import net.etfbl.ip.smart_ride_backend.model.Failure;
 import net.etfbl.ip.smart_ride_backend.model.Vehicle;
 import net.etfbl.ip.smart_ride_backend.model.VehicleState;
@@ -10,6 +11,7 @@ import net.etfbl.ip.smart_ride_backend.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -60,5 +62,21 @@ public class FailureService {
             return true;
         }
         return false;
+    }
+
+    public List<VerticalBarDataDTO> getFailuresByVehicle() {
+        List<Object[]> results = failureRepository.countFailuresPerVehicle();
+        List<VerticalBarDataDTO> failureCounts = new ArrayList<>();
+
+        for (Object[] row : results) {
+            String vehicleId = (String) row[0];
+            String manufacturer = (String) row[1];
+            String model = (String) row[2];
+            Long failureCount = (Long) row[3];
+
+            failureCounts.add(new VerticalBarDataDTO((vehicleId + " " + manufacturer + " " + model), failureCount));
+        }
+
+        return failureCounts;
     }
 }

@@ -1,0 +1,11 @@
+.main {
+  width: 700px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #c9b18d;
+  border-radius: 20px;
+  background-color: white;
+}
