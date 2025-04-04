@@ -1,165 +1,12 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Smart Ride - Login</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            background: #f0f4f8;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            height: 80px;
-            background: linear-gradient(135deg, #00b4db, #0083b0);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
-
-        header .header-content {
-            display: flex;
-            align-items: center;
-        }
-
-        header .logo {
-            height: 70px;
-            margin-right: 15px;
-        }
-
-        header .app-title {
-            font-size: 2rem;
-            color: #fff;
-            font-weight: bold;
-        }
-
-        main {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 100px 20px 20px;
-        }
-
-        .login-card {
-            background-color: #ffffff;
-            width: 100%;
-            max-width: 400px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-            padding: 40px;
-            text-align: center;
-        }
-
-        .login-card h2 {
-            margin-bottom: 20px;
-            color: #333;
-            font-size: 1.8rem;
-        }
-
-        .input-group {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        .input-group input:focus {
-            border-color: #007BFF;
-            outline: none;
-        }
-
-        .error-message {
-            color: red;
-            margin-bottom: 10px;
-            min-height: 20px;
-            text-align: center;
-        }
-
-        button {
-            width: 100%;
-            padding: 14px;
-            margin-top: 10px;
-            background-color: #007BFF;
-            border: none;
-            border-radius: 5px;
-            color: #fff;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .register-link {
-            margin-top: 20px;
-            font-size: 16px;
-            color: #666;
-        }
-
-        .register-link a {
-            color: #007BFF;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 480px) {
-            header {
-                flex-direction: column;
-                height: auto;
-                padding: 20px;
-            }
-
-            header .logo {
-                margin-bottom: 10px;
-                height: 80px;
-            }
-
-            header .app-title {
-                font-size: 1.5rem;
-            }
-
-            .login-card {
-                padding: 30px;
-            }
-        }
-    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
 <header>
@@ -170,25 +17,48 @@
 </header>
 
 <main>
-    <div class="login-card">
-        <h2>Login to Smart Ride</h2>
-        <form>
-            <!-- Mesto za prikaz greške (npr. neispravni kredencijali) -->
-            <div class="error-message" id="error-message">
-                <!-- Error message goes here -->
+    <div class="login-container">
+        <div class="image-side">
+            <div class="overlay">
+                <h2>Welcome to Smart Ride</h2>
+                <p>Your all-in-one platform for renting vehicles in the city.</p>
+                <ul class="features">
+                    <li><i class="fas fa-bicycle"></i> Rent electric bicycles</li>
+                    <li><i class="fas fa-bolt"></i> Electric scooters available</li>
+                    <li><i class="fas fa-car"></i> Car rentals</li>
+                    <li><i class="fas fa-leaf"></i> Eco-friendly transportation</li>
+                </ul>
             </div>
-            <div class="input-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+        </div>
+        <div class="login-card">
+            <h2>Sign In</h2>
+            <form action="?action=auth" method="post">
+                <div class="error-message" id="error-message">
+                    <% if(session.getAttribute("notification") != null) { %>
+                    <%= session.getAttribute("notification") %>
+                    <% session.removeAttribute("notification"); %>
+                    <% } %>
+                </div>
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                </div>
+                <button type="submit" class="login-btn">Sign In</button>
+            </form>
+
+            <div class="register-link">
+                <p>Don't have an account? <a href="?action=register">Register here</a></p>
             </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-            </div>
-            <button type="submit">Login</button>
-        </form>
-        <div class="register-link">
-            <p>Don't have an account? <a href="?action=register">Register here</a></p>
         </div>
     </div>
 </main>

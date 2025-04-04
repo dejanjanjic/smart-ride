@@ -5,15 +5,24 @@ import net.etfbl.ip.smartrideclient.dao.UserDAO;
 import net.etfbl.ip.smartrideclient.dto.User;
 
 public class UserBean {
-    private User user;
+    private User user = new User();
+    private boolean isLoggedIn = false;
 
 
 
     public boolean login(String username, String password) {
-        return (user = UserDAO.selectByUsernameAndPassword(username, password)) != null;
+        if ((user = UserDAO.selectByUsernameAndPassword(username, password))!=null && !user.isBlocked()){
+            isLoggedIn = true;
+            return true;
+        }
+        return false;
     }
 
+    public String getName(){
+        return user == null ? "" : user.getFirstName() + " " + user.getLastName();
+    }
 
-
-
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
 }

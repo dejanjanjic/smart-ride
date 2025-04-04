@@ -20,26 +20,40 @@ public class Controller extends HttpServlet {
         String address = "/WEB-INF/pages/login.jsp";
         String action = req.getParameter("action");
         HttpSession session = req.getSession();
-
+        System.out.println("Action = " + action);
         session.setAttribute("notification", "");
 
-        if(action == null || action.isEmpty()){
+        if(action == null || action.isEmpty() || action.equals("login")){
             address = "/WEB-INF/pages/login.jsp";
-        } else if (action.equals("login")) {
+        } else if (action.equals("auth")) {
             System.out.println(req.getParameter("username") + " " + req.getParameter("password"));
             String username = req.getParameter("username");
             String password = req.getParameter("password");
             UserBean userBean = new UserBean();
             if (userBean.login(username, password)) {
-                System.out.println("top");
                 session.setAttribute("userBean", userBean);
-                address = "/WEB-INF/pages/index.jsp";
+                address = "/WEB-INF/pages/menu.jsp";
             } else {
-                session.setAttribute("notification", "Pogresni parametri za pristup");
+                session.setAttribute("notification", "Invalid credentials");
             }
         } else if (action.equals("register")) {
             address = "/WEB-INF/pages/register.jsp";
 
+        } else if (action.equals("logout")) {
+            session.invalidate();
+            address = "/WEB-INF/pages/login.jsp";
+        } else {
+
+            UserBean userBean = (UserBean) session.getAttribute("userBean");
+            if(userBean == null || !userBean.isLoggedIn()){ //nevalidan action ili neautorizovan pristup
+                address = "/WEB-INF/pages/login.jsp";
+            } else { //korisnik je ulogovan i pristupa drugim stranicama
+                if(action.equals("scooter-rental")){
+                    address="/WEB-INF/pages/scooter-rental.jsp";
+                }
+
+
+            }
         }
         RequestDispatcher dispatcher = req.getRequestDispatcher(address);
         dispatcher.forward(req, resp);
