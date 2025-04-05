@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<jsp:useBean id="userBean" type="net.etfbl.ip.smartrideclient.beans.UserBean" scope="session"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -468,12 +469,12 @@
 <body>
 <header>
     <div class="logo-container">
-        <img src="logo.png" alt="Smart Ride Logo" class="logo">
+        <img src="../../images/logo.png" alt="Smart Ride Logo" class="logo">
         <div class="app-title">Smart Ride</div>
     </div>
     <div class="user-container">
-        <img src="no-avatar.jpg" alt="User Avatar" class="avatar">
-        <span class="username">John Doe</span>
+        <img src="../../images/no-avatar.jpg" alt="User Avatar" class="avatar">
+        <span class="username"><%=userBean.getName()%></span>
         <a href="#" class="back-btn">
             <span class="material-icons">arrow_back</span> Dashboard
         </a>

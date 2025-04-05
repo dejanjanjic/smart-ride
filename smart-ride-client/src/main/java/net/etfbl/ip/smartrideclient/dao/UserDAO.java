@@ -17,12 +17,14 @@ public class UserDAO {
             "  c.id,\n" +
             "  c.email,\n" +
             "  c.phone_number,\n" +
+            "  c.image,\n" +
             "  u.first_name,\n" +
             "  u.last_name,\n" +
             "  u.username,\n" +
             "  c.blocked\n" +
             "FROM client c\n" +
             "JOIN user u ON c.id = u.id\n WHERE u.username=? AND u.password=?;";
+    private static final String SQL_UPDATE_AVATAR = "UPDATE client SET image=? WHERE id=?;";
     public static User selectByUsernameAndPassword(String username, String password){
         User user = null;
         Connection connection = null;
@@ -41,6 +43,7 @@ public class UserDAO {
                         rs.getString("last_name"),
                         rs.getString("email"),
                         rs.getString("phone_number"),
+                        rs.getString("image"),
                         rs.getBoolean("blocked")
                 );
             }
@@ -51,5 +54,23 @@ public class UserDAO {
             connectionPool.checkIn(connection);
         }
         return user;
+    }
+
+    public static boolean updateUserAvatar(long userId, String imagePath) {
+        Connection connection = null;
+        boolean success = false;
+        try {
+            connection = connectionPool.checkOut();
+            PreparedStatement pstmt = DBUtil.prepareStatement(connection,
+                    SQL_UPDATE_AVATAR, false, imagePath, userId);
+            int affectedRows = pstmt.executeUpdate();
+            success = affectedRows > 0;
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            connectionPool.checkIn(connection);
+        }
+        return success;
     }
 }

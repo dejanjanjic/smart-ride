@@ -7,19 +7,21 @@ public class User {
     private String lastName;
     private String email;
     private String phoneNumber;
+    private String image;
     private boolean blocked;
 
 
     public User() {
     }
 
-    public User(Long id, String username, String firstName, String lastName, String email, String phoneNumber, boolean blocked) {
+    public User(Long id, String username, String firstName, String lastName, String email, String phoneNumber, String image, boolean blocked) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.image = image;
         this.blocked = blocked;
     }
 
@@ -80,6 +82,14 @@ public class User {
         this.blocked = blocked;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -89,6 +99,7 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", image='" + image + '\'' +
                 ", blocked=" + blocked +
                 '}';
     }

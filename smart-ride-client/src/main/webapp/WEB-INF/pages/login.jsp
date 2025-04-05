@@ -11,7 +11,7 @@
 <body>
 <header>
     <div class="header-content">
-        <img src="logo.png" alt="Smart Ride Logo" class="logo">
+        <img src="../../images/logo.png" alt="Smart Ride Logo" class="logo">
         <div class="app-title">Smart Ride</div>
     </div>
 </header>

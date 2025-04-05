@@ -10,19 +10,58 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="css/menu.css">
+    <style>
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .avatar-change-btn {
+            position: absolute;
+            bottom: 0;
+            right: -5px;
+            background-color: #2196F3;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .avatar-change-btn .material-icons {
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
 <header>
     <div class="logo-container">
-        <img src="logo.png" alt="Smart Ride Logo" class="logo">
+        <img src="../../images/logo.png" alt="Smart Ride Logo" class="logo">
         <div class="app-title">Smart Ride</div>
     </div>
     <div class="user-container">
-        <img src="no-avatar.jpg" alt="User Avatar" class="avatar">
+        <div class="avatar-container">
+            <img src="<%=userBean.getAvatarPath() != null ? userBean.getAvatarPath() : "images/no-avatar.jpg"%>" alt="User Avatar" class="avatar">
+            <a href="?action=change-avatar" class="avatar-change-btn">
+                <span class="material-icons">add</span>
+            </a>
+        </div>
         <span class="username"><%=userBean.getName()%></span>
         <a href="?action=logout" class="logout-link">
             <button class="logout-btn">
-                    <span class="material-icons">logout</span> Logout
+                <span class="material-icons">logout</span> Logout
             </button>
         </a>
     </div>
