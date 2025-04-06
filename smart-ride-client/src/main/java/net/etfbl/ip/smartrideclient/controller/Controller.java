@@ -1,6 +1,9 @@
 package net.etfbl.ip.smartrideclient.controller;
 
+import net.etfbl.ip.smartrideclient.beans.RentalPriceConfigBean;
+import net.etfbl.ip.smartrideclient.beans.ScooterBean;
 import net.etfbl.ip.smartrideclient.beans.UserBean;
+import net.etfbl.ip.smartrideclient.dto.Scooter;
 import net.etfbl.ip.smartrideclient.dto.User;
 
 import javax.servlet.RequestDispatcher;
@@ -10,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/Controller")
 @MultipartConfig(
@@ -58,38 +62,19 @@ public class Controller extends HttpServlet {
                         address = "/WEB-INF/pages/menu.jsp";
                         break;
                     case "scooter-rental":
+                        ScooterBean scooterBean = new ScooterBean();
+                        List<Scooter> availableScooters = scooterBean.getAllAvailable();
+                        req.setAttribute("availableScooters", availableScooters);
+                        RentalPriceConfigBean configBean = new RentalPriceConfigBean();
+                        double scooterPrice = configBean.getScooterPricePerMinute();
+                        req.setAttribute("scooterPrice", scooterPrice);
                         address = "/WEB-INF/pages/scooter-rental.jsp";
                         break;
                     case "change-avatar":
                         address = "/WEB-INF/pages/change-avatar.jsp";
                         break;
                     case "upload-avatar":
-                        System.out.println("Doslo u controller");
-                        Part filePart = req.getPart("avatar"); // input name u formi
-
-                        String uploadPath = getServletContext().getRealPath("") + File.separator + "images/avatars";
-
-                        // Kreiraj folder ako ne postoji
-                        File uploadDir = new File(uploadPath);
-                        if (!uploadDir.exists()) {
-                            uploadDir.mkdir();
-                        }
-
-                        String fileName = filePart.getSubmittedFileName();
-                        String fileExtension = fileName.substring(fileName.lastIndexOf("."));
-
-                        String newFileName = "avatar" + userBean.getId() + fileExtension;
-                        String filePath = uploadPath + File.separator + newFileName;
-
-                        // Snimi fajl
-                        filePart.write(filePath);
-
-                        // Sačuvaj relativnu putanju u User objektu (ovo zavisi od tvoje implementacije)
-                        String relativePath = "images/avatars/" + newFileName;
-                        // Pretpostavimo da postoji metoda za ažuriranje slike u bazi
-                        userBean.updateAvatar(relativePath);
-                        session.setAttribute("userBean", userBean);
-
+                        manageAvatarUpload(req, session, userBean);
                         address = "/WEB-INF/pages/change-avatar.jsp";
                         break;
                 }
@@ -104,4 +89,32 @@ public class Controller extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doGet(req, resp);
     }
+
+    private void manageAvatarUpload(HttpServletRequest req, HttpSession session, UserBean userBean) throws IOException, ServletException {
+        Part filePart = req.getPart("avatar"); // input name u formi
+
+        String uploadPath = getServletContext().getRealPath("") + File.separator + "images/avatars";
+
+        // Kreiraj folder ako ne postoji
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
+        }
+
+        String fileName = filePart.getSubmittedFileName();
+        String fileExtension = fileName.substring(fileName.lastIndexOf("."));
+
+        String newFileName = "avatar" + userBean.getId() + fileExtension;
+        String filePath = uploadPath + File.separator + newFileName;
+
+        // Snimi fajl
+        filePart.write(filePath);
+
+        // Sačuvaj relativnu putanju u User objektu (ovo zavisi od tvoje implementacije)
+        String relativePath = "images/avatars/" + newFileName;
+        // Pretpostavimo da postoji metoda za ažuriranje slike u bazi
+        userBean.updateAvatar(relativePath);
+        session.setAttribute("userBean", userBean);
+    }
+
 }

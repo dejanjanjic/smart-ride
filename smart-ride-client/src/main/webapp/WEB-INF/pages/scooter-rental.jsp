@@ -1,5 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
+<%@ page import="net.etfbl.ip.smartrideclient.dto.Scooter" %>
+<%@ page import="java.text.DecimalFormat" %>
+<%
+    double scooterPrice = (double) request.getAttribute("scooterPrice");
+    DecimalFormat df = new DecimalFormat("#.##");
+%>
 <jsp:useBean id="userBean" type="net.etfbl.ip.smartrideclient.beans.UserBean" scope="session"/>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,9 +40,11 @@
         body {
             font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
             background: linear-gradient(135deg, #f6f9fc, #e9f2f9);
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         header {
@@ -42,7 +53,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 15px 20px;
+            padding: 10px 20px;
             box-shadow: var(--shadow);
             z-index: 1000;
         }
@@ -53,14 +64,14 @@
         }
 
         header .logo {
-            height: 50px;
-            width: 50px;
+            height: 40px;
+            width: 40px;
             margin-right: 15px;
             border-radius: 12px;
         }
 
         header .app-title {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             color: var(--white);
             font-weight: bold;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
@@ -72,12 +83,39 @@
             gap: 10px;
         }
 
-        header .avatar {
-            width: 40px;
-            height: 40px;
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .avatar {
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--white);
+        }
+
+        .avatar-change-btn {
+            position: absolute;
+            bottom: 0;
+            right: -5px;
+            background-color: #2196F3;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            text-decoration: none;
+        }
+
+        .avatar-change-btn .material-icons {
+            font-size: 12px;
         }
 
         header .username {
@@ -91,7 +129,7 @@
             border: none;
             border-radius: 5px;
             color: var(--white);
-            padding: 8px 15px;
+            padding: 6px 12px;
             display: flex;
             align-items: center;
             gap: 5px;
@@ -107,66 +145,78 @@
         }
 
         .material-icons {
-            font-size: 24px;
+            font-size: 20px;
             vertical-align: middle;
         }
 
         main {
             flex: 1;
-            padding: 30px 20px;
+            padding: 15px;
             max-width: 1200px;
             width: 100%;
             margin: 0 auto;
+            display: flex;
+            flex-direction: column;
         }
 
         .page-title {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
         }
 
         .page-title h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--text-color);
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .page-title p {
             color: #666;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
         .rental-container {
             display: grid;
             grid-template-columns: 2fr 1fr;
-            gap: 30px;
+            gap: 20px;
+            flex: 1;
         }
 
         .scooter-selection {
             background-color: var(--white);
             border-radius: 12px;
-            padding: 25px;
+            padding: 15px;
             box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            height: 500px; /* Fixed height for the container */
         }
 
         .section-title {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
             color: var(--text-color);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+        }
+
+        .scooter-grid-container {
+            overflow-y: auto; /* Add scrollbar when content exceeds the container */
+            flex: 1; /* Take up all available space */
+            padding-right: 5px; /* Add padding for scrollbar */
         }
 
         .scooter-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
         }
 
         .scooter-card {
             border: 2px solid var(--light-gray);
-            border-radius: 10px;
-            padding: 15px;
+            border-radius: 8px;
+            padding: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
@@ -178,23 +228,23 @@
         }
 
         .scooter-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         }
 
         .scooter-image {
             width: 100%;
-            height: 120px;
+            height: 90px;
             background-color: var(--secondary-color);
             border-radius: 6px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .scooter-image .material-icons-outlined {
-            font-size: 3.5rem;
+            font-size: 3rem;
             color: var(--primary-color);
         }
 
@@ -204,28 +254,29 @@
 
         .scooter-name {
             font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 5px;
+            font-size: 1rem;
+            margin-bottom: 3px;
             color: var(--text-color);
         }
 
         .scooter-details {
             display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            font-size: 0.9rem;
+            justify-content: center;
+            margin-top: 5px;
+            font-size: 0.85rem;
             color: #666;
         }
 
         .scooter-card .checkmark {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 8px;
+            right: 8px;
             background-color: var(--primary-color);
             color: white;
             border-radius: 50%;
-            padding: 3px;
+            padding: 2px;
             display: none;
+            font-size: 18px;
         }
 
         .scooter-card.selected .checkmark {
@@ -235,112 +286,75 @@
         .payment-summary {
             background-color: var(--white);
             border-radius: 12px;
-            padding: 25px;
+            padding: 15px;
             box-shadow: var(--shadow);
-            position: sticky;
-            top: 30px;
+            display: flex;
+            flex-direction: column;
+            height: 500px; /* Fixed height to match scooter-selection */
+            justify-content: space-between; /* Distribute content with space between */
+        }
+
+        .payment-top {
+            flex: 1; /* Take remaining space */
         }
 
         .payment-method {
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
 
-        .payment-cards {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 15px;
+        .payment-method h3 {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
         }
 
-        .payment-card {
+        .card-input-container {
+            margin-top: 10px;
+        }
+
+        .card-input-field {
+            width: 100%;
+            padding: 12px;
             border: 2px solid var(--light-gray);
             border-radius: 8px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
         }
 
-        .payment-card.selected {
+        .card-input-field:focus {
+            outline: none;
             border-color: var(--primary-color);
-            background-color: rgba(20, 168, 157, 0.05);
+            box-shadow: 0 0 0 2px rgba(20, 168, 157, 0.2);
         }
 
-        .payment-card:hover {
-            background-color: var(--secondary-color);
-        }
-
-        .card-icon {
-            font-size: 1.8rem;
-            color: #555;
-        }
-
-        .card-details {
-            flex: 1;
-        }
-
-        .card-number {
+        .card-input-label {
+            display: block;
+            margin-bottom: 6px;
             font-weight: 500;
             color: var(--text-color);
-        }
-
-        .card-expiry {
-            font-size: 0.85rem;
-            color: #777;
-        }
-
-        .add-card {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--primary-color);
-            background: none;
-            border: 2px dashed var(--light-gray);
-            border-radius: 8px;
-            padding: 15px;
-            width: 100%;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            text-align: left;
-            font-size: 1rem;
-        }
-
-        .add-card:hover {
-            background-color: var(--secondary-color);
+            font-size: 0.95rem;
         }
 
         .price-breakdown {
-            margin-top: 25px;
-            padding-top: 20px;
+            margin-top: 15px;
+            padding-top: 15px;
             border-top: 1px solid var(--light-gray);
         }
 
         .price-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             color: #666;
+            font-size: 0.95rem;
         }
 
-        .price-total {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--light-gray);
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: var(--text-color);
+        .payment-bottom {
+            margin-top: 20px; /* Add space between content and button */
         }
 
         .start-ride-btn {
-            display: block;
             width: 100%;
-            padding: 16px;
-            margin-top: 25px;
+            padding: 14px;
             background-color: var(--primary-color);
             color: white;
             border: none;
@@ -369,113 +383,102 @@
             box-shadow: none;
         }
 
-        .availability-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 5px;
-        }
-
-        .available {
-            background-color: var(--success);
-        }
-
-        .unavailable {
-            background-color: var(--error);
-        }
-
         footer {
             background-color: var(--white);
-            padding: 20px;
+            padding: 12px;
             text-align: center;
             color: #666;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
         }
 
+        /* Adjust for different screen sizes to prevent scrolling */
         @media (max-width: 992px) {
             .rental-container {
                 grid-template-columns: 1fr;
             }
 
-            .payment-summary {
-                position: static;
+            .scooter-selection, .payment-summary {
+                height: auto;
+            }
+
+            .scooter-grid-container {
+                max-height: 400px;
             }
         }
 
         @media (max-width: 768px) {
             header {
-                flex-direction: column;
-                padding: 15px;
-            }
-
-            header .logo-container {
-                margin-bottom: 10px;
-            }
-
-            header .user-container {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .page-title h1 {
-                font-size: 1.8rem;
-            }
-
-            .scooter-grid {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            }
-        }
-
-        @media (min-width: 769px) {
-            header {
-                flex-direction: row;
+                padding: 8px 15px;
             }
 
             header .logo-container {
                 margin-bottom: 0;
             }
 
-            header .user-container {
-                width: auto;
+            .page-title h1 {
+                font-size: 1.5rem;
+            }
+
+            .scooter-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             }
         }
 
         @media (max-width: 480px) {
             main {
-                padding: 20px 15px;
+                padding: 10px;
             }
 
             .page-title h1 {
-                font-size: 1.5rem;
-            }
-
-            .section-title {
                 font-size: 1.3rem;
             }
 
             .scooter-grid {
                 grid-template-columns: 1fr 1fr;
-                gap: 15px;
+                gap: 10px;
             }
 
             .scooter-image {
-                height: 100px;
+                height: 80px;
             }
+        }
+
+        /* Custom scrollbar styling */
+        .scooter-grid-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scooter-grid-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .scooter-grid-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+
+        .scooter-grid-container::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
         }
     </style>
 </head>
 <body>
 <header>
     <div class="logo-container">
-        <img src="../../images/logo.png" alt="Smart Ride Logo" class="logo">
+        <img src="images/logo.png" alt="Smart Ride Logo" class="logo">
         <div class="app-title">Smart Ride</div>
     </div>
     <div class="user-container">
-        <img src="../../images/no-avatar.jpg" alt="User Avatar" class="avatar">
+        <div class="avatar-container">
+            <img src="<%=userBean.getAvatarPath() != null ? userBean.getAvatarPath() : "images/no-avatar.jpg"%>" alt="User Avatar" class="avatar">
+            <a href="?action=change-avatar" class="avatar-change-btn">
+                <span class="material-icons">add</span>
+            </a>
+        </div>
         <span class="username"><%=userBean.getName()%></span>
-        <a href="#" class="back-btn">
+        <a href="?action=home" class="back-btn">
             <span class="material-icons">arrow_back</span> Dashboard
         </a>
     </div>
@@ -492,161 +495,59 @@
             <h2 class="section-title">
                 <span class="material-icons-outlined">electric_scooter</span> Available Scooters
             </h2>
-            <div class="scooter-grid">
-                <!-- Scooter 1 -->
-                <div class="scooter-card selected">
-                    <span class="checkmark material-icons">check_circle</span>
-                    <div class="scooter-image">
-                        <span class="material-icons-outlined">electric_scooter</span>
-                    </div>
-                    <div class="scooter-info">
-                        <div class="scooter-name">Scooter S1</div>
-                        <div><span class="availability-indicator available"></span> Available</div>
-                        <div class="scooter-details">
-                            <span>Range: 25km</span>
-                            <span>Battery: 85%</span>
+            <div class="scooter-grid-container">
+                <div class="scooter-grid">
+                    <%
+                        List<Scooter> availableScooters = (List<Scooter>) request.getAttribute("availableScooters");
+                        if (availableScooters != null) {
+                            for (Scooter scooter : availableScooters) {
+                    %>
+                    <div class="scooter-card">
+                        <span class="checkmark material-icons">check_circle</span>
+                        <div class="scooter-image">
+                            <span class="material-icons-outlined">electric_scooter</span>
+                        </div>
+                        <div class="scooter-info">
+                            <div class="scooter-name"><%= scooter.getId() + " " + scooter.getManufacturerName() + " " + scooter.getModel()%></div>
+                            <div class="scooter-details">
+                                <span>Max. Speed: <%= scooter.getMaxSpeed() %>km/h</span>
+                            </div>
                         </div>
                     </div>
+                    <%
+                            }
+                        }
+                    %>
                 </div>
 
-                <!-- Scooter 2 -->
-                <div class="scooter-card">
-                    <span class="checkmark material-icons">check_circle</span>
-                    <div class="scooter-image">
-                        <span class="material-icons-outlined">electric_scooter</span>
-                    </div>
-                    <div class="scooter-info">
-                        <div class="scooter-name">Scooter S2</div>
-                        <div><span class="availability-indicator available"></span> Available</div>
-                        <div class="scooter-details">
-                            <span>Range: 30km</span>
-                            <span>Battery: 95%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Scooter 3 -->
-                <div class="scooter-card">
-                    <span class="checkmark material-icons">check_circle</span>
-                    <div class="scooter-image">
-                        <span class="material-icons-outlined">electric_scooter</span>
-                    </div>
-                    <div class="scooter-info">
-                        <div class="scooter-name">Scooter S3</div>
-                        <div><span class="availability-indicator available"></span> Available</div>
-                        <div class="scooter-details">
-                            <span>Range: 22km</span>
-                            <span>Battery: 75%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Scooter 4 -->
-                <div class="scooter-card">
-                    <span class="checkmark material-icons">check_circle</span>
-                    <div class="scooter-image">
-                        <span class="material-icons-outlined">electric_scooter</span>
-                    </div>
-                    <div class="scooter-info">
-                        <div class="scooter-name">Scooter S4</div>
-                        <div><span class="availability-indicator unavailable"></span> In Use</div>
-                        <div class="scooter-details">
-                            <span>Range: 20km</span>
-                            <span>Battery: 65%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Scooter 5 -->
-                <div class="scooter-card">
-                    <span class="checkmark material-icons">check_circle</span>
-                    <div class="scooter-image">
-                        <span class="material-icons-outlined">electric_scooter</span>
-                    </div>
-                    <div class="scooter-info">
-                        <div class="scooter-name">Scooter S5</div>
-                        <div><span class="availability-indicator available"></span> Available</div>
-                        <div class="scooter-details">
-                            <span>Range: 28km</span>
-                            <span>Battery: 90%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Scooter 6 -->
-                <div class="scooter-card">
-                    <span class="checkmark material-icons">check_circle</span>
-                    <div class="scooter-image">
-                        <span class="material-icons-outlined">electric_scooter</span>
-                    </div>
-                    <div class="scooter-info">
-                        <div class="scooter-name">Scooter S6</div>
-                        <div><span class="availability-indicator unavailable"></span> In Use</div>
-                        <div class="scooter-details">
-                            <span>Range: 15km</span>
-                            <span>Battery: 50%</span>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
         <div class="payment-summary">
-            <h2 class="section-title">
-                <span class="material-icons">payment</span> Payment
-            </h2>
+            <div class="payment-top">
+                <h2 class="section-title">
+                    <span class="material-icons">payment</span> Payment
+                </h2>
 
-            <div class="payment-method">
-                <h3>Select Payment Method</h3>
-                <div class="payment-cards">
-                    <!-- Saved Card 1 -->
-                    <div class="payment-card selected">
-                        <span class="material-icons card-icon">credit_card</span>
-                        <div class="card-details">
-                            <div class="card-number">•••• •••• •••• 4567</div>
-                            <div class="card-expiry">Expires 09/26</div>
-                        </div>
-                        <span class="material-icons">check_circle</span>
+                <div class="payment-method">
+                    <h3>Payment Details</h3>
+                    <div class="card-input-container">
+                        <label for="cardNumber" class="card-input-label">Card Number</label>
+                        <input type="text" id="cardNumber" class="card-input-field" placeholder="Enter your card number" maxlength="19">
                     </div>
+                </div>
 
-                    <!-- Saved Card 2 -->
-                    <div class="payment-card">
-                        <span class="material-icons card-icon">credit_card</span>
-                        <div class="card-details">
-                            <div class="card-number">•••• •••• •••• 8901</div>
-                            <div class="card-expiry">Expires 11/25</div>
-                        </div>
+                <div class="price-breakdown">
+                    <div class="price-item">
+                        <span>Per second rate</span>
+                        <span><%= df.format(scooterPrice) %> BAM/s</span>
                     </div>
-
-                    <!-- Add New Card Button -->
-                    <button class="add-card">
-                        <span class="material-icons">add_circle_outline</span>
-                        Add Payment Method
-                    </button>
                 </div>
             </div>
 
-            <div class="price-breakdown">
-                <h3>Price Breakdown</h3>
-                <div class="price-item">
-                    <span>Unlocking fee</span>
-                    <span>$1.00</span>
-                </div>
-                <div class="price-item">
-                    <span>Per minute rate</span>
-                    <span>$0.15/min</span>
-                </div>
-                <div class="price-item">
-                    <span>Estimated 30 min ride</span>
-                    <span>$4.50</span>
-                </div>
-                <div class="price-total">
-                    <span>Total (estimate)</span>
-                    <span>$5.50</span>
-                </div>
+            <div class="payment-bottom">
+                <button class="start-ride-btn">Start Ride</button>
             </div>
-
-            <button class="start-ride-btn">Start Ride</button>
         </div>
     </div>
 </main>
@@ -662,11 +563,6 @@
         const scooterCards = document.querySelectorAll('.scooter-card');
         scooterCards.forEach(card => {
             card.addEventListener('click', function() {
-                // Don't allow selecting unavailable scooters
-                if (this.querySelector('.unavailable')) {
-                    return;
-                }
-
                 // Remove selected class from all cards
                 scooterCards.forEach(c => c.classList.remove('selected'));
                 // Add selected class to clicked card
@@ -674,19 +570,26 @@
             });
         });
 
-        // Handle payment method selection
-        const paymentCards = document.querySelectorAll('.payment-card');
-        paymentCards.forEach(card => {
-            card.addEventListener('click', function() {
-                paymentCards.forEach(c => c.classList.remove('selected'));
-                this.classList.add('selected');
-            });
+        // Format card number with spaces
+        const cardInput = document.getElementById('cardNumber');
+        cardInput.addEventListener('input', function(e) {
+            // Remove non-digits
+            let value = this.value.replace(/\D/g, '');
+            // Add a space after every 4 digits
+            value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+            // Update the input value
+            this.value = value;
         });
 
         // Start ride button
         const startRideBtn = document.querySelector('.start-ride-btn');
         startRideBtn.addEventListener('click', function() {
-            alert('Your ride is starting! You will be redirected to the tracking page.');
+            const cardNumber = document.getElementById('cardNumber').value;
+            if (cardNumber.trim() === '') {
+                alert('Please enter a card number before starting your ride.');
+            } else {
+                alert('Your ride is starting! You will be redirected to the tracking page.');
+            }
         });
     });
 </script>

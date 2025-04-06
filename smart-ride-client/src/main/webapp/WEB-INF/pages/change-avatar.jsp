@@ -37,21 +37,24 @@
             font-weight: bold;
         }
 
-        .home-btn {
-            background-color: #2196F3;
-            color: white;
+        .back-btn {
+            background-color: rgba(255, 255, 255, 0.2);
             border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            display: inline-flex;
+            border-radius: 5px;
+            color: var(--white);
+            padding: 8px 15px;
+            display: flex;
             align-items: center;
-            margin-right: 10px;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            margin-left: 10px;
+            text-decoration: none;
         }
 
-        .home-btn .material-icons {
-            margin-right: 4px;
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
         }
 
     </style>
@@ -63,17 +66,10 @@
         <div class="app-title">Smart Ride</div>
     </div>
     <div class="user-container">
-        <a href="?action=home" class="home-link">
-            <button class="home-btn">
-                <span class="material-icons">home</span> Home
-            </button>
-        </a>
         <img src="<%=userBean.getAvatarPath() != null ? userBean.getAvatarPath() : "images/no-avatar.jpg"%>" alt="User Avatar" class="avatar">
         <span class="username"><%=userBean.getName()%></span>
-        <a href="?action=logout" class="logout-link">
-            <button class="logout-btn">
-                <span class="material-icons">logout</span> Logout
-            </button>
+        <a href="?action=home" class="back-btn">
+            <span class="material-icons">arrow_back</span> Dashboard
         </a>
     </div>
 </header>

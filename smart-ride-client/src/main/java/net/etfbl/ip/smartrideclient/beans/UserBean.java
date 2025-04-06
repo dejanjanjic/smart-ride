@@ -39,7 +39,6 @@ public class UserBean {
     }
 
     public void updateAvatar(String relativePath) {
-        System.out.println("Doslo do beana");
         if(UserDAO.updateUserAvatar(user.getId(), relativePath)){
             user.setImage(relativePath);
         }
