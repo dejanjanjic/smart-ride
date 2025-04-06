@@ -1,8 +1,8 @@
 package net.etfbl.ip.smartrideclient.controller;
 
-import net.etfbl.ip.smartrideclient.beans.RentalPriceConfigBean;
-import net.etfbl.ip.smartrideclient.beans.ScooterBean;
-import net.etfbl.ip.smartrideclient.beans.UserBean;
+import net.etfbl.ip.smartrideclient.beans.*;
+import net.etfbl.ip.smartrideclient.dto.Bike;
+import net.etfbl.ip.smartrideclient.dto.Car;
 import net.etfbl.ip.smartrideclient.dto.Scooter;
 import net.etfbl.ip.smartrideclient.dto.User;
 
@@ -57,6 +57,7 @@ public class Controller extends HttpServlet {
             if(userBean == null || !userBean.isLoggedIn()){ //nevalidan action ili neautorizovan pristup
                 address = "/WEB-INF/pages/login.jsp";
             } else { //korisnik je ulogovan i pristupa drugim stranicama
+                RentalPriceConfigBean configBean = new RentalPriceConfigBean();
                 switch (action) {
                     case "home":
                         address = "/WEB-INF/pages/menu.jsp";
@@ -65,10 +66,25 @@ public class Controller extends HttpServlet {
                         ScooterBean scooterBean = new ScooterBean();
                         List<Scooter> availableScooters = scooterBean.getAllAvailable();
                         req.setAttribute("availableScooters", availableScooters);
-                        RentalPriceConfigBean configBean = new RentalPriceConfigBean();
-                        double scooterPrice = configBean.getScooterPricePerMinute();
+                        double scooterPrice = configBean.getScooterPrice();
                         req.setAttribute("scooterPrice", scooterPrice);
                         address = "/WEB-INF/pages/scooter-rental.jsp";
+                        break;
+                    case "car-rental":
+                        CarBean carBean = new CarBean();
+                        List<Car> availableCars = carBean.getAllAvailable();
+                        req.setAttribute("availableCars", availableCars);
+                        double carPrice = configBean.getCarPrice();
+                        req.setAttribute("carPrice", carPrice);
+                        address = "/WEB-INF/pages/car-rental.jsp";
+                        break;
+                    case "bike-rental":
+                        BikeBean bikeBean = new BikeBean();
+                        List<Bike> availableBikes = bikeBean.getAllAvailable();
+                        req.setAttribute("availableBikes", availableBikes);
+                        double bikePrice = configBean.getBikePrice();
+                        req.setAttribute("bikePrice", bikePrice);
+                        address = "/WEB-INF/pages/bike-rental.jsp";
                         break;
                     case "change-avatar":
                         address = "/WEB-INF/pages/change-avatar.jsp";

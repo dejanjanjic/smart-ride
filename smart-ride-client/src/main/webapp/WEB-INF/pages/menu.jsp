@@ -92,7 +92,7 @@
             <div class="card-content">
                 <h3>Electric Bicycles</h3>
                 <p>Explore the city with our comfortable electric bicycles. Eco-friendly and perfect for longer trips.</p>
-                <a href="#" class="btn">Rent Bicycle</a>
+                <a href="?action=bike-rental" class="btn">Rent Bicycle</a>
             </div>
         </div>
 
@@ -103,7 +103,7 @@
             <div class="card-content">
                 <h3>Cars</h3>
                 <p>Need more space or going further? Rent a car by the hour or day for maximum flexibility.</p>
-                <a href="#" class="btn">Rent Car</a>
+                <a href="?action=car-rental" class="btn">Rent Car</a>
             </div>
         </div>
 

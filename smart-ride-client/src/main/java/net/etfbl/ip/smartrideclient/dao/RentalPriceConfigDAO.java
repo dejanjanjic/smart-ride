@@ -9,15 +9,28 @@ import java.sql.SQLException;
 
 public class RentalPriceConfigDAO {
     private static final ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
-    private static final String GET_PRICE_FOR_SCOOTER =
-            "SELECT price FROM rental_price_config WHERE vehicle_type = 'E_SCOOTER'";
+    private static final String GET_PRICE_FOR_SCOOTER = "SELECT price FROM rental_price_config WHERE vehicle_type = 'E_SCOOTER'";
+    private static final String GET_PRICE_FOR_CAR = "SELECT price FROM rental_price_config WHERE vehicle_type = 'CAR'";
+    private static final String GET_PRICE_FOR_BIKE = "SELECT price FROM rental_price_config WHERE vehicle_type = 'E_BIKE'";
 
-    public static double getScooterPricePerMinute() {
+    public static double getScooterPrice() {
+        return getVehiclePrice(GET_PRICE_FOR_SCOOTER);
+    }
+
+    public static double getCarPrice() {
+        return getVehiclePrice(GET_PRICE_FOR_CAR);
+    }
+
+    public static double getBikePrice() {
+        return getVehiclePrice(GET_PRICE_FOR_BIKE);
+    }
+
+    private static double getVehiclePrice(String query) {
         double price = 0.0;
         Connection connection = null;
         try {
             connection = connectionPool.checkOut();
-            PreparedStatement stmt = connection.prepareStatement(GET_PRICE_FOR_SCOOTER);
+            PreparedStatement stmt = connection.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 price = rs.getDouble("price");
