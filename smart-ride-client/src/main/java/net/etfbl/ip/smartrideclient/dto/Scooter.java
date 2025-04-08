@@ -5,6 +5,8 @@ public class Scooter {
     private String manufacturerName;
     private String model;
     private Integer maxSpeed;
+    private Double positionX;
+    private Double positionY;
 
     public String getId() {
         return id;
@@ -36,5 +38,21 @@ public class Scooter {
 
     public void setMaxSpeed(Integer maxSpeed) {
         this.maxSpeed = maxSpeed;
+    }
+
+    public Double getPositionX() {
+        return positionX;
+    }
+
+    public void setPositionX(Double positionX) {
+        this.positionX = positionX;
+    }
+
+    public Double getPositionY() {
+        return positionY;
+    }
+
+    public void setPositionY(Double positionY) {
+        this.positionY = positionY;
     }
 }

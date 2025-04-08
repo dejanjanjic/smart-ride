@@ -38,9 +38,11 @@ public class UserBean {
         return user.getId();
     }
 
-    public void updateAvatar(String relativePath) {
+    public boolean updateAvatar(String relativePath) {
         if(UserDAO.updateUserAvatar(user.getId(), relativePath)){
             user.setImage(relativePath);
+            return true;
         }
+        return false;
     }
 }

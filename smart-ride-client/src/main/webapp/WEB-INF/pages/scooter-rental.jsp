@@ -56,6 +56,7 @@
             padding: 10px 20px;
             box-shadow: var(--shadow);
             z-index: 1000;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
         }
 
         header .logo-container {
@@ -89,8 +90,8 @@
         }
 
         .avatar {
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--white);
@@ -124,25 +125,7 @@
             font-size: 1rem;
         }
 
-        header .back-btn {
-            background-color: rgba(255, 255, 255, 0.2);
-            border: none;
-            border-radius: 5px;
-            color: var(--white);
-            padding: 6px 12px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            margin-left: 10px;
-            text-decoration: none;
-        }
-
-        header .back-btn:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
+        /* Dashboard button styles removed */
 
         .material-icons {
             font-size: 20px;
@@ -334,6 +317,13 @@
             font-size: 0.95rem;
         }
 
+        .error-message {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none; /* Sakriveno po defaultu */
+        }
+
         .price-breakdown {
             margin-top: 15px;
             padding-top: 15px;
@@ -409,11 +399,11 @@
 
         @media (max-width: 768px) {
             header {
-                padding: 8px 15px;
+                padding: 10px 15px;
             }
 
-            header .logo-container {
-                margin-bottom: 0;
+            header .app-title {
+                font-size: 1.4rem;
             }
 
             .page-title h1 {
@@ -422,6 +412,33 @@
 
             .scooter-grid {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                padding: 10px;
+                gap: 10px;
+            }
+
+            header .logo-container {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 5px;
+            }
+
+            header .user-container {
+                width: 100%;
+                justify-content: center;
+            }
+
+            header .app-title {
+                font-size: 1.3rem;
+            }
+
+            header .username {
+                font-size: 0.9rem;
             }
         }
 
@@ -478,9 +495,6 @@
             </a>
         </div>
         <span class="username"><%=userBean.getName()%></span>
-        <a href="?action=home" class="back-btn">
-            <span class="material-icons">arrow_back</span> Dashboard
-        </a>
     </div>
 </header>
 
@@ -502,12 +516,13 @@
                         if (availableScooters != null) {
                             for (Scooter scooter : availableScooters) {
                     %>
-                    <div class="scooter-card">
+                    <div class="scooter-card" data-scooter-id="<%= scooter.getId() %>">
                         <span class="checkmark material-icons">check_circle</span>
                         <div class="scooter-image">
                             <span class="material-icons-outlined">electric_scooter</span>
                         </div>
                         <div class="scooter-info">
+                            <%-- Prikaz ID-a ovdje je opcionalan ako ga već imaš u data-* atributu --%>
                             <div class="scooter-name"><%= scooter.getId() + " " + scooter.getManufacturerName() + " " + scooter.getModel()%></div>
                             <div class="scooter-details">
                                 <span>Max. Speed: <%= scooter.getMaxSpeed() %>km/h</span>
@@ -515,39 +530,48 @@
                         </div>
                     </div>
                     <%
-                            }
+                        }
+                    } else {
+                    %>
+                    <p>No available scooters found.</p>
+                    <%
                         }
                     %>
                 </div>
-
             </div>
+            <div id="scooterSelectionError" class="error-message">Please select a scooter.</div>
         </div>
 
         <div class="payment-summary">
-            <div class="payment-top">
-                <h2 class="section-title">
-                    <span class="material-icons">payment</span> Payment
-                </h2>
+            <form id="rideForm" method="POST" action="?action=startScooterRide">
+                <input type="hidden" name="selectedScooterId" id="selectedScooterId" value="">
 
-                <div class="payment-method">
-                    <h3>Payment Details</h3>
-                    <div class="card-input-container">
-                        <label for="cardNumber" class="card-input-label">Card Number</label>
-                        <input type="text" id="cardNumber" class="card-input-field" placeholder="Enter your card number" maxlength="19">
+                <div class="payment-top">
+                    <h2 class="section-title">
+                        <span class="material-icons">payment</span> Payment
+                    </h2>
+
+                    <div class="payment-method">
+                        <h3>Payment Details</h3>
+                        <div class="card-input-container">
+                            <label for="cardNumber" class="card-input-label">Card Number</label>
+                            <input type="text" id="cardNumber" name="cardNumber" class="card-input-field" placeholder="Enter your card number" maxlength="19" required>
+                            <div id="cardNumberError" class="error-message">Please enter a valid card number.</div>
+                        </div>
+                    </div>
+
+                    <div class="price-breakdown">
+                        <div class="price-item">
+                            <span>Per second rate</span>
+                            <span><%= df.format(scooterPrice) %> BAM/s</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="price-breakdown">
-                    <div class="price-item">
-                        <span>Per second rate</span>
-                        <span><%= df.format(scooterPrice) %> BAM/s</span>
-                    </div>
+                <div class="payment-bottom">
+                    <button type="submit" class="start-ride-btn">Start Ride</button>
                 </div>
-            </div>
-
-            <div class="payment-bottom">
-                <button class="start-ride-btn">Start Ride</button>
-            </div>
+            </form>
         </div>
     </div>
 </main>
@@ -557,38 +581,77 @@
 </footer>
 
 <script>
-    // Simple JS for demonstration
     document.addEventListener('DOMContentLoaded', function() {
-        // Handle scooter selection
         const scooterCards = document.querySelectorAll('.scooter-card');
+        const selectedScooterIdInput = document.getElementById('selectedScooterId');
+        const rideForm = document.getElementById('rideForm');
+        const startRideBtn = rideForm.querySelector('.start-ride-btn');
+        const cardInput = document.getElementById('cardNumber');
+        const scooterSelectionError = document.getElementById('scooterSelectionError');
+        const cardNumberError = document.getElementById('cardNumberError');
+
+        let selectedScooterElement = null; // Za praćenje selektovanog elementa
+
+        // Handle scooter selection
         scooterCards.forEach(card => {
             card.addEventListener('click', function() {
-                // Remove selected class from all cards
-                scooterCards.forEach(c => c.classList.remove('selected'));
-                // Add selected class to clicked card
+                // Ukloni 'selected' sa prethodno selektovanog (ako postoji)
+                if (selectedScooterElement) {
+                    selectedScooterElement.classList.remove('selected');
+                }
+
+                // Dodaj 'selected' na trenutno kliknuti i ažuriraj skriveno polje
                 this.classList.add('selected');
+                selectedScooterElement = this; // Zapamti trenutno selektovani
+                const scooterId = this.dataset.scooterId; // Čitaj ID iz data atributa
+                selectedScooterIdInput.value = scooterId;
+                scooterSelectionError.style.display = 'none'; // Sakrij poruku o grešci ako je bila prikazana
+                console.log('Selected Scooter ID:', scooterId); // Za debug
             });
         });
 
         // Format card number with spaces
-        const cardInput = document.getElementById('cardNumber');
         cardInput.addEventListener('input', function(e) {
-            // Remove non-digits
-            let value = this.value.replace(/\D/g, '');
-            // Add a space after every 4 digits
-            value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
-            // Update the input value
-            this.value = value;
+            let value = this.value.replace(/\D/g, ''); // Ukloni sve što nije cifra
+            value = value.replace(/(\d{4})(?=\d)/g, '$1 '); // Dodaj razmak nakon svake 4 cifre
+            this.value = value.trim(); // Trim za svaki slučaj
+            cardNumberError.style.display = 'none'; // Sakrij grešku pri unosu
         });
 
-        // Start ride button
-        const startRideBtn = document.querySelector('.start-ride-btn');
-        startRideBtn.addEventListener('click', function() {
-            const cardNumber = document.getElementById('cardNumber').value;
-            if (cardNumber.trim() === '') {
-                alert('Please enter a card number before starting your ride.');
+        // Handle form submission (validacija prije slanja)
+        rideForm.addEventListener('submit', function(event) {
+            let isValid = true;
+            // 1. Provjeri je li skuter odabran
+            if (!selectedScooterIdInput.value) {
+                scooterSelectionError.style.display = 'block';
+                isValid = false;
+                console.error('Validation failed: Scooter not selected.');
             } else {
-                alert('Your ride is starting! You will be redirected to the tracking page.');
+                scooterSelectionError.style.display = 'none';
+            }
+
+            // 2. Provjeri je li broj kartice unesen (osnovna provjera, ne validnost broja)
+            // Ukloni razmake za provjeru dužine
+            const rawCardNumber = cardInput.value.replace(/\s/g, '');
+            // Osnovna provjera dužine (npr. 13-19 cifara) - prilagodi po potrebi
+            if (rawCardNumber.length < 13 || rawCardNumber.length > 19 || !/^\d+$/.test(rawCardNumber)) {
+                cardNumberError.textContent = 'Please enter a valid card number (13-19 digits).';
+                cardNumberError.style.display = 'block';
+                isValid = false;
+                console.error('Validation failed: Invalid card number format or length.');
+            } else {
+                cardNumberError.style.display = 'none';
+            }
+
+            // Ako validacija ne prođe, spriječi slanje forme
+            if (!isValid) {
+                event.preventDefault(); // Stop form submission
+                console.log('Form submission prevented due to validation errors.');
+            } else {
+                console.log('Form validation passed. Submitting...');
+                // Opcionalno: Onemogući dugme da spriječiš višestruke klikove
+                startRideBtn.disabled = true;
+                startRideBtn.textContent = 'Starting...';
             }
         });
     });
