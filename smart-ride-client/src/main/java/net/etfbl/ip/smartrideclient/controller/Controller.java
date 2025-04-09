@@ -1,10 +1,7 @@
 package net.etfbl.ip.smartrideclient.controller;
 
 import net.etfbl.ip.smartrideclient.beans.*;
-import net.etfbl.ip.smartrideclient.dto.Bike;
-import net.etfbl.ip.smartrideclient.dto.Car;
-import net.etfbl.ip.smartrideclient.dto.Scooter;
-import net.etfbl.ip.smartrideclient.dto.User;
+import net.etfbl.ip.smartrideclient.dto.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -74,7 +71,16 @@ public class Controller extends HttpServlet {
                         address = "/WEB-INF/pages/change-avatar.jsp";
                         break;
                     case "active-ride":
-                        address = "/WEB-INF/pages/active-ride.jsp";
+                        String activeScooterId = (String) session.getAttribute("activeScooterId");
+                        Long activeRentalId = (Long) session.getAttribute("rentalId");
+                        if (activeScooterId != null) {
+                            loadActiveScooterRidePage(req, configBean, activeScooterId, activeRentalId);
+                            address = "/WEB-INF/pages/active-ride.jsp";
+                        } else {
+                            session.setAttribute("notification", "No active ride information found.");
+                            resp.sendRedirect(req.getContextPath() + "?action=home");
+                            return;
+                        }
                         break;
                     default:
                         address = "/WEB-INF/pages/menu.jsp"; //TODO: staviti error.jsp
@@ -137,33 +143,23 @@ public class Controller extends HttpServlet {
             String cardNumber = req.getParameter("cardNumber");
             cardNumber = cardNumber != null ? cardNumber.replace(" ", "") : null;
 
-
-            System.out.println("Attempting to start ride for scooter ID: " + scooterId + " with card ending: " + (cardNumber != null && cardNumber.length() > 4 ? "****" + cardNumber.substring(cardNumber.length() - 4) : "N/A"));
-
-            // --- VALIDACIJA NA SERVERU ---
             if (scooterId == null || scooterId.trim().isEmpty() || cardNumber == null || cardNumber.length() < 13 || cardNumber.length() > 19) {
                 System.err.println("Server validation failed: Missing scooter ID or invalid card number.");
-                session.setAttribute("notification", "Invalid data provided. Please select a scooter and enter a valid card number.");
-                // Vrati korisnika na rental stranicu sa greškom
-                loadScooterRentalPage(req, new RentalPriceConfigBean()); // Ponovo učitaj podatke za stranicu
+                loadScooterRentalPage(req, new RentalPriceConfigBean());
                 nextPage = "/WEB-INF/pages/scooter-rental.jsp";
-                useRedirect = false; // Koristi forward da prikažeš grešku
+                useRedirect = false;
             } else {
                 try {
-                    // TODO: Provjera dostupnosti skutera (možda je neko drugi uzeo u međuvremenu)
                     Long clientId = userBean.getId();
                     RentalBean rentalBean = new RentalBean();
-                    boolean rentalCreated = rentalBean.startRental(clientId, scooterId);
-                    if (rentalCreated) {
-                        // Uspješno kreiran rental (Bean je pozvao DAO)
-                        System.out.println("Controller: RentalBean reported successful rental creation for user " + clientId + ", scooter " + scooterId);
-                        session.setAttribute("notification", "Rental started successfully! Enjoy your ride.");
+                    Long rentalId = rentalBean.startRental(clientId, scooterId);
+                    if (rentalId != null) {
+                        session.setAttribute("activeScooterId", scooterId);
+                        session.setAttribute("rentalId", rentalId);
                         nextPage = "/?action=active-ride";
                         useRedirect = true;
                     } else {
-                        // Bean je vratio false (DAO nije uspio ili je došlo do greške u Bean-u/DAO-u)
                         System.err.println("Controller: RentalBean reported failure to create rental for user " + clientId + ", scooter " + scooterId);
-                        // Poruka može biti generička ili specifičnija ako Bean vrati kod greške
                         session.setAttribute("notification", "Could not start rental. The scooter might be unavailable or a server error occurred. Please try again.");
                         loadScooterRentalPage(req, new RentalPriceConfigBean());
                         nextPage = "/WEB-INF/pages/scooter-rental.jsp";
@@ -186,11 +182,58 @@ public class Controller extends HttpServlet {
                     e.printStackTrace();
                 }
             }
+        } else if ("endRide".equals(action)) {
+            System.out.println("Processing 'endRide' action for user: " + userBean.getId());
+
+            String rentalIdStr = req.getParameter("rentalId");
+
+            if (rentalIdStr == null || rentalIdStr.trim().isEmpty()) {
+                System.err.println("Error ending ride: rentalId parameter missing from request.");
+                nextPage = "?action=home";
+                useRedirect = true;
+            } else {
+                try {
+                    Long rentalId = Long.parseLong(rentalIdStr);
+                    Long userId = userBean.getId();
+
+                    RentalBean rentalBean = new RentalBean();
+                    Rental details = rentalBean.finishScooterRentalById(rentalId, userId);
+
+                    if (details != null) {
+                        System.out.println("Controller: Ride ended successfully. RentalID: " + details.getId()
+                                + ", Duration: " + details.getDurationInSeconds() + "s, Cost: " + details.getPrice());
+
+                        session.removeAttribute("activeRentalId");
+                        session.removeAttribute("activeScooterId");
+
+
+                        nextPage = "?action=home";
+                        useRedirect = true;
+                    } else {
+                        System.err.println("Controller: Could not end ride for rentalId=" + rentalId + ". finishRentalById returned null.");
+                        nextPage = "?action=home";
+                        useRedirect = true;
+                    }
+
+                } catch (NumberFormatException e) {
+                    // Greška pri parsiranju rentalId
+                    System.err.println("Error ending ride: Invalid rentalId format '" + rentalIdStr + "'.");
+                    session.setAttribute("postRedirectNotification", "Could not end ride: invalid data received.");
+                    nextPage = "?action=home";
+                    useRedirect = true;
+                } catch (Exception e) {
+                    // Neka druga greška iz Beana ili DAO sloja
+                    System.err.println("Error ending ride: Exception occurred.");
+                    e.printStackTrace();
+                    session.setAttribute("postRedirectNotification", "An unexpected error occurred while ending the ride. Please contact support.");
+                    nextPage = "?action=home";
+                    useRedirect = true;
+                }
+            }
         } else {
-            // Nepoznata POST akcija ili akcija bez odgovarajuće provjere
             System.out.println("Unknown POST action or missing handler: " + action);
             session.setAttribute("notification", "Invalid operation requested.");
-            nextPage = "?action=home"; // Vrati na meni
+            nextPage = "?action=home";
             useRedirect = true;
         }
 
@@ -204,12 +247,25 @@ public class Controller extends HttpServlet {
 
     }
 
+
     private void loadScooterRentalPage(HttpServletRequest req, RentalPriceConfigBean configBean) {
         ScooterBean scooterBean = new ScooterBean();
         List<Scooter> availableScooters = scooterBean.getAllAvailable();
         req.setAttribute("availableScooters", availableScooters);
         double scooterPrice = configBean.getScooterPrice();
         req.setAttribute("scooterPrice", scooterPrice);
+    }
+
+    private void loadActiveScooterRidePage(HttpServletRequest req, RentalPriceConfigBean rentalPriceConfigBean, String scooterId, Long activeRentalId) {
+        ScooterBean scooterBean = new ScooterBean();
+        Scooter scooter = scooterBean.getById(scooterId);
+        System.out.println(scooter);
+        req.setAttribute("scooter", scooter);
+        double scooterPrice = rentalPriceConfigBean.getScooterPrice();
+        System.out.println(scooterPrice);
+        req.setAttribute("scooterPrice", scooterPrice);
+        req.setAttribute("icon", "electric_scooter");
+        req.setAttribute("activeRentalId", activeRentalId);
     }
 
     private void loadCarRentalPage(HttpServletRequest req, RentalPriceConfigBean configBean) {

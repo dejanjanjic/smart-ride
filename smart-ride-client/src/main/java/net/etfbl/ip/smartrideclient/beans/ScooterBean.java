@@ -10,4 +10,8 @@ public class ScooterBean {
     public List<Scooter> getAllAvailable(){
         return ScooterDAO.selectAvailableScooters();
     }
+
+    public Scooter getById(String scooterId){
+        return ScooterDAO.getScooterById(scooterId);
+    }
 }

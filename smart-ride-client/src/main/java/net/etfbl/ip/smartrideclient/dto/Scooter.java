@@ -55,4 +55,16 @@ public class Scooter {
     public void setPositionY(Double positionY) {
         this.positionY = positionY;
     }
+
+    @Override
+    public String toString() {
+        return "Scooter{" +
+                "id='" + id + '\'' +
+                ", manufacturerName='" + manufacturerName + '\'' +
+                ", model='" + model + '\'' +
+                ", maxSpeed=" + maxSpeed +
+                ", positionX=" + positionX +
+                ", positionY=" + positionY +
+                '}';
+    }
 }

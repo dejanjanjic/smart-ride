@@ -1,3 +1,10 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.text.DecimalFormat" %>
+<%
+  double scooterPrice = (double) request.getAttribute("scooterPrice");
+  DecimalFormat df = new DecimalFormat("#.##");
+%>
+<jsp:useBean id="userBean" type="net.etfbl.ip.smartrideclient.beans.UserBean" scope="session"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +14,9 @@
   <!-- Google Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
   <style>
     * {
       margin: 0;
@@ -405,12 +415,12 @@
   </div>
   <div class="user-container">
     <div class="avatar-container">
-      <img src="images/no-avatar.jpg" alt="User Avatar" class="avatar">
+      <img src="<%=userBean.getAvatarPath() != null ? userBean.getAvatarPath() : "images/no-avatar.jpg"%>" alt="User Avatar" class="avatar">
       <a href="?action=change-avatar" class="avatar-change-btn">
         <span class="material-icons">add</span>
       </a>
     </div>
-    <span class="username">John Doe</span>
+    <span class="username"><%=userBean.getName()%></span>
   </div>
 </header>
 
@@ -418,17 +428,17 @@
   <div class="active-ride-container">
     <div class="ride-title">
       <h1>
-        <span class="material-icons">directions_bike</span>
+        <span class="material-icons">${icon}</span>
         Active Ride
       </h1>
       <p class="subtitle">Your ride is in progress</p>
     </div>
 
     <div class="scooter-info">
-      <span class="material-icons-outlined scooter-icon">electric_scooter</span>
+      <span class="material-icons-outlined scooter-icon">${icon}</span>
       <div class="scooter-details">
-        <h3>XYZ Speedster Pro</h3>
-        <p>ID: SC-12345 • Max Speed: 25km/h</p>
+        <h3>${scooter.getManufacturerName()} ${scooter.getModel()}</h3>
+        <p>ID: ${scooter.getId()} • Max Speed: ${scooter.getMaxSpeed()}km/h</p>
       </div>
     </div>
 
@@ -440,25 +450,17 @@
     <div class="cost-section pulse-animation">
       <div class="cost-details">Current Cost</div>
       <div class="cost-amount" id="cost">0.00 BAM</div>
-      <div class="cost-details">Rate: 0.05 BAM/second</div>
-    </div>
-
-    <div class="ride-stats">
-      <div class="stat-box">
-        <div class="stat-label">Estimated Distance</div>
-        <div class="stat-value" id="distance">0.0 km</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-label">Avg. Speed</div>
-        <div class="stat-value" id="speed">0 km/h</div>
-      </div>
+      <div class="cost-details">Rate: <%=scooterPrice%> BAM/second</div>
     </div>
 
     <div class="action-buttons">
-      <button class="end-ride-btn">
-        <span class="material-icons">stop_circle</span>
-        End Ride
-      </button>
+      <form id="endRideForm" action="?action=endRide" method="POST" style="display: inline;">
+        <input type="hidden" name="rentalId" value="${activeRentalId}">
+        <button type="submit" class="end-ride-btn">
+          <span class="material-icons">stop_circle</span>
+          End Ride
+        </button>
+      </form>
     </div>
   </div>
 </main>
@@ -467,69 +469,76 @@
   <p>&copy; 2025 Smart Ride. All rights reserved.</p>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Timer implementation
     const timerDisplay = document.getElementById('timer');
     const costDisplay = document.getElementById('cost');
-    const distanceDisplay = document.getElementById('distance');
-    const speedDisplay = document.getElementById('speed');
-
-    // Mock rate per second
-    const ratePerSecond = 0.05; // BAM per second
-
-    // Initial values
+    const ratePerSecond = <%=scooterPrice%>;
     let seconds = 0;
     let cost = 0;
-    let distance = 0;
+    let timerInterval = null;
 
-    // Format time as HH:MM:SS
     function formatTime(totalSeconds) {
       const hours = Math.floor(totalSeconds / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
-
       return [
         hours.toString().padStart(2, '0'),
         minutes.toString().padStart(2, '0'),
         seconds.toString().padStart(2, '0')
       ].join(':');
     }
-
-    // Format cost with two decimal places
     function formatCost(cost) {
       return cost.toFixed(2) + ' BAM';
     }
 
-    // Update timer and cost every second
-    const timer = setInterval(function() {
+    timerInterval = setInterval(function() {
       seconds++;
       cost = seconds * ratePerSecond;
-
-      // Update displays
       timerDisplay.textContent = formatTime(seconds);
       costDisplay.textContent = formatCost(cost);
-
-      // Update mock distance (as if traveling at 15 km/h)
-      distance = (seconds / 240).toFixed(1); // Very rough approximation
-      distanceDisplay.textContent = distance + ' km';
-
-      // Mock average speed
-      const speed = Math.floor(10 + Math.sin(seconds / 10) * 5); // Oscillating between ~5-15 km/h
-      speedDisplay.textContent = speed + ' km/h';
-
     }, 1000);
 
-    // End ride button functionality
-    const endRideBtn = document.querySelector('.end-ride-btn');
-    endRideBtn.addEventListener('click', function() {
-      // Show confirmation (in real app, this would submit to server)
-      if (confirm('Are you sure you want to end this ride?')) {
-        clearInterval(timer);
-        alert('Ride ended. Total cost: ' + formatCost(cost));
-        // In a real app, this would redirect to a summary page or process payment
-        window.location.href = '?action=rideCompleted&cost=' + cost.toFixed(2);
+    const endRideForm = document.getElementById('endRideForm');
+    const endRideBtn = endRideForm.querySelector('.end-ride-btn');
+
+    endRideForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      if (timerInterval) {
+        clearInterval(timerInterval);
       }
+
+      Swal.fire({
+        title: 'End Ride?',
+        text: "Are you sure you want to end this ride?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, end it!',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+
+          endRideBtn.disabled = true;
+          endRideBtn.innerHTML = '<span class="material-icons">hourglass_top</span> Ending...';
+
+          endRideForm.submit();
+        } else {
+          if (!timerInterval) {
+            timerInterval = setInterval(function() {
+              seconds++;
+              cost = seconds * ratePerSecond;
+              timerDisplay.textContent = formatTime(seconds);
+              costDisplay.textContent = formatCost(cost);
+            }, 1000);
+          }
+          console.log('Ride end cancelled by user.');
+        }
+      });
     });
   });
 </script>
