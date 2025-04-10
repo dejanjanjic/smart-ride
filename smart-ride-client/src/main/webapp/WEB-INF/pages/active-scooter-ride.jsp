@@ -428,14 +428,14 @@
   <div class="active-ride-container">
     <div class="ride-title">
       <h1>
-        <span class="material-icons">${icon}</span>
+        <span class="material-icons">electric_scooter</span>
         Active Ride
       </h1>
       <p class="subtitle">Your ride is in progress</p>
     </div>
 
     <div class="scooter-info">
-      <span class="material-icons-outlined scooter-icon">${icon}</span>
+      <span class="material-icons-outlined scooter-icon">electric_scooter</span>
       <div class="scooter-details">
         <h3>${scooter.getManufacturerName()} ${scooter.getModel()}</h3>
         <p>ID: ${scooter.getId()} • Max Speed: ${scooter.getMaxSpeed()}km/h</p>
@@ -454,7 +454,7 @@
     </div>
 
     <div class="action-buttons">
-      <form id="endRideForm" action="?action=endRide" method="POST" style="display: inline;">
+      <form id="endRideForm" action="?action=endScooterRide" method="POST" style="display: inline;">
         <input type="hidden" name="rentalId" value="${activeRentalId}">
         <button type="submit" class="end-ride-btn">
           <span class="material-icons">stop_circle</span>

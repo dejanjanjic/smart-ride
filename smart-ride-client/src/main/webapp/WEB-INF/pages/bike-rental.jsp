@@ -499,10 +499,10 @@
                 <div class="bike-grid">
                     <%
                         List<Bike> availableBikes = (List<Bike>) request.getAttribute("availableBikes");
-                        if (availableBikes != null) {
+                        if (availableBikes != null && !availableBikes.isEmpty()) {
                             for (Bike bike : availableBikes) {
                     %>
-                    <div class="bike-card">
+                    <div class="bike-card" data-bike-id="<%= bike.getId() %>">
                         <span class="checkmark material-icons">check_circle</span>
                         <div class="bike-image">
                             <span class="material-icons-outlined">electric_bike</span>
@@ -515,39 +515,48 @@
                         </div>
                     </div>
                     <%
-                            }
+                        }
+                    } else {
+                    %>
+                    <p>No available bikes found.</p>
+                    <%
                         }
                     %>
                 </div>
-
             </div>
+            <div id="bikeSelectionError" class="error-message" style="display: none; color: red; margin-top: 10px;">Please select a bike.</div>
         </div>
 
         <div class="payment-summary">
-            <div class="payment-top">
-                <h2 class="section-title">
-                    <span class="material-icons">payment</span> Payment
-                </h2>
+            <form id="rideForm" method="POST" action="?action=startBikeRide">
+                <input type="hidden" name="selectedBikeId" id="selectedBikeId" value="">
 
-                <div class="payment-method">
-                    <h3>Payment Details</h3>
-                    <div class="card-input-container">
-                        <label for="cardNumber" class="card-input-label">Card Number</label>
-                        <input type="text" id="cardNumber" class="card-input-field" placeholder="Enter your card number" maxlength="19">
+                <div class="payment-top">
+                    <h2 class="section-title">
+                        <span class="material-icons">payment</span> Payment
+                    </h2>
+
+                    <div class="payment-method">
+                        <h3>Payment Details</h3>
+                        <div class="card-input-container">
+                            <label for="cardNumber" class="card-input-label">Card Number</label>
+                            <input type="text" id="cardNumber" name="cardNumber" class="card-input-field" placeholder="Enter your card number" maxlength="19" required>
+                            <div id="cardNumberError" class="error-message" style="display: none; color: red; margin-top: 5px;">Please enter a valid card number.</div>
+                        </div>
+                    </div>
+
+                    <div class="price-breakdown">
+                        <div class="price-item">
+                            <span>Per second rate</span>
+                            <span><%= df.format(bikePrice) %> BAM/s</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="price-breakdown">
-                    <div class="price-item">
-                        <span>Per second rate</span>
-                        <span><%= df.format(bikePrice) %> BAM/s</span>
-                    </div>
+                <div class="payment-bottom">
+                    <button type="submit" class="start-ride-btn">Start Ride</button>
                 </div>
-            </div>
-
-            <div class="payment-bottom">
-                <button class="start-ride-btn">Start Ride</button>
-            </div>
+            </form>
         </div>
     </div>
 </main>
@@ -557,38 +566,66 @@
 </footer>
 
 <script>
-    // Simple JS for demonstration
     document.addEventListener('DOMContentLoaded', function() {
-        // Handle bike selection
         const bikeCards = document.querySelectorAll('.bike-card');
+        const selectedBikeIdInput = document.getElementById('selectedBikeId');
+        const rideForm = document.getElementById('rideForm');
+        const startRideBtn = rideForm.querySelector('.start-ride-btn');
+        const cardInput = document.getElementById('cardNumber');
+        const bikeSelectionError = document.getElementById('bikeSelectionError');
+        const cardNumberError = document.getElementById('cardNumberError');
+
+        let selectedBikeElement = null;
+
         bikeCards.forEach(card => {
             card.addEventListener('click', function() {
-                // Remove selected class from all cards
-                bikeCards.forEach(c => c.classList.remove('selected'));
-                // Add selected class to clicked card
+                if (selectedBikeElement) {
+                    selectedBikeElement.classList.remove('selected');
+                }
                 this.classList.add('selected');
+                selectedBikeElement = this;
+                const bikeId = this.dataset.bikeId;
+                selectedBikeIdInput.value = bikeId;
+                bikeSelectionError.style.display = 'none';
+                console.log('Selected Bike ID:', bikeId);
             });
         });
 
-        // Format card number with spaces
-        const cardInput = document.getElementById('cardNumber');
         cardInput.addEventListener('input', function(e) {
-            // Remove non-digits
             let value = this.value.replace(/\D/g, '');
-            // Add a space after every 4 digits
             value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
-            // Update the input value
-            this.value = value;
+            this.value = value.trim();
+            cardNumberError.style.display = 'none';
         });
 
-        // Start ride button
-        const startRideBtn = document.querySelector('.start-ride-btn');
-        startRideBtn.addEventListener('click', function() {
-            const cardNumber = document.getElementById('cardNumber').value;
-            if (cardNumber.trim() === '') {
-                alert('Please enter a card number before starting your ride.');
+        rideForm.addEventListener('submit', function(event) {
+            let isValid = true;
+
+            if (!selectedBikeIdInput.value) {
+                bikeSelectionError.style.display = 'block';
+                isValid = false;
+                console.error('Validation failed: Bike not selected.');
             } else {
-                alert('Your ride is starting! You will be redirected to the tracking page.');
+                bikeSelectionError.style.display = 'none';
+            }
+
+            const rawCardNumber = cardInput.value.replace(/\s/g, '');
+            if (rawCardNumber.length < 13 || rawCardNumber.length > 19 || !/^\d+$/.test(rawCardNumber)) {
+                cardNumberError.textContent = 'Please enter a valid card number (13-19 digits).';
+                cardNumberError.style.display = 'block';
+                isValid = false;
+                console.error('Validation failed: Invalid card number format or length.');
+            } else {
+                cardNumberError.style.display = 'none';
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+                console.log('Form submission prevented due to validation errors.');
+            } else {
+                console.log('Form validation passed. Submitting...');
+                startRideBtn.disabled = true;
+                startRideBtn.textContent = 'Starting...';
             }
         });
     });

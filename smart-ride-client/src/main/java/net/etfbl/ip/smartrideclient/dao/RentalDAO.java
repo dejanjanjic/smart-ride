@@ -6,6 +6,8 @@ import net.etfbl.ip.smartrideclient.util.DBUtil;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RentalDAO {
     private static final ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
@@ -23,6 +25,45 @@ public class RentalDAO {
             "UPDATE rental " +
                     "SET active = ?, duration_in_seconds = ?, price = ?, end_locationx = ?, end_locationy = ? " +
                     "WHERE id = ?";
+    private static final String SQL_SELECT_RENTAL_HISTORY =
+            "SELECT id, vehicle_id, date_time, duration_in_seconds, price " +
+                    "FROM rental WHERE client_id = ? AND active = FALSE ORDER BY date_time DESC";
+
+    public static List<Rental> getRentalHistoryForUser(Long userId) {
+        List<Rental> history = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            connection = connectionPool.checkOut();
+            pstmt = connection.prepareStatement(SQL_SELECT_RENTAL_HISTORY);
+            pstmt.setLong(1, userId);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Rental rental = new Rental();
+                rental.setId(rs.getLong("id"));
+                rental.setVehicleId(rs.getString("vehicle_id"));
+                Timestamp startTimeStamp = rs.getTimestamp("date_time");
+                if (startTimeStamp != null) {
+                    rental.setDateTime(startTimeStamp.toLocalDateTime());
+                }
+                rental.setDurationInSeconds(rs.getInt("duration_in_seconds"));
+                rental.setPrice(rs.getBigDecimal("price"));
+                rental.setActive(false);
+                history.add(rental);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching rental history for user ID: " + userId);
+            e.printStackTrace();
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (pstmt != null) pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            connectionPool.checkIn(connection);
+        }
+        return history;
+    }
 
     public static Long addRental(Rental rental) {
         Long generatedId = null;

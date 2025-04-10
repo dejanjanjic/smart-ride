@@ -1,6 +1,7 @@
 package net.etfbl.ip.smartrideclient.dao;
 
 import net.etfbl.ip.smartrideclient.dto.Bike;
+import net.etfbl.ip.smartrideclient.dto.Scooter;
 import net.etfbl.ip.smartrideclient.util.ConnectionPool;
 import net.etfbl.ip.smartrideclient.util.DBUtil;
 
@@ -26,6 +27,12 @@ public class BikeDAO {
                     "    SELECT 1 FROM failure f " +
                     "    WHERE f.vehicle_id = b.id " +
                     ");";
+    private static final String SQL_SELECT_BIKE_BY_ID =
+            "SELECT b.id AS bike_id, m.name AS manufacturer_name, v.model, b.max_range " +
+                    "FROM ebike b " +
+                    "JOIN vehicle v ON b.id = v.id " +
+                    "JOIN manufacturer m ON v.manufacturer_id = m.id " +
+                    "WHERE b.id = ?;";
     public static List<Bike> selectAvailableBikes() {
         List<Bike> bikes = new ArrayList<>();
         Connection connection = null;
@@ -52,5 +59,35 @@ public class BikeDAO {
         }
 
         return bikes;
+    }
+
+    public static Bike getBikeById(String bikeId) {
+        Bike bike = null;
+        Connection connection = null;
+        ResultSet rs = null;
+
+        try {
+            connection = connectionPool.checkOut();
+            PreparedStatement pstmt = DBUtil.prepareStatement(connection,
+                    SQL_SELECT_BIKE_BY_ID, false);
+            pstmt.setString(1, bikeId);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                bike = new Bike();
+                bike.setId(rs.getString("bike_id"));
+                bike.setManufacturerName(rs.getString("manufacturer_name"));
+                bike.setModel(rs.getString("model"));
+                bike.setMaxRange(rs.getInt("max_range"));
+            }
+
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            connectionPool.checkIn(connection);
+        }
+
+        return bike;
     }
 }

@@ -11,7 +11,7 @@
 <body>
 <header>
     <div class="header-content">
-        <img src="../../images/logo.png" alt="Smart Ride Logo" class="logo">
+        <img src="images/logo.png" alt="Smart Ride Logo" class="logo">
         <div class="app-title">Smart Ride</div>
     </div>
 </header>
@@ -32,13 +32,18 @@
         </div>
         <div class="register-card">
             <h2>Create Account</h2>
-            <form>
-                <div class="error-message" id="error-message">
-                    <% if(session.getAttribute("errorMessage") != null) { %>
-                    <%= session.getAttribute("errorMessage") %>
-                    <% session.removeAttribute("errorMessage"); %>
-                    <% } %>
+            <form id="registerForm" method="POST" action="Controller">
+                <input type="hidden" name="action" value="register">
+
+                <div class="error-message" id="server-error-message">
+                    <% String errorMessage = (String) session.getAttribute("errorMessage");
+                        if(errorMessage != null) { %>
+                    <%= errorMessage %>
+                    <%   session.removeAttribute("errorMessage");
+                    } %>
                 </div>
+                <div class="error-message" id="client-error-message" style="display: none;"></div>
+
 
                 <div class="form-column">
                     <div class="input-group">
@@ -60,18 +65,18 @@
 
                 <div class="form-column">
                     <div class="input-group">
-                        <label for="first-name">First Name</label>
+                        <label for="firstName">First Name</label>
                         <div class="input-wrapper">
                             <i class="fas fa-id-card"></i>
-                            <input type="text" id="first-name" name="first-name" placeholder="Your first name" required>
+                            <input type="text" id="firstName" name="firstName" placeholder="Your first name" required>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label for="last-name">Last Name</label>
+                        <label for="lastName">Last Name</label>
                         <div class="input-wrapper">
                             <i class="fas fa-id-card"></i>
-                            <input type="text" id="last-name" name="last-name" placeholder="Your last name" required>
+                            <input type="text" id="lastName" name="lastName" placeholder="Your last name" required>
                         </div>
                     </div>
                 </div>
@@ -93,10 +98,10 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="confirm-password">Confirm Password</label>
+                    <label for="confirmPassword">Confirm Password</label>
                     <div class="input-wrapper">
                         <i class="fas fa-lock"></i>
-                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
                     </div>
                 </div>
 
@@ -108,5 +113,24 @@
         </div>
     </div>
 </main>
+<script>
+    const registerForm = document.getElementById('registerForm');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const clientErrorMessage = document.getElementById('client-error-message');
+
+    registerForm.addEventListener('submit', function(event) {
+        clientErrorMessage.style.display = 'none';
+        clientErrorMessage.textContent = '';
+
+        if (passwordInput.value !== confirmPasswordInput.value) {
+            event.preventDefault();
+            clientErrorMessage.textContent = 'Passwords do not match!';
+            clientErrorMessage.style.display = 'block';
+            confirmPasswordInput.focus();
+            return;
+        }
+    });
+</script>
 </body>
 </html>

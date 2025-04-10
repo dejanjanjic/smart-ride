@@ -21,6 +21,18 @@ public class UserBean {
         return false;
     }
 
+    public boolean changePassword(Long userId, String newPassword) {
+        if (userId == null || newPassword == null || newPassword.isEmpty()) {
+            return false;
+        }
+        try {
+            return UserDAO.updatePassword(userId, newPassword);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public String getName(){
         return user == null ? "" : user.getFirstName() + " " + user.getLastName();
     }

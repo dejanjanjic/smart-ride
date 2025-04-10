@@ -12,10 +12,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Smart Ride - Rent a Car</title>
-    <!-- Google Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <style>
@@ -74,7 +73,7 @@
             font-size: 1.6rem;
             color: var(--white);
             font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
 
         header .user-container {
@@ -110,7 +109,7 @@
             justify-content: center;
             cursor: pointer;
             border: 2px solid white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
             text-decoration: none;
         }
 
@@ -189,7 +188,7 @@
             box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
-            height: 500px; /* Fixed height for the container */
+            height: 500px;
         }
 
         .section-title {
@@ -202,9 +201,9 @@
         }
 
         .car-grid-container {
-            overflow-y: auto; /* Add scrollbar when content exceeds the container */
-            flex: 1; /* Take up all available space */
-            padding-right: 5px; /* Add padding for scrollbar */
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 5px;
         }
 
         .car-grid {
@@ -282,12 +281,12 @@
             box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
-            height: 500px; /* Fixed height to match car-selection */
-            justify-content: space-between; /* Distribute content with space between */
+            height: auto; /* Prilagodi visinu */
+            justify-content: space-between;
         }
 
         .payment-top {
-            flex: 1; /* Take remaining space */
+            flex: 1;
         }
 
         .payment-method {
@@ -301,6 +300,7 @@
 
         .card-input-container {
             margin-top: 10px;
+            margin-bottom: 10px;
         }
 
         .card-input-field {
@@ -341,7 +341,7 @@
         }
 
         .payment-bottom {
-            margin-top: 20px; /* Add space between content and button */
+            margin-top: 20px;
         }
 
         .start-ride-btn {
@@ -384,7 +384,36 @@
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
         }
 
-        /* Adjust for different screen sizes to prevent scrolling */
+        .id-type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .id-type-option {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .id-type-option.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(20, 168, 157, 0.05);
+            color: var(--primary-color);
+        }
+
+        .error-message {
+            display: none;
+            color: var(--error);
+            margin-top: 5px;
+            font-size: 0.85rem;
+        }
+
         @media (max-width: 992px) {
             .rental-container {
                 grid-template-columns: 1fr;
@@ -436,7 +465,6 @@
             }
         }
 
-        /* Custom scrollbar styling */
         .car-grid-container::-webkit-scrollbar {
             width: 6px;
         }
@@ -464,7 +492,8 @@
     </div>
     <div class="user-container">
         <div class="avatar-container">
-            <img src="<%=userBean.getAvatarPath() != null ? userBean.getAvatarPath() : "images/no-avatar.jpg"%>" alt="User Avatar" class="avatar">
+            <img src="<%=userBean.getAvatarPath() != null ? userBean.getAvatarPath() : "images/no-avatar.jpg"%>"
+                 alt="User Avatar" class="avatar">
             <a href="?action=change-avatar" class="avatar-change-btn">
                 <span class="material-icons">add</span>
             </a>
@@ -491,57 +520,87 @@
                 <div class="car-grid">
                     <%
                         List<Car> availableCars = (List<Car>) request.getAttribute("availableCars");
-                        if (availableCars != null) {
+                        if (availableCars != null && !availableCars.isEmpty()) {
                             for (Car car : availableCars) {
                     %>
-                    <div class="car-card">
+                    <div class="car-card" data-car-id="<%= car.getId() %>">
                         <span class="checkmark material-icons">check_circle</span>
                         <div class="car-image">
-<%--                            <% System.out.println(car.getImage());--%>
-<%--                            if (car.getImage() != null && !car.getImage().isEmpty()) { %>--%>
-<%--                            <img src="<%=car.getImage()%>" alt="Car Image" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px;">--%>
-<%--                            <% } else { %>--%>
                             <span class="material-icons-outlined">directions_car</span>
-<%--                            <% } %>--%>
                         </div>
                         <div class="car-info">
-                            <div class="car-name"><%= car.getId() + " " + car.getManufacturerName() + " " + car.getModel()%></div>
+                            <div class="car-name"><%= car.getId() + " " + car.getManufacturerName() + " " + car.getModel()%>
+                            </div>
                         </div>
                     </div>
                     <%
-                            }
+                        }
+                    } else {
+                    %>
+                    <p>No available cars found.</p>
+                    <%
                         }
                     %>
                 </div>
-
             </div>
+            <div id="carSelectionError" class="error-message">Please select a car.</div>
         </div>
 
         <div class="payment-summary">
-            <div class="payment-top">
-                <h2 class="section-title">
-                    <span class="material-icons">payment</span> Payment
-                </h2>
+            <form id="rideForm" method="POST" action="?action=startCarRide">
+                <input type="hidden" name="selectedCarId" id="selectedCarId" value="">
 
-                <div class="payment-method">
-                    <h3>Payment Details</h3>
-                    <div class="card-input-container">
-                        <label for="cardNumber" class="card-input-label">Card Number</label>
-                        <input type="text" id="cardNumber" class="card-input-field" placeholder="Enter your card number" maxlength="19">
+                <div class="payment-top">
+                    <h2 class="section-title">
+                        <span class="material-icons">payment</span> Payment & Identification
+                    </h2>
+
+                    <div class="payment-method">
+                        <h3>Identification Details</h3>
+
+                        <div class="id-type-selector">
+                            <div class="id-type-option selected" data-type="id-card">ID Card</div>
+                            <div class="id-type-option" data-type="passport">Passport</div>
+                        </div>
+
+                        <div class="card-input-container">
+                            <label for="idNumber" class="card-input-label">ID Document Number</label>
+                            <input type="text" id="idNumber" name="idNumber" class="card-input-field"
+                                   placeholder="Enter your ID card number" required>
+                            <div id="idNumberError" class="error-message">Please enter your ID document number.</div>
+                        </div>
+
+                        <div class="card-input-container">
+                            <label for="driverLicense" class="card-input-label">Driver's License Number</label>
+                            <input type="text" id="driverLicense" name="driverLicense" class="card-input-field"
+                                   placeholder="Enter your driver's license number" required>
+                            <div id="driverLicenseError" class="error-message">Please enter your driver's license
+                                number.
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 15px;">Payment Details</h3>
+
+                        <div class="card-input-container">
+                            <label for="cardNumber" class="card-input-label">Card Number</label>
+                            <input type="text" id="cardNumber" name="cardNumber" class="card-input-field"
+                                   placeholder="Enter your card number" maxlength="19" required>
+                            <div id="cardNumberError" class="error-message">Please enter a valid card number.</div>
+                        </div>
+                    </div>
+
+                    <div class="price-breakdown">
+                        <div class="price-item">
+                            <span>Per second rate</span>
+                            <span><%= df.format(carPrice) %> BAM/s</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="price-breakdown">
-                    <div class="price-item">
-                        <span>Per second rate</span>
-                        <span><%= df.format(carPrice) %> BAM/s</span>
-                    </div>
+                <div class="payment-bottom">
+                    <button type="submit" class="start-ride-btn">Start Ride</button>
                 </div>
-            </div>
-
-            <div class="payment-bottom">
-                <button class="start-ride-btn">Start Ride</button>
-            </div>
+            </form>
         </div>
     </div>
 </main>
@@ -551,38 +610,121 @@
 </footer>
 
 <script>
-    // Simple JS for demonstration
-    document.addEventListener('DOMContentLoaded', function() {
-        // Handle car selection
+    document.addEventListener('DOMContentLoaded', function () {
         const carCards = document.querySelectorAll('.car-card');
+        const idTypeOptions = document.querySelectorAll('.id-type-option');
+        const idNumberInput = document.getElementById('idNumber');
+        const driverLicenseInput = document.getElementById('driverLicense');
+        const cardInput = document.getElementById('cardNumber');
+
+        // Reference iz forme
+        const rideForm = document.getElementById('rideForm');
+        const selectedCarIdInput = document.getElementById('selectedCarId');
+        const startRideBtn = rideForm.querySelector('.start-ride-btn');
+
+        // Reference za poruke o greškama
+        const carSelectionError = document.getElementById('carSelectionError');
+        const idNumberError = document.getElementById('idNumberError');
+        const driverLicenseError = document.getElementById('driverLicenseError');
+        const cardNumberError = document.getElementById('cardNumberError');
+
+        let selectedCarElement = null;
+
+        // Handle car selection - Ažurirano da pamti ID u skrivenom polju
         carCards.forEach(card => {
-            card.addEventListener('click', function() {
-                // Remove selected class from all cards
-                carCards.forEach(c => c.classList.remove('selected'));
-                // Add selected class to clicked card
+            card.addEventListener('click', function () {
+                if (selectedCarElement) {
+                    selectedCarElement.classList.remove('selected');
+                }
                 this.classList.add('selected');
+                selectedCarElement = this;
+                const carId = this.dataset.carId; // Čitaj data-car-id
+                selectedCarIdInput.value = carId; // Postavi vrednost skrivenog polja
+                carSelectionError.style.display = 'none'; // Sakrij grešku
+                console.log('Selected Car ID:', carId);
             });
         });
 
-        // Format card number with spaces
-        const cardInput = document.getElementById('cardNumber');
-        cardInput.addEventListener('input', function(e) {
-            // Remove non-digits
-            let value = this.value.replace(/\D/g, '');
-            // Add a space after every 4 digits
-            value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
-            // Update the input value
-            this.value = value;
+        // Handle ID document type selection (ostaje isto)
+        idTypeOptions.forEach(option => {
+            option.addEventListener('click', function () {
+                idTypeOptions.forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                if (this.dataset.type === 'passport') {
+                    idNumberInput.placeholder = 'Enter your passport number';
+                } else {
+                    idNumberInput.placeholder = 'Enter your ID card number';
+                }
+                idNumberError.style.display = 'none'; // Sakrij grešku pri promeni tipa
+            });
         });
 
-        // Start ride button
-        const startRideBtn = document.querySelector('.start-ride-btn');
-        startRideBtn.addEventListener('click', function() {
-            const cardNumber = document.getElementById('cardNumber').value;
-            if (cardNumber.trim() === '') {
-                alert('Please enter a card number before starting your ride.');
+        // Sakrij greške pri unosu u polja
+        idNumberInput.addEventListener('input', () => idNumberError.style.display = 'none');
+        driverLicenseInput.addEventListener('input', () => driverLicenseError.style.display = 'none');
+        cardInput.addEventListener('input', () => cardNumberError.style.display = 'none');
+
+
+        // Format card number with spaces (ostaje isto)
+        cardInput.addEventListener('input', function (e) {
+            let value = this.value.replace(/\D/g, '');
+            value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+            this.value = value.trim();
+            cardNumberError.style.display = 'none';
+        });
+
+        // Handle form submission (VALIDACIJA PRE SLANJA)
+        rideForm.addEventListener('submit', function (event) {
+            let isValid = true;
+
+            // 1. Provera da li je automobil odabran
+            if (!selectedCarIdInput.value) {
+                carSelectionError.style.display = 'block';
+                isValid = false;
+                console.error('Validation failed: Car not selected.');
             } else {
-                alert('Your ride is starting! You will be redirected to the tracking page.');
+                carSelectionError.style.display = 'none';
+            }
+
+            // 2. Provera da li je ID dokument unet (samo da nije prazno)
+            if (idNumberInput.value.trim() === '') {
+                idNumberError.textContent = 'Please enter your ID document number.'; // Postavi poruku
+                idNumberError.style.display = 'block';
+                isValid = false;
+                console.error('Validation failed: ID number missing.');
+            } else {
+                idNumberError.style.display = 'none';
+            }
+
+            // 3. Provera da li je broj vozačke unet (samo da nije prazno)
+            if (driverLicenseInput.value.trim() === '') {
+                driverLicenseError.textContent = 'Please enter your driver\'s license number.'; // Postavi poruku
+                driverLicenseError.style.display = 'block';
+                isValid = false;
+                console.error('Validation failed: Driver license number missing.');
+            } else {
+                driverLicenseError.style.display = 'none';
+            }
+
+            // 4. Provera broja kartice (dužina)
+            const rawCardNumber = cardInput.value.replace(/\s/g, '');
+            if (rawCardNumber.length < 13 || rawCardNumber.length > 19 || !/^\d+$/.test(rawCardNumber)) {
+                cardNumberError.textContent = 'Please enter a valid card number (13-19 digits).';
+                cardNumberError.style.display = 'block';
+                isValid = false;
+                console.error('Validation failed: Invalid card number format or length.');
+            } else {
+                cardNumberError.style.display = 'none';
+            }
+
+            // Ako validacija ne prođe, spriječi slanje forme
+            if (!isValid) {
+                event.preventDefault(); // Stop form submission
+                console.log('Form submission prevented due to validation errors.');
+            } else {
+                console.log('Form validation passed. Submitting...');
+                startRideBtn.disabled = true;
+                startRideBtn.textContent = 'Starting...';
             }
         });
     });

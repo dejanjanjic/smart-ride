@@ -11,9 +11,23 @@ import net.etfbl.ip.smartrideclient.dto.Scooter;
 import java.math.BigDecimal; // Importuj BigDecimal
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
 public class RentalBean {
-    // Promeni povratni tip u Integer (ili Long)
+
+    public List<Rental> getRentalHistory(Long userId) {
+        if (userId == null) {
+            return Collections.emptyList();
+        }
+        try {
+            return RentalDAO.getRentalHistoryForUser(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
     public Long startRental(Long userId, String vehicleId) {
         LocalDateTime startTime = LocalDateTime.now();
         boolean active = true;
@@ -65,6 +79,45 @@ public class RentalBean {
         return null;
     }
 
+    public Rental finishBikeRentalById(Long rentalId, Long userId) {
+        Rental rental = RentalDAO.findActiveRentalByIdAndUserId(rentalId, userId);
+        if(rental != null){
+            int durationInSeconds = ((int) Duration.between(rental.getDateTime(), LocalDateTime.now()).getSeconds());
+            rental.setDurationInSeconds(durationInSeconds);
+            double pricePerSecond = RentalPriceConfigDAO.getBikePrice();
+            BigDecimal price = BigDecimal.valueOf(pricePerSecond * durationInSeconds);
+            rental.setPrice(price);
+            double locationX = getRandomLocationX();
+            double locationY = getRandomLocationY();
+            rental.setEndLocationX(locationX);
+            rental.setEndLocationY(locationY);
+
+            ScooterDAO.updateLocation(rental.getVehicleId(), locationX, locationY);
+            RentalDAO.updateRentalEndDetails(rentalId, durationInSeconds, price, locationX, locationY);
+            return rental;
+        }
+        return null;
+    }
+
+    public Rental finishCarRentalById(Long rentalId, Long userId) {
+        Rental rental = RentalDAO.findActiveRentalByIdAndUserId(rentalId, userId);
+        if(rental != null){
+            int durationInSeconds = ((int) Duration.between(rental.getDateTime(), LocalDateTime.now()).getSeconds());
+            rental.setDurationInSeconds(durationInSeconds);
+            double pricePerSecond = RentalPriceConfigDAO.getCarPrice();
+            BigDecimal price = BigDecimal.valueOf(pricePerSecond * durationInSeconds);
+            rental.setPrice(price);
+            double locationX = getRandomLocationX();
+            double locationY = getRandomLocationY();
+            rental.setEndLocationX(locationX);
+            rental.setEndLocationY(locationY);
+
+            ScooterDAO.updateLocation(rental.getVehicleId(), locationX, locationY);
+            RentalDAO.updateRentalEndDetails(rentalId, durationInSeconds, price, locationX, locationY);
+            return rental;
+        }
+        return null;
+    }
 
 
     private double getRandomLocationX() {
@@ -74,4 +127,7 @@ public class RentalBean {
     private double getRandomLocationY() {
         return 17.170851491908504 + Math.random() * (17.229302191354293 - 17.170851491908504);
     }
+
+
+
 }

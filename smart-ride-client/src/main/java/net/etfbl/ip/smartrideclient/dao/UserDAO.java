@@ -25,6 +25,11 @@ public class UserDAO {
             "FROM client c\n" +
             "JOIN user u ON c.id = u.id\n WHERE u.username=? AND u.password=?;";
     private static final String SQL_UPDATE_AVATAR = "UPDATE client SET image=? WHERE id=?;";
+    private static final String SQL_UPDATE_PASSWORD = "UPDATE user SET password = ? WHERE id = ?";
+    private static final String SQL_INSERT_CLIENT =
+            "INSERT INTO client (id, email, phone_number, domesticate, driver_license_number, id_number, image, blocked) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
     public static User selectByUsernameAndPassword(String username, String password){
         User user = null;
         Connection connection = null;
@@ -56,6 +61,7 @@ public class UserDAO {
         return user;
     }
 
+
     public static boolean updateUserAvatar(long userId, String imagePath) {
         Connection connection = null;
         boolean success = false;
@@ -69,6 +75,27 @@ public class UserDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
+            connectionPool.checkIn(connection);
+        }
+        return success;
+    }
+
+    public static boolean updatePassword(Long userId, String password) {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        boolean success = false;
+        try {
+            connection = connectionPool.checkOut();
+            pstmt = connection.prepareStatement(SQL_UPDATE_PASSWORD);
+            pstmt.setString(1, password);
+            pstmt.setLong(2, userId);
+            int affectedRows = pstmt.executeUpdate();
+            success = (affectedRows == 1);
+        } catch (SQLException e) {
+            System.err.println("Error updating password for user ID: " + userId);
+            e.printStackTrace();
+        } finally {
+            try { if (pstmt != null) pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
             connectionPool.checkIn(connection);
         }
         return success;

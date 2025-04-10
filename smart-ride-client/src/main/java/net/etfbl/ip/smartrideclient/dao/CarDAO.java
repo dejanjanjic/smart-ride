@@ -1,5 +1,6 @@
 package net.etfbl.ip.smartrideclient.dao;
 
+import net.etfbl.ip.smartrideclient.dto.Bike;
 import net.etfbl.ip.smartrideclient.dto.Car;
 import net.etfbl.ip.smartrideclient.util.ConnectionPool;
 import net.etfbl.ip.smartrideclient.util.DBUtil;
@@ -26,6 +27,12 @@ public class CarDAO {
                     "    SELECT 1 FROM failure f " +
                     "    WHERE f.vehicle_id = c.id " +
                     ");";
+    private static final String SQL_SELECT_CAR_BY_ID =
+            "SELECT c.id AS car_id, m.name AS manufacturer_name, v.model " +
+                    "FROM car c " +
+                    "JOIN vehicle v ON c.id = v.id " +
+                    "JOIN manufacturer m ON v.manufacturer_id = m.id " +
+                    "WHERE c.id = ?;";
     public static List<Car> selectAvailableCars() {
         List<Car> cars = new ArrayList<>();
         Connection connection = null;
@@ -52,5 +59,34 @@ public class CarDAO {
         }
 
         return cars;
+    }
+
+    public static Car getCarById(String carId) {
+        Car car = null;
+        Connection connection = null;
+        ResultSet rs = null;
+
+        try {
+            connection = connectionPool.checkOut();
+            PreparedStatement pstmt = DBUtil.prepareStatement(connection,
+                    SQL_SELECT_CAR_BY_ID, false);
+            pstmt.setString(1, carId);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                car = new Car();
+                car.setId(rs.getString("car_id"));
+                car.setManufacturerName(rs.getString("manufacturer_name"));
+                car.setModel(rs.getString("model"));
+            }
+
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            connectionPool.checkIn(connection);
+        }
+
+        return car;
     }
 }

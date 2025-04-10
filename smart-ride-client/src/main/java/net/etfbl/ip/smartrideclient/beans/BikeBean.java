@@ -9,4 +9,8 @@ public class BikeBean {
     public List<Bike> getAllAvailable(){
         return BikeDAO.selectAvailableBikes();
     }
+
+    public Bike getById(String bikeId) {
+        return BikeDAO.getBikeById(bikeId);
+    }
 }

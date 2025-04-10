@@ -243,6 +243,20 @@ main {
     flex: 1 0 45%;
 }
 
+.error-message {
+    color: #a94442;
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    text-align: center;
+}
+
+.error-message:empty {
+    display: none;
+}
 @media (min-width: 768px) {
     .image-side {
         display: block;
