@@ -143,7 +143,7 @@ public class UserDAO {
         Connection connection = null;
         boolean success = false;
         String SQL_INSERT_USER = "INSERT INTO user (first_name, last_name, username, password) VALUES (?, ?, ?, ?);";
-        String SQL_INSERT_CLIENT = "INSERT INTO client (id, email, phone_number, image, blocked) VALUES (?, ?, ?, ?, ?);";
+        String SQL_INSERT_CLIENT = "INSERT INTO client (id, email, phone_number, image, blocked, role) VALUES (?, ?, ?, ?, ?, CLIENT);";
 
         try {
             connection = connectionPool.checkOut();
