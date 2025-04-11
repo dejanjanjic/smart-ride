@@ -57,4 +57,8 @@ public class UserBean {
         }
         return false;
     }
+
+    public boolean registerUser(User newUser, String password) {
+        return UserDAO.addNewClient(newUser, password);
+    }
 }

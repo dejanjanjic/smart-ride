@@ -1,6 +1,7 @@
 package net.etfbl.ip.smartrideclient.controller;
 
 import net.etfbl.ip.smartrideclient.beans.*;
+import net.etfbl.ip.smartrideclient.dao.UserDAO;
 import net.etfbl.ip.smartrideclient.dto.*;
 
 import javax.servlet.RequestDispatcher;
@@ -336,6 +337,63 @@ public class Controller extends HttpServlet {
                     loadCarRentalPage(req, new RentalPriceConfigBean());
                     nextPage = "/WEB-INF/pages/car-rental.jsp";
                     useRedirect = false;
+                }
+            }
+        } else if ("register".equals(action)) {
+            String username = req.getParameter("username");
+            String email = req.getParameter("email");
+            String firstName = req.getParameter("firstName");
+            String lastName = req.getParameter("lastName");
+            String phone = req.getParameter("phone");
+            String password = req.getParameter("password");
+            String confirmPassword = req.getParameter("confirmPassword");
+
+            String errorMessage = null;
+
+            if (username == null || username.trim().isEmpty()) {
+                errorMessage = "All fields are required.";
+            } else if (!password.equals(confirmPassword)) {
+                errorMessage = "Passwords do not match.";
+            } else if (UserDAO.existsByUsername(username)) {
+                errorMessage = "Username already taken.";
+            } else if (UserDAO.existsByEmail(email)) {
+                errorMessage = "Email address already registered.";
+            }
+
+            if (errorMessage != null) {
+                session.setAttribute("errorMessage", errorMessage);
+                nextPage = "?action=register";
+                useRedirect = true;
+            } else {
+                try {
+                    User newUser = new User();
+                    newUser.setUsername(username);
+                    newUser.setFirstName(firstName);
+                    newUser.setLastName(lastName);
+                    newUser.setEmail(email);
+                    newUser.setPhoneNumber(phone);
+
+                    UserBean registrationBean = new UserBean();
+                    boolean registrationSuccess = registrationBean.registerUser(newUser, password); // Prosledi plain lozinku
+
+                    if (registrationSuccess) {
+                        // Ukloni poruku o grešci ako je postojala
+                        session.removeAttribute("errorMessage");
+                        // Postavi poruku o uspehu za login stranicu
+                        session.setAttribute("registrationSuccess", "Account created successfully! Please login.");
+                        nextPage = "?action=login";
+                        useRedirect = true;
+                    } else {
+                        session.setAttribute("errorMessage", "Registration failed. Please try again.");
+                        nextPage = "?action=register";
+                        useRedirect = true;
+                    }
+                } catch (Exception e) {
+                    System.err.println("Controller: Unexpected error during registration.");
+                    e.printStackTrace();
+                    session.setAttribute("errorMessage", "An unexpected error occurred.");
+                    nextPage = "?action=register";
+                    useRedirect = true;
                 }
             }
         } else if ("endScooterRide".equals(action)) {

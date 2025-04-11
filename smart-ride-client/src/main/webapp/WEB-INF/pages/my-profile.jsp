@@ -212,6 +212,12 @@
             background-color: var(--primary-dark);
         }
 
+        /* Responsive table styles */
+        .rental-history-container {
+            overflow-x: auto;
+            width: 100%;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -237,6 +243,32 @@
 
         tr:hover {
             background-color: #f1f1f1;
+        }
+
+        /* Cards for mobile view */
+        .rental-card {
+            display: none;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            padding: 12px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .rental-card div {
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .rental-card .card-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .rental-card .card-value {
+            text-align: right;
         }
 
         .no-history {
@@ -298,6 +330,14 @@
                 padding: 15px;
                 margin: 10px;
             }
+
+            .table-view {
+                display: none;
+            }
+
+            .rental-card {
+                display: block;
+            }
         }
 
         /* For smaller mobile devices */
@@ -321,6 +361,10 @@
 
             h2 {
                 font-size: 1.2em;
+            }
+
+            .profile-section {
+                padding: 10px;
             }
         }
     </style>
@@ -380,33 +424,55 @@
         <% if (rentalHistory == null || rentalHistory.isEmpty()) { %>
         <p class="no-history">No past rentals found.</p>
         <% } else { %>
-        <table>
-            <thead>
-            <tr>
-                <th>Rental ID</th>
-                <th>Vehicle ID</th>
-                <th>Start Time</th>
-                <th>Duration</th>
-                <th>Final Cost</th>
-            </tr>
-            </thead>
-            <tbody>
+
+        <!-- Table view for desktop -->
+        <div class="rental-history-container table-view">
+            <table>
+                <thead>
+                <tr>
+                    <th>Vehicle ID</th>
+                    <th>Start Time</th>
+                    <th>Duration</th>
+                    <th>Final Cost</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% for (Rental rental : rentalHistory) { %>
+                <tr>
+                    <td><%= rental.getVehicleId() != null ? rental.getVehicleId() : "N/A" %></td>
+                    <td><%= rental.getDateTime() != null ? rental.getDateTime().format(dateTimeFormatter) : "N/A" %></td>
+                    <td><%= formatDuration(rental.getDurationInSeconds()) %></td>
+                    <td><%= rental.getPrice() != null ? priceFormatter.format(rental.getPrice()) : "N/A" %></td>
+                </tr>
+                <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Card view for mobile -->
+        <div class="card-view">
             <% for (Rental rental : rentalHistory) { %>
-            <tr>
-                <td><%= rental.getId() %>
-                </td>
-                <td><%= rental.getVehicleId() != null ? rental.getVehicleId() : "N/A" %>
-                </td>
-                <td><%= rental.getDateTime() != null ? rental.getDateTime().format(dateTimeFormatter) : "N/A" %>
-                </td>
-                <td><%= formatDuration(rental.getDurationInSeconds()) %>
-                </td>
-                <td><%= rental.getPrice() != null ? priceFormatter.format(rental.getPrice()) : "N/A" %>
-                </td>
-            </tr>
+            <div class="rental-card">
+                <div>
+                    <span class="card-label">Vehicle ID:</span>
+                    <span class="card-value"><%= rental.getVehicleId() != null ? rental.getVehicleId() : "N/A" %></span>
+                </div>
+                <div>
+                    <span class="card-label">Start Time:</span>
+                    <span class="card-value"><%= rental.getDateTime() != null ? rental.getDateTime().format(dateTimeFormatter) : "N/A" %></span>
+                </div>
+                <div>
+                    <span class="card-label">Duration:</span>
+                    <span class="card-value"><%= formatDuration(rental.getDurationInSeconds()) %></span>
+                </div>
+                <div>
+                    <span class="card-label">Final Cost:</span>
+                    <span class="card-value"><%= rental.getPrice() != null ? priceFormatter.format(rental.getPrice()) : "N/A" %></span>
+                </div>
+            </div>
             <% } %>
-            </tbody>
-        </table>
+        </div>
+
         <% } %>
     </section>
 

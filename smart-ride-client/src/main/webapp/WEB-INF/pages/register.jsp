@@ -35,15 +35,14 @@
             <form id="registerForm" method="POST" action="Controller">
                 <input type="hidden" name="action" value="register">
 
+                <% String errorMessage = (String) session.getAttribute("errorMessage");
+                    if(errorMessage != null && !errorMessage.trim().isEmpty()) { %>
                 <div class="error-message" id="server-error-message">
-                    <% String errorMessage = (String) session.getAttribute("errorMessage");
-                        if(errorMessage != null) { %>
                     <%= errorMessage %>
-                    <%   session.removeAttribute("errorMessage");
-                    } %>
                 </div>
+                <% session.removeAttribute("errorMessage");
+                } %>
                 <div class="error-message" id="client-error-message" style="display: none;"></div>
-
 
                 <div class="form-column">
                     <div class="input-group">
