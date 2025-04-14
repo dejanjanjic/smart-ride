@@ -5,11 +5,14 @@ import net.etfbl.ip.smartrideclient.dto.Car;
 import net.etfbl.ip.smartrideclient.util.ConnectionPool;
 import net.etfbl.ip.smartrideclient.util.DBUtil;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public class CarDAO {
@@ -43,16 +46,24 @@ public class CarDAO {
             PreparedStatement pstmt = DBUtil.prepareStatement(connection,
                     SQL_SELECT_AVAILABLE_CARS, false);
             rs = pstmt.executeQuery();
+            String imagePath = null;
             while (rs.next()) {
                 Car car = new Car();
                 car.setId(rs.getString("car_id"));
                 car.setManufacturerName(rs.getString("manufacturer_name"));
                 car.setModel(rs.getString("model"));
-                car.setImage(rs.getString("picture_path"));
+                imagePath=rs.getString("picture_path");
+                if(imagePath != null && !imagePath.isEmpty()){
+                    byte[] imageBytes = Files.readAllBytes(Paths.get(imagePath));
+                    String imageBase64 = Base64.getEncoder().encodeToString(imageBytes);
+                    car.setImage(imageBase64);
+                } else{
+                    car.setImage(null);
+                }
                 cars.add(car);
             }
             pstmt.close();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             connectionPool.checkIn(connection);

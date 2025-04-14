@@ -5,6 +5,7 @@ public class Bike {
     private String manufacturerName;
     private String model;
     private Integer maxRange;
+    private String image;
 
     public String getId() {
         return id;
@@ -36,5 +37,13 @@ public class Bike {
 
     public void setMaxRange(Integer maxRange) {
         this.maxRange = maxRange;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

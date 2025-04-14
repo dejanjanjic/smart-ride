@@ -4,17 +4,21 @@ import net.etfbl.ip.smartrideclient.dto.Scooter;
 import net.etfbl.ip.smartrideclient.util.ConnectionPool;
 import net.etfbl.ip.smartrideclient.util.DBUtil;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public class ScooterDAO {
     private static final ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
     private static final String SQL_SELECT_AVAILABLE_SCOOTERS =
-            "SELECT s.id AS scooter_id, m.name AS manufacturer_name, v.model, s.max_speed " +
+            "SELECT s.id AS scooter_id, m.name AS manufacturer_name, v.model, s.max_speed, v.picture_path " +
                     "FROM escooter s " +
                     "JOIN vehicle v ON s.id = v.id " +
                     "JOIN manufacturer m ON v.manufacturer_id = m.id " +
@@ -45,16 +49,25 @@ public class ScooterDAO {
             PreparedStatement pstmt = DBUtil.prepareStatement(connection,
                     SQL_SELECT_AVAILABLE_SCOOTERS, false);
             rs = pstmt.executeQuery();
+            String imagePath = null;
             while (rs.next()) {
                 Scooter scooter = new Scooter();
                 scooter.setId(rs.getString("scooter_id"));
                 scooter.setManufacturerName(rs.getString("manufacturer_name"));
                 scooter.setModel(rs.getString("model"));
+                imagePath=rs.getString("picture_path");
+                if(imagePath != null && !imagePath.isEmpty()){
+                    byte[] imageBytes = Files.readAllBytes(Paths.get(imagePath));
+                    String imageBase64 = Base64.getEncoder().encodeToString(imageBytes);
+                    scooter.setImage(imageBase64);
+                } else{
+                    scooter.setImage(null);
+                }
                 scooter.setMaxSpeed(rs.getInt("max_speed"));
                 scooters.add(scooter);
             }
             pstmt.close();
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         } finally {
             connectionPool.checkIn(connection);

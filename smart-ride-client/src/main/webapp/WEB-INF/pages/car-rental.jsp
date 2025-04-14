@@ -208,14 +208,14 @@
 
         .car-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
         }
 
         .car-card {
             border: 2px solid var(--light-gray);
-            border-radius: 8px;
-            padding: 12px;
+            border-radius: 10px;
+            padding: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
@@ -233,13 +233,14 @@
 
         .car-image {
             width: 100%;
-            height: 90px;
+            height: 150px;
             background-color: var(--secondary-color);
-            border-radius: 6px;
-            margin-bottom: 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
 
         .car-image .material-icons-outlined {
@@ -442,7 +443,11 @@
             }
 
             .car-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+
+            .car-image {
+                height: 130px;
             }
         }
 
@@ -457,11 +462,11 @@
 
             .car-grid {
                 grid-template-columns: 1fr 1fr;
-                gap: 10px;
+                gap: 12px;
             }
 
             .car-image {
-                height: 80px;
+                height: 120px;
             }
         }
 
@@ -526,7 +531,11 @@
                     <div class="car-card" data-car-id="<%= car.getId() %>">
                         <span class="checkmark material-icons">check_circle</span>
                         <div class="car-image">
-                            <span class="material-icons-outlined">directions_car</span>
+                            <% if(car.getImage() != null) { %>
+                            <img src="data:image/jpeg;base64,<%= car.getImage() %>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                            <%} else {%>
+                            <span class="material-icons-outlined" style="font-size: 4rem;">directions_car</span>
+                            <%}%>
                         </div>
                         <div class="car-info">
                             <div class="car-name"><%= car.getId() + " " + car.getManufacturerName() + " " + car.getModel()%>

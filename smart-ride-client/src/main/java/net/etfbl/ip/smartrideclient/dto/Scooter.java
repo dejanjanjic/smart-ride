@@ -7,6 +7,7 @@ public class Scooter {
     private Integer maxSpeed;
     private Double positionX;
     private Double positionY;
+    private String image;
 
     public String getId() {
         return id;
@@ -54,6 +55,14 @@ public class Scooter {
 
     public void setPositionY(Double positionY) {
         this.positionY = positionY;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override

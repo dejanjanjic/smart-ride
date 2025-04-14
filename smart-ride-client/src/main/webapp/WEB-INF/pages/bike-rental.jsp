@@ -56,6 +56,7 @@
             padding: 10px 20px;
             box-shadow: var(--shadow);
             z-index: 1000;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
         }
 
         header .logo-container {
@@ -89,8 +90,8 @@
         }
 
         .avatar {
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--white);
@@ -209,14 +210,14 @@
 
         .bike-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
         }
 
         .bike-card {
             border: 2px solid var(--light-gray);
-            border-radius: 8px;
-            padding: 12px;
+            border-radius: 10px;
+            padding: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
@@ -234,17 +235,18 @@
 
         .bike-image {
             width: 100%;
-            height: 90px;
+            height: 150px;
             background-color: var(--secondary-color);
-            border-radius: 6px;
-            margin-bottom: 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
 
         .bike-image .material-icons-outlined {
-            font-size: 3rem;
+            font-size: 4rem;
             color: var(--primary-color);
         }
 
@@ -334,6 +336,13 @@
             font-size: 0.95rem;
         }
 
+        .error-message {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none; /* Sakriveno po defaultu */
+        }
+
         .price-breakdown {
             margin-top: 15px;
             padding-top: 15px;
@@ -409,11 +418,11 @@
 
         @media (max-width: 768px) {
             header {
-                padding: 8px 15px;
+                padding: 10px 15px;
             }
 
-            header .logo-container {
-                margin-bottom: 0;
+            header .app-title {
+                font-size: 1.4rem;
             }
 
             .page-title h1 {
@@ -421,7 +430,38 @@
             }
 
             .bike-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+
+            .bike-image {
+                height: 130px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                padding: 10px;
+                gap: 10px;
+            }
+
+            header .logo-container {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 5px;
+            }
+
+            header .user-container {
+                width: 100%;
+                justify-content: center;
+            }
+
+            header .app-title {
+                font-size: 1.3rem;
+            }
+
+            header .username {
+                font-size: 0.9rem;
             }
         }
 
@@ -436,11 +476,11 @@
 
             .bike-grid {
                 grid-template-columns: 1fr 1fr;
-                gap: 10px;
+                gap: 12px;
             }
 
             .bike-image {
-                height: 80px;
+                height: 120px;
             }
         }
 
@@ -505,7 +545,11 @@
                     <div class="bike-card" data-bike-id="<%= bike.getId() %>">
                         <span class="checkmark material-icons">check_circle</span>
                         <div class="bike-image">
+                            <% if(bike.getImage() != null) { %>
+                            <img src="data:image/jpeg;base64,<%= bike.getImage() %>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                            <%} else {%>
                             <span class="material-icons-outlined">electric_bike</span>
+                            <%}%>
                         </div>
                         <div class="bike-info">
                             <div class="bike-name"><%= bike.getId() + " " + bike.getManufacturerName() + " " + bike.getModel()%></div>
