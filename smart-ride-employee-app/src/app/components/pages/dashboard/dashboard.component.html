@@ -1,14 +1,21 @@
-<div class="main column">
-  <h1>Dashboard</h1>
-  <div class="top-part column">
-    <app-revenue-by-day />
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Dashboard Overview</h1>
   </div>
-  <div class="bottom-part row">
-    <div class="graph-2 flex-1">
-      <app-failures-by-vehicle />
+
+  <div class="charts-container">
+    <div class="chart-card revenue-by-day">
+      <app-revenue-by-day />
     </div>
-    <div class="graph-3 flex-1">
-      <app-revenue-by-vehicle-type />
+
+    <div class="charts-row">
+      <div class="chart-card failures-by-vehicle">
+        <app-failures-by-vehicle />
+      </div>
+
+      <div class="chart-card revenue-by-vehicle-type">
+        <app-revenue-by-vehicle-type />
+      </div>
     </div>
   </div>
 </div>

@@ -1,31 +1,42 @@
-<div class="main">
-  <mat-form-field>
-    <mat-label>Enter a date range</mat-label>
-    <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-      <input matStartDate formControlName="start" placeholder="Start date" />
-      <input matEndDate formControlName="end" placeholder="End date" />
-    </mat-date-range-input>
-    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-date-range-picker #picker></mat-date-range-picker>
+<div class="chart-wrapper">
+  <h3 class="chart-title">Daily Revenue</h3>
 
-    @if (range.controls.start.hasError('matStartDateInvalid')) {
-    <mat-error>Invalid start date</mat-error>
-    } @if (range.controls.end.hasError('matEndDateInvalid')) {
-    <mat-error>Invalid end date</mat-error>
-    }
-  </mat-form-field>
-  <ngx-charts-bar-vertical
-    [view]="view"
-    [results]="results"
-    [scheme]="'cool'"
-    [gradient]="false"
-    [xAxis]="true"
-    [yAxis]="true"
-    [legend]="false"
-    [showXAxisLabel]="false"
-    [showYAxisLabel]="true"
-    [yAxisLabel]="'Revenue'"
-  >
-  </ngx-charts-bar-vertical>
+  <div class="chart-controls">
+    <mat-form-field appearance="outline" class="date-range-picker">
+      <mat-label>Select date range</mat-label>
+      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+        <input matStartDate formControlName="start" placeholder="Start date" />
+        <input matEndDate formControlName="end" placeholder="End date" />
+      </mat-date-range-input>
+      <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+
+      @if (range.controls.start.hasError('matStartDateInvalid')) {
+      <mat-error>Invalid start date</mat-error>
+      } @if (range.controls.end.hasError('matEndDateInvalid')) {
+      <mat-error>Invalid end date</mat-error>
+      }
+    </mat-form-field>
+  </div>
+
+  <div class="chart-container">
+    <ngx-charts-bar-vertical
+      [view]="view"
+      [results]="results"
+      [scheme]="colorScheme"
+      [gradient]="true"
+      [xAxis]="true"
+      [yAxis]="true"
+      [legend]="false"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      [xAxisLabel]="'Date'"
+      [yAxisLabel]="'Revenue (BAM)'"
+    >
+    </ngx-charts-bar-vertical>
+  </div>
 </div>

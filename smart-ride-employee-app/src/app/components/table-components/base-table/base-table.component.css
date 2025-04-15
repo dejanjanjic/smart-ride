@@ -1,31 +1,20 @@
-#visibility-icon {
-  color: #424874;
-}
-
-#update-icon {
-  color: #424874;
-}
-#search-icon {
-  color: #424874;
-}
-#add-icon {
-  color: #424874;
-}
-
-#delete-icon {
-  color: crimson;
-}
-
-th {
-  color: #424874;
+div.table-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
 .table-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 0 0 16px 0;
   flex-wrap: wrap;
+  gap: 15px;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 16px;
 }
 
 .search-container {
@@ -47,17 +36,113 @@ th {
   flex: 1;
 }
 
+.search-field ::ng-deep .mat-mdc-form-field-outline {
+  color: var(--primary-color, #14a89d);
+}
+
+.search-field ::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: #f8f9fa;
+}
+
+button.mat-raised-button[color="primary"] {
+  background-color: var(--primary-color, #14a89d);
+  color: white;
+  transition: background-color 0.3s;
+}
+
+button.mat-raised-button[color="primary"]:hover {
+  background-color: var(--primary-dark, #0e7d74);
+}
+
+#search-button {
+  height: 40px;
+}
+
 .add-button {
   margin-right: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .refresh-button {
   border: 1px solid rgba(0, 0, 0, 0.12);
   transition: background-color 0.3s ease;
-  color: #424874;
+  color: var(--primary-color, #14a89d);
   margin-left: 5px;
 }
 
 .refresh-button:hover {
+  background-color: rgba(20, 168, 157, 0.1);
+}
+
+table.mat-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th.mat-header-cell {
+  color: var(--primary-color, #14a89d);
+  font-weight: 600;
+  font-size: 14px;
+  background-color: #f8f9fa;
+  padding: 12px 16px !important;
+  border-bottom: 2px solid var(--primary-color, #14a89d);
+}
+
+td.mat-cell {
+  padding: 12px 16px !important;
+  border-bottom: 1px solid #e9ecef;
+}
+
+tr.mat-row:hover {
+  background-color: rgba(20, 168, 157, 0.05);
+}
+
+#visibility-icon {
+  color: var(--primary-color, #14a89d);
+}
+
+#update-icon {
+  color: var(--primary-color, #14a89d);
+}
+
+#delete-icon {
+  color: crimson;
+}
+
+button.mat-icon-button {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  transition: background-color 0.3s;
+}
+
+button.mat-icon-button:hover {
   background-color: rgba(0, 0, 0, 0.04);
+}
+
+.mat-paginator {
+  background-color: transparent;
+  border-top: 1px solid #e9ecef;
+  margin-top: 8px;
+}
+
+::ng-deep .mat-mdc-paginator-container {
+  justify-content: space-between;
+}
+
+::ng-deep .mat-mdc-paginator-range-label {
+  color: var(--primary-color, #14a89d);
+}
+
+.no-data {
+  text-align: center;
+  padding: 30px;
+  color: #666;
+}
+
+.mt-3 {
+  margin-top: 16px;
 }

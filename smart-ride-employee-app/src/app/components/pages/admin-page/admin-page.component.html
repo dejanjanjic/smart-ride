@@ -1,17 +1,28 @@
 <div class="admin-main">
-  <app-header (toggleSidebar)="sidenav.toggle()"> </app-header>
+  <app-header (toggleSidebar)="sidenav.toggle()"></app-header>
   <mat-sidenav-container>
-    <mat-sidenav #sidenav>
+    <mat-sidenav #sidenav mode="side" [opened]="isOpen" class="sidebar">
       <mat-nav-list>
-        <a mat-list-item routerLink="vehicles" (click)="sidenav.toggle()"
-          >Vehicles</a
+        <a mat-list-item routerLink="vehicles" routerLinkActive="active-link">
+          <mat-icon class="nav-icon">directions_car</mat-icon>
+          <span>Vehicles</span>
+        </a>
+        <a
+          mat-list-item
+          routerLink="manufacturers"
+          routerLinkActive="active-link"
         >
-        <a mat-list-item routerLink="manufacturers" (click)="sidenav.toggle()"
-          >Manufacturers</a
-        >
-        <a mat-list-item routerLink="users" (click)="sidenav.toggle()">Users</a>
+          <mat-icon class="nav-icon">factory</mat-icon>
+          <span>Manufacturers</span>
+        </a>
+        <a mat-list-item routerLink="users" routerLinkActive="active-link">
+          <mat-icon class="nav-icon">people</mat-icon>
+          <span>Users</span>
+        </a>
       </mat-nav-list>
     </mat-sidenav>
-    <mat-sidenav-content><router-outlet /></mat-sidenav-content>
+    <mat-sidenav-content class="content-area">
+      <router-outlet />
+    </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

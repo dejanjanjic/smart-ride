@@ -1,22 +1,32 @@
 <div class="operator-main">
-  <app-header (toggleSidebar)="sidenav.toggle()"> </app-header>
+  <app-header (toggleSidebar)="sidenav.toggle()"></app-header>
   <mat-sidenav-container>
-    <mat-sidenav #sidenav>
+    <mat-sidenav #sidenav mode="side" [opened]="isOpen" class="sidebar">
       <mat-nav-list>
-        <a mat-list-item routerLink="rentals" (click)="sidenav.toggle()"
-          >Rentals</a
+        <a mat-list-item routerLink="rentals" routerLinkActive="active-link">
+          <mat-icon class="nav-icon">receipt</mat-icon>
+          <span>Rentals</span>
+        </a>
+        <a mat-list-item routerLink="map" routerLinkActive="active-link">
+          <mat-icon class="nav-icon">map</mat-icon>
+          <span>Vehicle map</span>
+        </a>
+        <a mat-list-item routerLink="clients" routerLinkActive="active-link">
+          <mat-icon class="nav-icon">people</mat-icon>
+          <span>Clients</span>
+        </a>
+        <a
+          mat-list-item
+          routerLink="add-failure"
+          routerLinkActive="active-link"
         >
-        <a mat-list-item routerLink="map" (click)="sidenav.toggle()"
-          >Vehicle map</a
-        >
-        <a mat-list-item routerLink="clients" (click)="sidenav.toggle()"
-          >Clients</a
-        >
-        <a mat-list-item routerLink="add-failure" (click)="sidenav.toggle()"
-          >Add failure</a
-        >
+          <mat-icon class="nav-icon">report_problem</mat-icon>
+          <span>Add failure</span>
+        </a>
       </mat-nav-list>
     </mat-sidenav>
-    <mat-sidenav-content><router-outlet /></mat-sidenav-content>
+    <mat-sidenav-content class="content-area">
+      <router-outlet />
+    </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

@@ -1,18 +1,19 @@
-<mat-toolbar color="accent">
+<mat-toolbar>
   <button mat-icon-button class="hamburger-icon" (click)="onToggleSidebar()">
-    <mat-icon class="font-color-blue">menu</mat-icon>
+    <mat-icon>menu</mat-icon>
   </button>
-  <span class="font-color-blue">Smart ride</span>
+  <div class="logo-container">
+    <img src="assets/logo.png" alt="Smart Ride Logo" class="logo" />
+    <div class="app-title">Smart Ride</div>
+  </div>
   <span class="spacer"></span>
-  <p class="font-color-blue">{{ username }}</p>
-  <mat-icon class="font-color-blue">person</mat-icon>
-
-  <button
-    mat-icon-button
-    class="logout-icon"
-    (click)="logout()"
-    matTooltip="Logout"
-  >
-    <mat-icon>logout</mat-icon>
-  </button>
+  <div class="user-container">
+    <div class="avatar-container">
+      <img [src]="'assets/no-avatar.jpg'" alt="User Avatar" class="avatar" />
+    </div>
+    <span class="username">{{ username }}</span>
+    <button mat-button class="logout-btn" (click)="logout()">
+      <mat-icon>logout</mat-icon> Logout
+    </button>
+  </div>
 </mat-toolbar>

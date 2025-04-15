@@ -1,32 +1,44 @@
-h1 {
-  color: #424874;
+.dashboard-container {
+  padding: 20px;
+  height: 100%;
+  background-color: #f6f9fc;
 }
-.column {
+
+.dashboard-header {
+  margin-bottom: 24px;
+}
+
+.dashboard-header h1 {
+  color: var(--primary-color, #14a89d);
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.charts-container {
   display: flex;
   flex-direction: column;
+  gap: 24px;
 }
 
-.row {
+.charts-row {
   display: flex;
-  flex-direction: row;
+  gap: 24px;
+  flex-wrap: wrap;
 }
 
-.flex-1 {
+.chart-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 0;
   flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.main {
-  padding: 10px;
-  background-color: #e6e6e6;
-  height: 100%;
-}
-
-.top-part {
-  margin-bottom: 10px;
-  justify-content: center;
-  align-items: center;
-}
-.bottom-part {
-  justify-content: center;
-  align-content: space-around;
+.revenue-by-day {
+  width: 100%;
 }

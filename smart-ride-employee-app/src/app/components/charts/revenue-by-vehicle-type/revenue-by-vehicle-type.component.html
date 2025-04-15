@@ -1,11 +1,18 @@
-<div class="main">
-  <ngx-charts-pie-chart
-    [view]="view"
-    [results]="results"
-    [scheme]="'cool'"
-    [gradient]="false"
-    [legend]="true"
-    [labels]="true"
-  >
-  </ngx-charts-pie-chart>
+<div class="chart-wrapper">
+  <h3 class="chart-title">Revenue by Vehicle Type</h3>
+
+  <div class="chart-container">
+    <ngx-charts-pie-chart
+      [view]="view"
+      [results]="results"
+      [scheme]="colorScheme"
+      [gradient]="true"
+      [legend]="true"
+      [legendPosition]="legendPosition"
+      [labels]="true"
+      [doughnut]="true"
+      [arcWidth]="0.4"
+    >
+    </ngx-charts-pie-chart>
+  </div>
 </div>

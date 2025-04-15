@@ -1,35 +1,56 @@
 <div class="manager-main">
-  <app-header (toggleSidebar)="sidenav.toggle()"> </app-header>
+  <app-header (toggleSidebar)="sidenav.toggle()"></app-header>
   <mat-sidenav-container>
-    <mat-sidenav #sidenav>
+    <mat-sidenav #sidenav mode="side" [opened]="isOpen" class="sidebar">
       <mat-nav-list>
-        <a mat-list-item routerLink="dashboard" (click)="sidenav.toggle()"
-          >Dashboard</a
+        <a mat-list-item routerLink="dashboard" routerLinkActive="active-link">
+          <mat-icon class="nav-icon">dashboard</mat-icon>
+          <span>Dashboard</span>
+        </a>
+        <a mat-list-item routerLink="vehicles" routerLinkActive="active-link">
+          <mat-icon class="nav-icon">directions_car</mat-icon>
+          <span>Vehicles</span>
+        </a>
+        <a
+          mat-list-item
+          routerLink="manufacturers"
+          routerLinkActive="active-link"
         >
-        <a mat-list-item routerLink="vehicles" (click)="sidenav.toggle()"
-          >Vehicles</a
+          <mat-icon class="nav-icon">factory</mat-icon>
+          <span>Manufacturers</span>
+        </a>
+        <a mat-list-item routerLink="users" routerLinkActive="active-link">
+          <mat-icon class="nav-icon">people</mat-icon>
+          <span>Users</span>
+        </a>
+        <a mat-list-item routerLink="rentals" routerLinkActive="active-link">
+          <mat-icon class="nav-icon">receipt</mat-icon>
+          <span>Rentals</span>
+        </a>
+        <a mat-list-item routerLink="map" routerLinkActive="active-link">
+          <mat-icon class="nav-icon">map</mat-icon>
+          <span>Vehicle map</span>
+        </a>
+        <a
+          mat-list-item
+          routerLink="add-failure"
+          routerLinkActive="active-link"
         >
-        <a mat-list-item routerLink="manufacturers" (click)="sidenav.toggle()"
-          >Manufacturers</a
-        >
-        <a mat-list-item routerLink="users" (click)="sidenav.toggle()">Users</a>
-        <a mat-list-item routerLink="rentals" (click)="sidenav.toggle()"
-          >Rentals</a
-        >
-        <a mat-list-item routerLink="map" (click)="sidenav.toggle()"
-          >Vehicle map</a
-        >
-        <a mat-list-item routerLink="add-failure" (click)="sidenav.toggle()"
-          >Add failure</a
-        >
+          <mat-icon class="nav-icon">report_problem</mat-icon>
+          <span>Add failure</span>
+        </a>
         <a
           mat-list-item
           routerLink="rental-price-config"
-          (click)="sidenav.toggle()"
-          >Rental prices</a
+          routerLinkActive="active-link"
         >
+          <mat-icon class="nav-icon">attach_money</mat-icon>
+          <span>Rental prices</span>
+        </a>
       </mat-nav-list>
     </mat-sidenav>
-    <mat-sidenav-content><router-outlet /></mat-sidenav-content>
+    <mat-sidenav-content class="content-area">
+      <router-outlet />
+    </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
