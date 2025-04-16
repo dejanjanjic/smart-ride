@@ -11,11 +11,8 @@ import net.etfbl.ip.smart_ride_backend.model.Client;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClientSimpleDTO extends UserSimpleDTO{
-    private String idNumber; //id card number or passport number
     private String email;
     private String phoneNumber;
-    private String driverLicenseNumber;
-    private Boolean domesticate;
     private Boolean blocked;
 
     public ClientSimpleDTO(Client client){
@@ -24,11 +21,8 @@ public class ClientSimpleDTO extends UserSimpleDTO{
         this.firstName = client.getFirstName();
         this.lastName = client.getLastName();
         this.role = client.getRole();
-        this.idNumber = client.getIdNumber();
         this.email = client.getEmail();
         this.phoneNumber = client.getPhoneNumber();
-        this.driverLicenseNumber = client.getDriverLicenseNumber();
-        this.domesticate = client.getDomesticate();
         this.blocked = client.getBlocked();
     }
 }

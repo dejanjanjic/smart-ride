@@ -51,20 +51,11 @@ public class ClientService {
         if (clientSimpleDTO.getRole() != null) {
             temp.setRole(clientSimpleDTO.getRole());
         }
-        if (clientSimpleDTO.getIdNumber() != null) {
-            temp.setIdNumber(clientSimpleDTO.getIdNumber());
-        }
         if (clientSimpleDTO.getEmail() != null) {
             temp.setEmail(clientSimpleDTO.getEmail());
         }
         if (clientSimpleDTO.getPhoneNumber() != null) {
             temp.setPhoneNumber(clientSimpleDTO.getPhoneNumber());
-        }
-        if (clientSimpleDTO.getDriverLicenseNumber() != null) {
-            temp.setDriverLicenseNumber(clientSimpleDTO.getDriverLicenseNumber());
-        }
-        if (clientSimpleDTO.getDomesticate() != null) {
-            temp.setDomesticate(clientSimpleDTO.getDomesticate());
         }
         if (clientSimpleDTO.getBlocked() != null) {
             temp.setBlocked(clientSimpleDTO.getBlocked());

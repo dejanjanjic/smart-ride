@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { EScooterService } from '../../../services/e-scooter.service';
 import { BaseTableComponent } from '../base-table/base-table.component';
+import { EScooter } from '../../../model/escooter.model';
 
 @Component({
   selector: 'app-e-scooters-table',
@@ -20,4 +21,11 @@ export class EScootersTableComponent {
   };
 
   retrieveDataFunction = () => this.eScooterService.getAll();
+
+  @ViewChild(BaseTableComponent)
+  private baseTableRef?: BaseTableComponent<EScooter>;
+
+  public loadData(): void {
+    this.baseTableRef?.loadData();
+  }
 }

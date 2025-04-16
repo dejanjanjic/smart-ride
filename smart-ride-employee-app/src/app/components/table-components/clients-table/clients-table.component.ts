@@ -15,10 +15,8 @@ export class ClientsTableComponent {
     username: 'Username',
     firstName: 'First name',
     lastName: 'Last name',
-    idNumber: 'Id number',
     email: 'Email',
     phoneNumber: 'Phone number',
-    driverLicenseNumber: 'License number',
     blocked: 'Blocked',
   };
 

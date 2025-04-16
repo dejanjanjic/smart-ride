@@ -1,4 +1,10 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  inject,
+  ViewChild,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CarsTableComponent } from '../../table-components/cars-table/cars-table.component';
 import { EBikesTableComponent } from '../../table-components/e-bikes-table/e-bikes-table.component';
@@ -9,11 +15,13 @@ import { CarService } from '../../../services/car.service';
 import { EBikeService } from '../../../services/e-bike.service';
 import { EScooterService } from '../../../services/e-scooter.service';
 import { Car } from '../../../model/car.model';
-
-import Papa from 'papaparse';
 import { EBike } from '../../../model/ebike.model';
 import { EScooter } from '../../../model/escooter.model';
 import { VehicleState } from '../../../enum/vehicle-state.enum';
+
+import Papa from 'papaparse';
+import { Observable, forkJoin, of } from 'rxjs';
+import { finalize, catchError, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-vehicles-management',
@@ -29,149 +37,279 @@ import { VehicleState } from '../../../enum/vehicle-state.enum';
   styleUrl: './vehicles-management.component.css',
 })
 export class VehiclesManagementComponent {
-  @ViewChild('fileInput') fileInput!: ElementRef;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  @ViewChild(CarsTableComponent) carsTable?: CarsTableComponent;
+  @ViewChild(EBikesTableComponent) eBikesTable?: EBikesTableComponent;
+  @ViewChild(EScootersTableComponent) eScootersTable?: EScootersTableComponent;
 
   private carService: CarService = inject(CarService);
   private eBikeService: EBikeService = inject(EBikeService);
   private eScooterService: EScooterService = inject(EScooterService);
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+  isLoading = false;
 
   openFileDialog(): void {
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
     this.fileInput.nativeElement.click();
   }
-  onFileSelected(event: Event) {
+
+  onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      console.log('Selected file:', file.name);
+      if (
+        file.type !== 'text/csv' &&
+        !file.name.toLowerCase().endsWith('.csv')
+      ) {
+        input.value = '';
+        return;
+      }
+
+      this.isLoading = true;
       const reader = new FileReader();
+
       reader.onload = (e) => {
         const content: string = e.target?.result as string;
-        const lines: Array<string> = content.split('\n');
-        for (let line of lines) {
-          let mark = line.split(',')[0];
-          if (mark === 'C') {
-            console.log(line);
-            this.parseCar(line);
-          } else if (mark === 'B') {
-            this.parseEBike(line);
-          } else if (mark === 'S') {
-            this.parseEScooter(line);
-          } else {
-            throw new Error(`Mark '${mark}' is invalid`);
+
+        const parseResult = Papa.parse<string[]>(content, {
+          delimiter: ',',
+          skipEmptyLines: true,
+          header: false,
+        });
+
+        if (parseResult.errors.length > 0) {
+          this.isLoading = false;
+          input.value = '';
+          return;
+        }
+
+        const addObservables: Observable<any>[] = [];
+
+        for (const row of parseResult.data) {
+          if (!row || row.length === 0 || !row[0]) continue;
+
+          const mark = row[0].trim().toUpperCase();
+
+          try {
+            if (mark === 'C') {
+              const car = this.parseCarRow(row);
+              if (car) {
+                addObservables.push(
+                  this.carService.add(car).pipe(
+                    tap((addedCar) => console.log('Car added:', addedCar)),
+                    catchError((err) => {
+                      console.error(
+                        `Error adding car (ID: ${car.id}):`,
+                        err.message || err
+                      );
+                      return of(null);
+                    })
+                  )
+                );
+              }
+            } else if (mark === 'B') {
+              const eBike = this.parseEBikeRow(row);
+              if (eBike) {
+                addObservables.push(
+                  this.eBikeService.add(eBike).pipe(
+                    tap((addedBike) => console.log('EBike added:', addedBike)),
+                    catchError((err) => {
+                      console.error(
+                        `Error adding eBike (ID: ${eBike.id}):`,
+                        err.message || err
+                      );
+                      return of(null);
+                    })
+                  )
+                );
+              }
+            } else if (mark === 'S') {
+              const eScooter = this.parseEScooterRow(row);
+              if (eScooter) {
+                addObservables.push(
+                  this.eScooterService.add(eScooter).pipe(
+                    tap((addedScooter) =>
+                      console.log('EScooter added:', addedScooter)
+                    ),
+                    catchError((err) => {
+                      console.error(
+                        `Error adding eScooter (ID: ${eScooter.id}):`,
+                        err.message || err
+                      );
+                      return of(null);
+                    })
+                  )
+                );
+              }
+            } else {
+              console.warn(`Invalid mark '${mark}' found in row:`, row);
+            }
+          } catch (error: any) {
+            console.error(
+              `Error processing row: ${row.join(',')}`,
+              error.message || error
+            );
           }
         }
-        console.log('File content:', content);
+
+        if (addObservables.length > 0) {
+          forkJoin(addObservables)
+            .pipe(
+              finalize(() => {
+                this.refreshTables();
+                this.isLoading = false;
+                input.value = '';
+                this.cdr.detectChanges();
+              })
+            )
+            .subscribe({
+              next: (results) => {
+                const successfulAdds = results.filter((r) => r !== null).length;
+                if (successfulAdds < results.length) {
+                  console.warn(
+                    `${
+                      results.length - successfulAdds
+                    } vehicles failed to add. Check previous logs.`
+                  );
+                }
+              },
+              error: (err) => {
+                console.error('Unexpected error in forkJoin:', err);
+                this.isLoading = false;
+                input.value = '';
+              },
+            });
+        } else {
+          console.log('No valid vehicle data found in the file to process.');
+          this.isLoading = false;
+          input.value = '';
+        }
       };
+
+      reader.onerror = (e) => {
+        console.error('Error reading file:', reader.error);
+        this.isLoading = false;
+        input.value = '';
+      };
+
       reader.readAsText(file);
     }
   }
-  parseEScooter(line: string) {
-    const parsed = Papa.parse<string[]>(line, {
-      delimiter: ',',
-      skipEmptyLines: true,
-      header: false,
-    });
-    const parts = parsed.data[0];
 
-    if (!parts || parts.length < 6) {
-      throw new Error('Invalid line format');
+  private parseCarRow(parts: string[]): Car | null {
+    if (!parts || parts.length < 8) {
+      console.warn('Invalid car row format:', parts);
+      return null;
     }
 
-    const id = parts[1],
-      manufacturer = parts[2],
-      model = parts[3],
-      purchasePrice = parseFloat(parts[4]),
-      maxSpeed = parseInt(parts[5]);
+    const [
+      ,
+      id,
+      manufacturer,
+      model,
+      purchasePriceStr,
+      purchaseDateTimeStr,
+      description,
+      imagePath,
+    ] = parts;
 
-    const eScooter: EScooter = {
-      id: id,
-      manufacturer: manufacturer,
-      model: model,
+    const purchasePrice = parseFloat(purchasePriceStr);
+    const purchaseDateTime = new Date(purchaseDateTimeStr);
+
+    if (isNaN(purchasePrice) || isNaN(purchaseDateTime.getTime())) {
+      console.warn(
+        `Invalid number or date format in car row: ${parts.join(',')}`
+      );
+      return null;
+    }
+
+    return {
+      id: id.trim(),
+      manufacturer: manufacturer.trim(),
+      model: model.trim(),
       purchasePrice: purchasePrice,
-      maxSpeed: maxSpeed,
+      purchaseDateTime: purchaseDateTime,
+      description: description.trim(),
       vehicleState: VehicleState.AVAILABLE,
+      picture: imagePath ? imagePath.trim() : undefined,
     };
-
-    this.eScooterService.add(eScooter).subscribe({
-      next: (eScooter: EScooter) => {
-        console.log('Successful:', eScooter);
-      },
-      error: (err) => {
-        console.error('Conflict:', err.message);
-      },
-    });
   }
-  parseEBike(line: string) {
-    const parsed = Papa.parse<string[]>(line, {
-      delimiter: ',',
-      skipEmptyLines: true,
-      header: false,
-    });
-    const parts = parsed.data[0];
 
-    if (!parts || parts.length < 6) {
-      throw new Error('Invalid line format');
+  private parseEBikeRow(parts: string[]): EBike | null {
+    if (!parts || parts.length < 7) {
+      console.warn('Invalid eBike row format:', parts);
+      return null;
     }
 
-    const id = parts[1],
-      manufacturer = parts[2],
-      model = parts[3],
-      purchasePrice = parseFloat(parts[4]),
-      maxRange = parseInt(parts[5]);
+    const [
+      ,
+      id,
+      manufacturer,
+      model,
+      purchasePriceStr,
+      maxRangeStr,
+      imagePath,
+    ] = parts;
+    const purchasePrice = parseFloat(purchasePriceStr);
+    const maxRange = parseInt(maxRangeStr, 10);
 
-    const eBike: EBike = {
-      id: id,
-      manufacturer: manufacturer,
-      model: model,
+    if (isNaN(purchasePrice) || isNaN(maxRange)) {
+      console.warn(`Invalid number format in eBike row: ${parts.join(',')}`);
+      return null;
+    }
+
+    return {
+      id: id.trim(),
+      manufacturer: manufacturer.trim(),
+      model: model.trim(),
       purchasePrice: purchasePrice,
       maxRange: maxRange,
       vehicleState: VehicleState.AVAILABLE,
+      picture: imagePath ? imagePath.trim() : undefined,
     };
-
-    this.eBikeService.add(eBike).subscribe({
-      next: (eBike: EBike) => {
-        console.log('Successful:', eBike);
-      },
-      error: (err) => {
-        console.error('Conflict:', err.message);
-      },
-    });
   }
-  parseCar(line: string) {
-    const parsed = Papa.parse<string[]>(line, {
-      delimiter: ',',
-      skipEmptyLines: true,
-      header: false,
-    });
-    const parts = parsed.data[0];
 
+  private parseEScooterRow(parts: string[]): EScooter | null {
     if (!parts || parts.length < 7) {
-      throw new Error('Invalid line format');
+      console.warn('Invalid eScooter row format:', parts);
+      return null;
     }
 
-    const id = parts[1],
-      manufacturer = parts[2],
-      model = parts[3],
-      purchasePrice = parseFloat(parts[4]),
-      purchaseDateTime = parts[5],
-      description = parts[6];
-    const car: Car = {
-      id: id,
-      manufacturer: manufacturer,
-      model: model,
-      purchasePrice: purchasePrice,
-      purchaseDateTime: new Date(purchaseDateTime),
-      description: description,
-      vehicleState: VehicleState.AVAILABLE,
-    };
+    const [
+      ,
+      id,
+      manufacturer,
+      model,
+      purchasePriceStr,
+      maxSpeedStr,
+      imagePath,
+    ] = parts;
+    const purchasePrice = parseFloat(purchasePriceStr);
+    const maxSpeed = parseInt(maxSpeedStr, 10);
 
-    this.carService.add(car).subscribe({
-      next: (car: Car) => {
-        console.log('Successful:', car);
-      },
-      error: (err) => {
-        console.error('Conflict:', err.message);
-      },
-    });
+    if (isNaN(purchasePrice) || isNaN(maxSpeed)) {
+      console.warn(`Invalid number format in eScooter row: ${parts.join(',')}`);
+      return null;
+    }
+
+    return {
+      id: id.trim(),
+      manufacturer: manufacturer.trim(),
+      model: model.trim(),
+      purchasePrice: purchasePrice,
+      maxSpeed: maxSpeed,
+      vehicleState: VehicleState.AVAILABLE,
+      picture: imagePath ? imagePath.trim() : undefined,
+    };
+  }
+
+  private refreshTables(): void {
+    this.carsTable?.loadData();
+    this.eBikesTable?.loadData();
+    this.eScootersTable?.loadData();
   }
 }

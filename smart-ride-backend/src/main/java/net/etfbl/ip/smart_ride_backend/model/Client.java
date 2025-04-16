@@ -13,12 +13,9 @@ import java.util.List;
 @Data
 @Entity
 public class Client extends User{
-    private String idNumber; //id card number or passport number
     private String email;
     private String phoneNumber;
     private String image;
-    private String driverLicenseNumber;
-    private Boolean domesticate;
     private Boolean blocked;
     @OneToMany(mappedBy = "client")
     private List<Rental> rentals = new ArrayList<>();
@@ -26,13 +23,10 @@ public class Client extends User{
     public Client() {
     }
 
-    public Client(Long id, String username, String password, String firstName, String lastName, String idNumber, String email, String phoneNumber, String driverLicenseNumber, Boolean domesticate, Boolean blocked) {
+    public Client(Long id, String username, String password, String firstName, String lastName, String email, String phoneNumber, Boolean blocked) {
         super(id, username, password, firstName, lastName, Role.CLIENT);
-        this.idNumber = idNumber;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.driverLicenseNumber = driverLicenseNumber;
-        this.domesticate = domesticate;
         this.blocked = blocked;
     }
 }
