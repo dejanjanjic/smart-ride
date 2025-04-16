@@ -112,10 +112,8 @@ export class AddVehicleBaseComponent implements OnInit {
 
     const formValue = this.prepareFormData();
 
-    // Prvo šaljemo podatke o vozilu
     this.vehicleService.add(formValue).subscribe({
       next: (vehicle: any) => {
-        // Nakon uspješnog dodavanja vozila, šaljemo sliku
         this.uploadImage(vehicle.id);
       },
       error: (err: any) => this.handleError(err),
@@ -141,7 +139,6 @@ export class AddVehicleBaseComponent implements OnInit {
       return;
     }
 
-    // Slanje slike na server
     this.vehicleService.uploadImage(vehicleId, this.selectedImage).subscribe({
       next: () => {
         console.log('Image uploaded successfully');

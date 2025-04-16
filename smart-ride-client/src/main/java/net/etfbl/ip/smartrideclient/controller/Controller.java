@@ -377,9 +377,7 @@ public class Controller extends HttpServlet {
                     boolean registrationSuccess = registrationBean.registerUser(newUser, password); // Prosledi plain lozinku
 
                     if (registrationSuccess) {
-                        // Ukloni poruku o grešci ako je postojala
                         session.removeAttribute("errorMessage");
-                        // Postavi poruku o uspehu za login stranicu
                         session.setAttribute("registrationSuccess", "Account created successfully! Please login.");
                         nextPage = "?action=login";
                         useRedirect = true;
@@ -472,8 +470,8 @@ public class Controller extends HttpServlet {
             }
         } else if ("endCarRide".equals(action)) {
             System.out.println("Processing 'endCarRide' action...");
-
             String rentalIdStr = req.getParameter("rentalId");
+            Long rentalId = null;
 
             if (rentalIdStr == null || rentalIdStr.trim().isEmpty()) {
                 System.err.println("Error ending car ride: rentalId parameter missing.");
@@ -481,62 +479,93 @@ public class Controller extends HttpServlet {
                 useRedirect = true;
             } else {
                 try {
-                    Long rentalId = Long.parseLong(rentalIdStr);
+                    rentalId = Long.parseLong(rentalIdStr);
                     Long userId = userBean.getId();
+                    Long currentSessionRentalId = (Long) session.getAttribute("activeRentalId"); // Uzmi ID iz sesije PRE završetka
 
-                    RentalBean rentalBean = new RentalBean();
-                    Rental details = rentalBean.finishCarRentalById(rentalId, userId);
-
-                    if (details != null) {
+                    if (currentSessionRentalId == null || !currentSessionRentalId.equals(rentalId)) {
+                        System.err.println("Error ending car ride: Submitted rentalId (" + rentalId + ") does not match active rentalId in session (" + currentSessionRentalId + "). Cleaning session.");
                         session.removeAttribute("activeRentalId");
                         session.removeAttribute("activeCarId");
-
+                        session.removeAttribute("currentRentalIdNumber");
+                        session.removeAttribute("currentRentalDriverLicense");
+                        session.removeAttribute("lastRideReceiptData");
+                        session.removeAttribute("triggerPdfDownload");
+                        nextPage = "?action=home";
+                        useRedirect = true;
+                    } else {
+                        session.removeAttribute("activeRentalId");
+                        session.removeAttribute("activeCarId");
                         String idNumber = (String) session.getAttribute("currentRentalIdNumber");
                         String driverLicense = (String) session.getAttribute("currentRentalDriverLicense");
-
-                        Map<String, Object> receiptData = new java.util.HashMap<>();
-                        receiptData.put("rentalId", details.getId());
-                        receiptData.put("userId", userId);
-                        receiptData.put("userName", userBean.getName());
-                        receiptData.put("idNumber", idNumber);
-                        receiptData.put("driverLicense", driverLicense);
-                        receiptData.put("durationSeconds", details.getDurationInSeconds());
-                        receiptData.put("finalCost", details.getPrice());
-                        receiptData.put("vehicleId", details.getVehicleId());
-                        receiptData.put("endTime", java.time.LocalDateTime.now());
-
-                        session.setAttribute("lastRideReceiptData", receiptData);
-
                         session.removeAttribute("currentRentalIdNumber");
                         session.removeAttribute("currentRentalDriverLicense");
 
-                        session.setAttribute("triggerPdfDownload", true);
+                        RentalBean rentalBean = new RentalBean();
+                        Rental details = rentalBean.finishCarRentalById(rentalId, userId);
 
-                        nextPage = "?action=home";
-                        useRedirect = true;
+                        if (details != null) {
+                            System.out.println("Controller: Car Ride ended successfully. RentalID: " + details.getId());
 
-                    } else {
-                        System.err.println("Controller: Could not end car ride for rentalId=" + rentalId + ". finishRentalById returned null.");
-                        Long currentSessionRentalId = (Long) session.getAttribute("activeRentalId");
-                        if (currentSessionRentalId == null || !currentSessionRentalId.equals(rentalId)) {
-                            System.err.println("Controller: Session data suggests ride already ended or ID mismatch.");
-                            session.removeAttribute("activeRentalId");
-                            session.removeAttribute("activeCarId");
-                            session.removeAttribute("currentRentalIdNumber");
-                            session.removeAttribute("currentRentalDriverLicense");
+                            Map<String, Object> receiptData = new java.util.HashMap<>();
+                            receiptData.put("rentalId", details.getId());
+                            receiptData.put("userId", userId);
+                            receiptData.put("userName", userBean.getName());
+                            receiptData.put("idNumber", idNumber);
+                            receiptData.put("driverLicense", driverLicense);
+                            receiptData.put("durationSeconds", details.getDurationInSeconds());
+                            receiptData.put("finalCost", details.getPrice());
+                            receiptData.put("vehicleId", details.getVehicleId());
+                            receiptData.put("endTime", java.time.LocalDateTime.now());
+
+                            session.setAttribute("lastRideReceiptData", receiptData);
+                            session.setAttribute("triggerPdfDownload", true);
+
+                            nextPage = "?action=home";
+                            useRedirect = true;
+
+                        } else {
+                            System.err.println("Controller: Could not end car ride for rentalId=" + rentalId + ". finishCarRentalById returned null, but session attributes were cleared.");
+                            session.setAttribute("notification", "Ride session ended, but failed to finalize ride details. Please check your ride history.");
+                            nextPage = "?action=home";
+                            useRedirect = true;
                         }
-
-                        nextPage = "?action=home";
-                        useRedirect = true;
                     }
 
                 } catch (NumberFormatException e) {
                     System.err.println("Error ending car ride: Invalid rentalId format '" + rentalIdStr + "'.");
+                    session.removeAttribute("activeRentalId");
+                    session.removeAttribute("activeCarId");
+                    session.removeAttribute("currentRentalIdNumber");
+                    session.removeAttribute("currentRentalDriverLicense");
+                    session.removeAttribute("lastRideReceiptData");
+                    session.removeAttribute("triggerPdfDownload");
                     nextPage = "?action=home";
                     useRedirect = true;
                 } catch (Exception e) {
-                    System.err.println("Error ending car ride: Exception occurred.");
+                    System.err.println("Error ending car ride: Exception occurred: " + e.getMessage());
                     e.printStackTrace();
+                    if (rentalId != null) {
+                        Long currentSessionRentalId = (Long) session.getAttribute("activeRentalId");
+                        if (currentSessionRentalId != null && currentSessionRentalId.equals(rentalId)) {
+                            session.removeAttribute("activeRentalId");
+                            session.removeAttribute("activeCarId");
+                            session.removeAttribute("currentRentalIdNumber");
+                            session.removeAttribute("currentRentalDriverLicense");
+                            session.removeAttribute("lastRideReceiptData");
+                            session.removeAttribute("triggerPdfDownload");
+                            System.err.println("Cleaned up session attributes for rentalId " + rentalId + " after exception.");
+                        }
+                    } else {
+                        session.removeAttribute("activeRentalId");
+                        session.removeAttribute("activeCarId");
+                        session.removeAttribute("currentRentalIdNumber");
+                        session.removeAttribute("currentRentalDriverLicense");
+                        session.removeAttribute("lastRideReceiptData");
+                        session.removeAttribute("triggerPdfDownload");
+                        System.err.println("Cleaned up session attributes blindly after exception (rentalId might be null or invalid).");
+                    }
+                    session.setAttribute("notification", "An error occurred while ending your ride. Please check your ride history or contact support.");
                     nextPage = "?action=home";
                     useRedirect = true;
                 }

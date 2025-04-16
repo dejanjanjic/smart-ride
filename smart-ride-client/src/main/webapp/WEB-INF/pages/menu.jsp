@@ -160,12 +160,28 @@
     document.addEventListener('DOMContentLoaded', function() {
         <%
         Boolean autoDownload = (Boolean) request.getAttribute("autoDownloadReceipt");
-        if (Boolean.TRUE.equals(autoDownload)) {
+        Map<String, Object> receiptDataForDownload = (Map<String, Object>) session.getAttribute("lastRideReceiptData");
+        if (Boolean.TRUE.equals(autoDownload) && receiptDataForDownload != null) {
         %>
-        console.log('Auto-download triggered for receipt via scriptlet.');
-        setTimeout(function() {
-            window.location.href = '?action=generateReceipt';
-        }, 500);
+        console.log('Auto-triggering receipt download without navigation.');
+
+        function triggerReceiptDownload() {
+            const downloadUrl = '${pageContext.request.contextPath}/Controller?action=generateReceipt';
+            const fileName = 'SmartRide_Racun_ID<%= receiptDataForDownload.get("rentalId") %>.pdf';
+
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.setAttribute('download', fileName);
+            link.style.display = 'none';
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+        }
+
+        triggerReceiptDownload();
+
         <%
         }
         %>
