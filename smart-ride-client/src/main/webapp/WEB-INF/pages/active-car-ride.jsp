@@ -507,9 +507,6 @@
         endRideForm.addEventListener('submit', function (event) {
             event.preventDefault();
 
-            if (timerInterval) {
-                clearInterval(timerInterval);
-            }
 
             Swal.fire({
                 title: 'End Ride?',
@@ -522,21 +519,18 @@
                 cancelButtonText: 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    if (timerInterval) {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                    }
 
                     endRideBtn.disabled = true;
                     endRideBtn.innerHTML = '<span class="material-icons">hourglass_top</span> Ending...';
 
                     endRideForm.submit();
+
                 } else {
-                    if (!timerInterval) {
-                        timerInterval = setInterval(function () {
-                            seconds++;
-                            cost = seconds * ratePerSecond;
-                            timerDisplay.textContent = formatTime(seconds);
-                            costDisplay.textContent = formatCost(cost);
-                        }, 1000);
-                    }
-                    console.log('Ride end cancelled by user.');
+                    console.log('Ride end cancelled by user. Timer continues running.');
                 }
             });
         });
