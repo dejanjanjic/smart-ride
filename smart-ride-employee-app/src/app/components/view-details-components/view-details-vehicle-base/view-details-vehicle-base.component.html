@@ -29,7 +29,21 @@
           class="vehicle-image"
         />
         }@else {
-        <p>No image available</p>
+        <div class="no-image-container">
+          <p>No image available</p>
+          <div class="upload-section">
+            <input
+              type="file"
+              #fileInput
+              style="display: none"
+              accept="image/*"
+              (change)="onFileSelected($event)"
+            />
+            <button class="upload-btn" (click)="openFileDialog()">
+              Upload Image
+            </button>
+          </div>
+        </div>
         }
       </div>
     </div>

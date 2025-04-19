@@ -29,7 +29,6 @@
           <input matInput type="number" formControlName="purchasePrice" />
         </mat-form-field>
 
-        <!-- Type Specific Fields -->
         @if (vehicleType === 'car') {
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Purchase Date</mat-label>
@@ -52,7 +51,6 @@
         </mat-form-field>
         }
 
-        <!-- Image Upload -->
         <div class="image-input-container">
           @if(selectedImage) {
           <div class="fileName">

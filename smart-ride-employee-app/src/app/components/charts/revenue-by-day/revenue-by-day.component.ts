@@ -49,7 +49,6 @@ export class RevenueByDayComponent implements OnInit {
   public results: any[] = [];
 
   ngOnInit(): void {
-    // Initialize with last 7 days by default
     const today = new Date();
     const lastWeek = new Date();
     lastWeek.setDate(today.getDate() - 7);
@@ -65,7 +64,6 @@ export class RevenueByDayComponent implements OnInit {
       }
     });
 
-    // Initial data load
     this.getRevenueByDay();
   }
 
