@@ -58,7 +58,7 @@ public class Controller extends HttpServlet {
                 Map<String, Object> receiptData = (Map<String, Object>) session.getAttribute("lastRideReceiptData");
                 if (receiptData != null) {
                     generatePdfReceipt(resp, receiptData);
-                    // session.removeAttribute("lastRideReceiptData");
+                    session.removeAttribute("lastRideReceiptData");
                 } else {
                     resp.setContentType("text/plain");
                     resp.getWriter().println("Error: Receipt data not found.");

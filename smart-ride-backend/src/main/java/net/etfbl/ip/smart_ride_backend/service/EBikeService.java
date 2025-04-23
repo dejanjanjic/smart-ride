@@ -1,5 +1,6 @@
 package net.etfbl.ip.smart_ride_backend.service;
 
+import jakarta.transaction.Transactional;
 import net.etfbl.ip.smart_ride_backend.dto.CarSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.dto.EBikeSimpleDTO;
 import net.etfbl.ip.smart_ride_backend.model.*;
@@ -110,8 +111,11 @@ public class EBikeService{
 //    }
 
 
+    @Transactional
     public boolean deleteById(String id) {
         if (eBikeRepository.existsById(id)) {
+            rentalRepository.deleteAllByVehicle_Id(id);
+            failureRepository.deleteAllByVehicle_Id(id);
             eBikeRepository.deleteById(id);
             return true;
         }

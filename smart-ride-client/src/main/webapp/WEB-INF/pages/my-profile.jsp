@@ -119,8 +119,8 @@
             background-color: #2196F3;
             color: white;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -131,7 +131,7 @@
         }
 
         .avatar-change-btn .material-icons {
-            font-size: 14px;
+            font-size: 12px;
         }
 
         header .username {
@@ -379,9 +379,6 @@
         <div class="avatar-container">
             <img src="<%=userBean.getAvatarPath() != null ? userBean.getAvatarPath() : "images/no-avatar.jpg"%>"
                  alt="User Avatar" class="avatar">
-            <a href="?action=change-avatar" class="avatar-change-btn">
-                <span class="material-icons">add</span>
-            </a>
         </div>
         <span class="username"><%= userBean.getName() %></span>
     </div>
